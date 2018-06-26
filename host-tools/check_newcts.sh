@@ -139,7 +139,7 @@ function upload_to_s3(){
 
 function upload_build_info_to_s3(){
     local remote_dir_path=$1
-    local build_info_path=$(mktemp -p /tmp/ BUILD-INFO.txt_XXX)
+    local build_info_path="/tmp/BUILD-INFO.txt"
     local build_info="Format-Version: 0.5\n\nFiles-Pattern: *\nLicense-Type: open\n"
     echo -e ${build_info} >${build_info_path}
 
@@ -269,3 +269,4 @@ function main(){
 }
 
 main "$@"
+#upload_build_info_to_s3 "cts/18.06"
