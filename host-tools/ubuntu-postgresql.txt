@@ -28,6 +28,9 @@ https://help.ubuntu.com/community/PostgreSQL
     update-alternatives: 使用 /usr/share/postgresql/9.6/man/man1/postmaster.1.gz 来在自动模式中提供 /usr/share/man/man1/postmaster.1.gz (postmaster.1.gz)
 
 4. cheatsheet
+    sudo su - postgres
+    postgres@dl380p:~$ psql
+
    \l or \list to show all database in postgressql
    \c dbname or \connect dbname to change to a new database
    \dt display all the tables in currect database
@@ -35,6 +38,7 @@ https://help.ubuntu.com/community/PostgreSQL
    \h help
    \q exit
 
+   https://www.techonthenet.com/postgresql/delete.php
    CREATE DATABASE myproject;
    CREATE USER myprojectuser WITH PASSWORD 'password';
    # for django
@@ -44,5 +48,7 @@ https://help.ubuntu.com/community/PostgreSQL
 
    GRANT ALL PRIVILEGES ON DATABASE myproject TO myprojectuser;
 
+   select * from report_testcase where job_id  = '299593';
+   delete from report_testcase where job_id  = '299593';
 5. config file /etc/postgresql/9.6/main/postgresql.conf
    defines the database directory and configuration file path
