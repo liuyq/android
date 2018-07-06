@@ -320,6 +320,7 @@ function build_board_ver(){
     build ${TARGET_PRODUCT}
 }
 
+export CFG_TEE_SUPP_LOG_LEVEL=3
 #build_board_ver hikey o
 #build_board_ver x15 o
 #build_board_ver hikey p
