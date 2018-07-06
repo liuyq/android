@@ -14,10 +14,7 @@ else
     exit 1
 fi
 
-branch="android-o-preview-4"
-branch="android-8.0.0_r32"
-branch="android-o-mr1-preview-1"
-branch="android-8.1.0_r29"
+branch="android-8.1.0_r41"
 
 LOCAL_MANIFEST="git://android-git.linaro.org/platform/manifest.git"
 LOCAL_MANIFEST_BRANCH="linaro-oreo"
