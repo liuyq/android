@@ -23,13 +23,13 @@ LOCAL_MANIFEST="https://android-git.linaro.org/git/platform/manifest.git"
 LOCAL_MANIFEST_BRANCH="linaro-master"
 
 main "$@"
-
+exit
 if true; then
 ${BASE}/sync-projects.sh  \
                           android-patchsets \
                           android-build-configs \
                           device/linaro/hikey \
-                          kernel/linaro/hisilicon/ \
+                          kernel/linaro/hisilicon-4.14 \
                           frameworks/base \
                           frameworks/av \
 
@@ -60,7 +60,7 @@ fi
 #export https_proxy=192.168.0.102:37586
 
 func_apply_patch MASTER-RLCR-PATCHSET
-func_apply_patch hikey-master-workarounds
+#func_apply_patch hikey-master-workarounds
 func_apply_patch hikey-optee-master
 #func_apply_patch hikey-optee-4.9
 func_apply_patch hikey-optee-4.14
