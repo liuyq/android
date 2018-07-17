@@ -23,7 +23,7 @@ LOCAL_MANIFEST="https://android-git.linaro.org/git/platform/manifest.git"
 LOCAL_MANIFEST_BRANCH="linaro-master"
 
 main "$@"
-exit
+
 if true; then
 ${BASE}/sync-projects.sh  \
                           android-patchsets \
