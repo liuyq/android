@@ -4,12 +4,13 @@
 IRC_NOTIFY_CHANNEL="#liuyq-sync"
 IRC_NOTIFY_SERVER="irc.freenode.net"
 IRC_NOTIFY_NICK="aosp-tag-check"
-URL_CTS_TEMPLATE="https://git.linaro.org/qa/test-plans.git/plain/android/hikey-v2/template-cts-focused1-v7a.yaml"
+URL_CTS_TEMPLATE="https://android-git.linaro.org/android-build-configs.git/plain/lcr-reference-hikey-o"
 PUBLISH_TOKEN=''
 
 
 function getLCRURL(){
-    local url_lcr=$(curl --insecure -L ${URL_CTS_TEMPLATE}|grep TEST_URL|cut -d\" -f 2)
+    # CTS_PKG_URL=http://testdata.linaro.org/cts/18.06/android-cts-8.1_r6-linux_x86-arm-linaro.zip
+    local url_lcr=$(curl --insecure -L ${URL_CTS_TEMPLATE}|grep CTS_PKG_URL|cut -d= -f 2)
     if [ -z "${url_lcr}" ]; then
         echo "Failed to get the url information for LCR via url ${URL_CTS_TEMPLATE}"
         echo "Please check the status and try again"
