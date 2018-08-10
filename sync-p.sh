@@ -14,9 +14,7 @@ else
     exit 1
 fi
 
-branch="android-o-preview-4"
-branch="android-8.0.0_r32"
-branch="android-p-preview-1"
+branch="android-9.0.0_r3"
 
 LOCAL_MANIFEST="git://android-git.linaro.org/platform/manifest.git"
 LOCAL_MANIFEST_BRANCH="linaro-p-preview"
@@ -27,22 +25,13 @@ if true; then
 ${BASE}/sync-projects.sh  \
                           android-patchsets \
                           device/linaro/hikey \
-                          kernel/linaro/hisilicon/ \
-                          frameworks/base \
-                          frameworks/native \
-                          system/sepolicy \
-                          packages/inputmethods/LatinIME \
-                          system/core \
-                          hardware/interfaces \
-                          external/optee_test \
-                          optee/optee_os \
+                          kernel/linaro/hisilicon-4.14 \
+                          kernel/linaro/hisilicon-4.9 \
+                          kernel/linaro/hisilicon-4.4 \
 
 
 #                        system/vold \
 
-${BASE}/sync-projects.sh \
-                        external/libdrm \
-                        device/ti/am57xevm \
 
 #                          art \
 #                        kernel/ti/x15/ \
@@ -56,11 +45,10 @@ fi
 func_apply_patch P-RLCR-PATCHSET
 func_apply_patch hikey-p-workarounds
 func_apply_patch hikey-optee-p
-func_apply_patch optee-310-workarounds
-func_apply_patch hikey-optee-4.9
+func_apply_patch hikey-optee-4.14
 #func_apply_patch hikey-clang-4.9
 #func_apply_patch OREO-BOOTTIME-OPTIMIZATIONS-HIKEY
-func_apply_patch x15-p-workarounds
+#func_apply_patch x15-p-workarounds
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-X15
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-JUNO
 

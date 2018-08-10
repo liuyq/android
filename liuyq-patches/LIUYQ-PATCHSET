@@ -33,11 +33,22 @@ apply --linaro external/mksh 17850/1
 #============================================
 #=== patches for webcam =====================
 #============================================
-## hikey_defconfig: add configs for webcam support
-## http://android-review.linaro.org/17846
-apply --linaro --local kernel/linaro/hisilicon kernel/hikey-linaro 17846/2
 ## hack: remove drivers/staging/greybus/tools/Android.mk
-apply --linaro --local kernel/linaro/hisilicon kernel/hikey-linaro 18270/1
+if [ -d kernel/linaro/hisilicon-4.14 ]; then
+    apply --linaro --local kernel/linaro/hisilicon-4.14 kernel/hikey-linaro 18270/1
+
+    ## hikey_defconfig: add configs for webcam support
+    ## http://android-review.linaro.org/#/c/kernel/hikey-linaro/+/19586
+    apply --linaro --local kernel/linaro/hisilicon-4.14 kernel/hikey-linaro 19586/1
+fi
+
+if [ -d kernel/linaro/hisilicon-4.9 ]; then
+    apply --linaro --local kernel/linaro/hisilicon-4.9 kernel/hikey-linaro 18270/1
+
+    ## hikey_defconfig: add configs for webcam support
+    ## http://android-review.linaro.org/17846
+    apply --linaro --local kernel/linaro/hisilicon-4.9 kernel/hikey-linaro 17846/2
+fi
 ## add patches for webcam support
 ## http://android-review.linaro.org/17847
 #apply --linaro device/linaro/hikey 17847/3

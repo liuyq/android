@@ -21,9 +21,15 @@ function build_kernel(){
     ## CROSS_COMPILE
     ## DEFCONFIG
     ## CC && CLANG_PREBUILT_BIN for clang
+    ## ClangDefaultVersion in build/soong/cc/config/global.go
     build_config=${KERNEL_SRC}/build.config.clang && use_clang=true
     source ${build_config}
+    ## prebuilts-master/clang/host/linux-x86/clang-4679922/bin/
     CLANG_PREBUILT_BIN=$(echo ${CLANG_PREBUILT_BIN}|sed 's/-master//')
+    if [ ! -d ${CLANG_PREBUILT_BIN} ]; then
+        clang_default_ver=$(grep -rn "ClangDefaultVersion.*=" build/soong/cc/config/global.go|cut -d= -f2|tr -d '" ')
+        CLANG_PREBUILT_BIN=prebuilts/clang/host/linux-x86/${clang_default_ver}/bin/
+    fi
 
     KERNEL_TOOLS_PREFIX=${AOSP_ROOT}/${LINUX_GCC_CROSS_COMPILE_PREBUILTS_BIN}/${CROSS_COMPILE}
 
