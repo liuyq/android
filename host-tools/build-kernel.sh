@@ -14,6 +14,7 @@ AOSP_ROOT=$(cd $(dirname $0)/..; pwd)
 function build_kernel(){
     KERNEL_SRC=$1 && shift
     KERNEL_OUT=$1 && shift
+    mkdir -p ${KERNEL_OUT}
 
     ## ARCH
     ## LINUX_GCC_CROSS_COMPILE_PREBUILTS_BIN
@@ -95,11 +96,12 @@ function make_bootimg(){
 
 KERNEL_SRC_BASE="${AOSP_ROOT}/kernel/linaro"
 KERNEL_OUT_BASE="${AOSP_ROOT}/out/target/product/hikey/obj"
-build_kernel "${KERNEL_SRC_BASE}/hisilicon-4.14" ${KERNEL_OUT_BASE}/kernel-4.14
-#build_kernel "${KERNEL_SRC_BASE}/hisilicon-4.9" ${KERNEL_OUT_BASE}/kernel-4.9
-#build_kernel "${KERNEL_SRC_BASE}/hisilicon-4.4" ${KERNEL_OUT_BASE}/kernel-4.4
 
-make_bootimg ${KERNEL_OUT_BASE}/kernel-4.14/arch/arm64/boot/Image.gz-dtb ${F_RAMDISK} ${AOSP_ROOT}/out/target/product/hikey/boot-4.14.img
-#make_bootimg ${KERNEL_OUT_BASE}/kernel-4.9/arch/arm64/boot/Image.gz-dtb ${F_RAMDISK} ${AOSP_ROOT}/out/target/product/hikey/boot-4.9.img
-#make_bootimg ${KERNEL_OUT_BASE}/kernel-4.4/arch/arm64/boot/Image.gz-dtb ${F_RAMDISK} ${AOSP_ROOT}/out/target/product/hikey/boot-4.4.img
+function build_single_version(){
+    local ver=$1 && shift
+    rm -fr ${KERNEL_OUT_BASE}/kernel-${ver}/arch/arm64/boot/Image.gz-dtb
+    build_kernel "${KERNEL_SRC_BASE}/hisilicon-${ver}" ${KERNEL_OUT_BASE}/kernel-${ver}
+    make_bootimg ${KERNEL_OUT_BASE}/kernel-${ver}/arch/arm64/boot/Image.gz-dtb ${F_RAMDISK} ${AOSP_ROOT}/out/target/product/hikey/boot-${ver}.img
+}
 
+build_single_version 4.14

@@ -60,13 +60,13 @@ fi
 #export https_proxy=192.168.0.102:37586
 
 func_apply_patch MASTER-RLCR-PATCHSET
-#func_apply_patch hikey-master-workarounds
+func_apply_patch hikey-master-workarounds
 func_apply_patch hikey-optee-master
 #func_apply_patch hikey-optee-4.9
 func_apply_patch hikey-optee-4.14
 #func_apply_patch MASTER-CLANG-PATCHSET
-func_apply_patch x15-master-workarounds
-func_apply_patch x15-master-workarounds-lcr
+#func_apply_patch x15-master-workarounds
+#func_apply_patch x15-master-workarounds-lcr
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-HIKEY
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-X15
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-JUNO
