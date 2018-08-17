@@ -2,7 +2,7 @@
 
 img_dir=${1}
 if [ -z "${img_dir}" ]; then
-    img_dir="out/target/product/am57xevm"
+    img_dir="out/target/product/beagle_x15"
 fi
 
 if ! [ -d ${img_dir} ]; then
