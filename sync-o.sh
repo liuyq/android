@@ -32,6 +32,7 @@ ${BASE}/sync-projects.sh  \
                           packages/inputmethods/LatinIME \
                           system/core \
                           hardware/interfaces \
+                          device/linaro/bootloader/edk2 \
 
 #                        system/vold \
 
