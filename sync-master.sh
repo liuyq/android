@@ -29,28 +29,20 @@ ${BASE}/sync-projects.sh  \
                           android-patchsets \
                           android-build-configs \
                           device/linaro/hikey \
-                          kernel/linaro/hisilicon-4.14 \
-                          kernel/linaro/hisilicon-4.9 \
-                          kernel/linaro/hisilicon-4.4 \
-                          frameworks/base \
-                          frameworks/av \
 
-#                          bionic \
-#                          build \
-
-#${BASE}/sync-projects.sh \
-#                        system/extras \
-#                        system/vold \
-#                        system/core \
+if [ -d kernel/linaro/hisilicon-4.14 ]; then
+    ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.14
+fi
+if [ -d kernel/linaro/hisilicon-4.9 ]; then
+    ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.9
+fi
+if [ -d kernel/linaro/hisilicon-4.4 ]; then
+    ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.4
+fi
 
 ${BASE}/sync-projects.sh \
                         external/libdrm \
                         device/ti/beagle-x15 \
-
-#                        kernel/ti/x15/ \
-#                        ti/u-boot/ \
-#                          art \
-#                          external/opencv-upstream \
 
 ${BASE}/sync-projects.sh \
                         external/optee_client \
@@ -64,9 +56,12 @@ fi
 func_apply_patch MASTER-RLCR-PATCHSET
 func_apply_patch hikey-master-workarounds
 func_apply_patch hikey-optee-master
-#func_apply_patch hikey-optee-4.9
-func_apply_patch hikey-optee-4.14
-#func_apply_patch MASTER-CLANG-PATCHSET
+if [ -d kernel/linaro/hisilicon-4.14 ]; then
+    func_apply_patch hikey-optee-4.14
+fi
+if [ -d kernel/linaro/hisilicon-4.9 ]; then
+    func_apply_patch hikey-optee-4.9-new
+fi
 func_apply_patch x15-master-workarounds
 func_apply_patch x15-master-workarounds-lcr
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-HIKEY

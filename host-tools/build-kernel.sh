@@ -106,8 +106,11 @@ KERNEL_OUT_BASE="${AOSP_ROOT}/out/target/product/hikey/obj"
 function build_single_version(){
     local ver=$1 && shift
     rm -fr ${KERNEL_OUT_BASE}/kernel-${ver}/arch/arm64/boot/Image.gz-dtb
+    rm -fr ${AOSP_ROOT}/out/target/product/hikey/boot-${ver}.img
     build_kernel "${KERNEL_SRC_BASE}/hisilicon-${ver}" ${KERNEL_OUT_BASE}/kernel-${ver}
     make_bootimg ${KERNEL_OUT_BASE}/kernel-${ver}/arch/arm64/boot/Image.gz-dtb ${F_RAMDISK} ${AOSP_ROOT}/out/target/product/hikey/boot-${ver}.img
 }
 
 build_single_version 4.14
+build_single_version 4.9
+build_single_version 4.4

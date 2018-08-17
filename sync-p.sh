@@ -24,19 +24,27 @@ main "$@"
 if true; then
 ${BASE}/sync-projects.sh  \
                           android-patchsets \
+                          android-build-configs \
                           device/linaro/hikey \
-                          kernel/linaro/hisilicon-4.14 \
-                          kernel/linaro/hisilicon-4.9 \
-                          kernel/linaro/hisilicon-4.4 \
 
+if [ -d kernel/linaro/hisilicon-4.14 ]; then
+    ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.14
+fi
+if [ -d kernel/linaro/hisilicon-4.9 ]; then
+    ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.9
+fi
+if [ -d kernel/linaro/hisilicon-4.4 ]; then
+    ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.4
+fi
 
-#                        system/vold \
+${BASE}/sync-projects.sh \
+                        external/libdrm \
+                        device/ti/beagle-x15 \
 
-
-#                          art \
-#                        kernel/ti/x15/ \
-#                        ti/u-boot/ \
-#                          external/opencv-upstream \
+${BASE}/sync-projects.sh \
+                        external/optee_client \
+                        external/optee_test \
+                        optee/optee_os \
 
 fi
 #export http_proxy=192.168.0.102:37586
@@ -45,8 +53,12 @@ fi
 func_apply_patch P-RLCR-PATCHSET
 func_apply_patch hikey-p-workarounds
 func_apply_patch hikey-optee-p
-func_apply_patch hikey-optee-4.14
-#func_apply_patch hikey-clang-4.9
+if [ -d kernel/linaro/hisilicon-4.14 ]; then
+    func_apply_patch hikey-optee-4.14
+fi
+if [ -d kernel/linaro/hisilicon-4.9 ]; then
+    func_apply_patch hikey-optee-4.9-new
+fi
 #func_apply_patch OREO-BOOTTIME-OPTIMIZATIONS-HIKEY
 #func_apply_patch x15-p-workarounds
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-X15
