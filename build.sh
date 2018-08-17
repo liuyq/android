@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 ROOT_DIR=$(cd $(dirname $0); pwd)
 source ${ROOT_DIR}/scripts-common/helpers
 
@@ -10,7 +10,7 @@ targets="droidcore"
 variant="userdebug"
 
 export SHOW_COMMANDS=showcommands
-export ALLOW_MISSING_DEPENDENCIES=true
+#export ALLOW_MISSING_DEPENDENCIES=true
 #export CFG_GP_SOCKETS=n
 #export INCLUDE_STLPORT_FOR_MASTER=true
 #export INCLUDE_LAVA_HACK_FOR_MASTER=true
@@ -325,6 +325,11 @@ export CFG_TEE_SUPP_LOG_LEVEL=3
 #build_board_ver x15 o
 #build_board_ver hikey p
 #build_board_ver x15 p
-#build_board_ver x15 master
-build_board_ver hikey master
+build_board_ver x15 master
+#export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-4.4
+#build_board_ver hikey master
 #make -j"${CPUs}" vts cts
+#source build/envsetup.sh
+#lunch hikey-userdebug
+#make -j"${CPUs}" vts
+#mmm -j"${CPUs}" kernel/tests/net/test
