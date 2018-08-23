@@ -14,6 +14,7 @@ if [ $# -lt 2 ] || [ $# -gt 3 ] ; then
 fi
 
 key=$(echo $RANDOM)$(echo $RANDOM)
+key=20120723
 
 if [ $# -eq 3 ]; then
     key=$3
@@ -34,7 +35,8 @@ WIFI_HOME=~/.360wifi
 #[1] Check whether we have 360 wifi inserted
 
 echo "[*] Checking 360-wifi ... "
-result=$(lsusb | grep -e "148f:5370 Ralink Technology")
+#result=$(lsusb | grep -e "148f:5370 Ralink Technology")
+result=$(lsusb | grep -e "148f:760b Ralink Technology")
 
 if [ $? -ne 0 ]; then
     echo "[x] Please insert 360-wifi into the USB interface"
@@ -58,10 +60,10 @@ fi
 # [3] install necessary packages
 echo "[*] Installing necessary packages ... "
 echo " -->[a] hostapd"
-sudo apt-get install hostapd > /dev/null
+sudo apt-get install hostapd
 
 echo " -->[b] isc-dhcp-server"
-sudo apt-get install isc-dhcp-server > /dev/null
+sudo apt-get install isc-dhcp-server
 
 
 # [4] set isc-dhcp-server
@@ -79,7 +81,7 @@ option domain-name-servers 8.8.8.8;
 option routers 10.1.1.1;
 default-lease-time 600;
 max-lease-time 7200;
-}" | sudo tee /etc/dhcp/dhcpd.$in_interface.conf > /dev/null
+}" | sudo tee /etc/dhcp/dhcpd.$in_interface.conf
 sudo ifconfig $in_interface 10.1.1.1 up
 sudo dhcpd -q -cf /etc/dhcp/dhcpd.$in_interface.conf -pf /var/run/dhcp-server/dhcpd.pid $in_interface
 
@@ -99,7 +101,7 @@ sudo iptables -A FORWARD -d 10.1.1.0/24 -m conntrack --ctstate ESTABLISHED,RELAT
 
 echo "[*] Setting hostapd ... "
 
-ssid=cofface
+ssid=ipad360
 
 echo
 echo "**** SSID : $ssid, key: $key. Enjoy! ****"
@@ -108,7 +110,7 @@ function clean_up {
     echo "[*] Cleaning up ..."
     if [ -f /var/run/dhcp-server/dhcpd.pid ]; then
         dhcpd_pid=$(cat /var/run/dhcp-server/dhcpd.pid)
-        sudo kill -9 $dhcpd_pid > /dev/null
+        sudo kill -9 $dhcpd_pid
         # echo $dhcpd_pid
     fi
 }
@@ -135,7 +137,7 @@ wpa=3
 wpa_passphrase=$key
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
-rsn_pairwise=CCMP" | tee $WIFI_HOME/.hostapd.$in_interface.conf > /dev/null
+rsn_pairwise=CCMP" | tee $WIFI_HOME/.hostapd.$in_interface.conf
 
 # sudo hostapd $WIFI_HOME/.hostapd.$in_interface.conf -P $WIFI_HOME/.hostapd.$in_interface.pid -B
-sudo hostapd $WIFI_HOME/.hostapd.$in_interface.conf > /dev/null
+sudo hostapd $WIFI_HOME/.hostapd.$in_interface.conf

@@ -1,4 +1,5 @@
-01:37:14 liuyq: test-definitions$ sudo  dpkg -S /usr/bin/qemu-system-x86_64
+udo qemu-system-x86_64 -m 20480 -hda winxp2.img -smp cores=4 -cpu host -enable-kvm -machine accel=kvm:tcg -usb -usbdevice host:0b95:772b  -usb -usbdevice host:148f:760b -net user -net nic,model=rtl8139
+1:37:14 liuyq: test-definitions$ sudo  dpkg -S /usr/bin/qemu-system-x86_64
 qemu-system-x86: /usr/bin/qemu-system-x86_64
 01:37:43 liuyq: test-definitions$
 
@@ -11,6 +12,7 @@ qemu-system-x86_64 -machine accel=kvm:tcg -m 512 -nographic -net nic,macaddr=DE:
 https://en.wikibooks.org/wiki/QEMU/Images
 
 1. qemu-img create -f qcow2 winxp.img 3G
+   qemu-img create -f qcow2 ubunt1404.img 20G
    qemu-system-x86_64 -m 1024 -hda winxp.img -cdrom winxp_nec.iso -boot d
    Or
    qemu-system-x86_64 -m 256 -hda winxp.img -cdrom /dev/cdrom -boot d
@@ -42,3 +44,8 @@ https://en.wikibooks.org/wiki/QEMU/Images
 12:15:06 liuyq: VirtualBox$ sudo qemu-system-x86_64 -m 20480 -hda ubuntu1604.img -smp cores=4 -cpu host -enable-kvm -machine accel=kvm:tcg -drive file=/dev/mmcblk0,format=raw
 qemu-system-x86_64: -drive file=/dev/mmcblk0,format=raw: could not open disk image /dev/mmcblk0: Could not open '/dev/mmcblk0': Permission denied
 12:15:13 liuyq: VirtualBox$ c
+
+sudo qemu-system-x86_64 -m 20480 -hda winxp2.img -smp cores=4 -cpu host -enable-kvm -machine accel=kvm:tcg -usb -usbdevice host:0b95:772b  -usb -usbdevice host:148f:760b -net user -net nic,model=rtl8139
+sudo qemu-system-x86_64 -m 20480 -hda winxp2.img -smp cores=4 -cpu host -enable-kvm -machine accel=kvm:tcg -usb -usbdevice host:0b95:772b  -usb -usbdevice host:148f:760b -net none
+
+sudo qemu-system-x86_64 -m 20480 -hda win7.img -smp cores=4 -cpu host -enable-kvm -machine accel=kvm:tcg -usb -usbdevice host:0b95:772b  -usb -usbdevice host:148f:760b -usb -usbdevice host:0fe6:9700 -net user -net nic,model=rtl8139

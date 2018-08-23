@@ -52,3 +52,10 @@ cat /proc/cpuinfo | grep MHz
 description from Documentation/cpu-freq/user-guide.txt:
 cpuinfo_cur_freq : Current frequency of the CPU as obtained from the hardware, in KHz. This is the frequency the CPU actually runs at.
 caling_cur_freq :  Current frequency of the CPU as determined by the governor and cpufreq core, in KHz. This is  the frequency the kernel thinks the CPU runs at
+=============
+http://www.refining-linux.org/archives/27/20-Multi-line-sed-search-and-replace/
+sed -i '/namespace: tlxc/{ N; s/namespace: tlxc\n    connection: lxc/namespace: tlxc/ }' android/hikey-v2/*
+==================
+check the resolution of one machine
+cat /sys/class/graphics/fb0/modes
+=============================
