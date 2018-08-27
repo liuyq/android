@@ -40,9 +40,6 @@ if [ -d kernel/linaro/hisilicon-4.4 ]; then
     ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.4
 fi
 
-${BASE}/sync-projects.sh \
-                        external/libdrm \
-                        device/ti/beagle-x15 \
 
 ${BASE}/sync-projects.sh \
                         external/optee_client \
@@ -63,7 +60,7 @@ if [ -d kernel/linaro/hisilicon-4.9 ]; then
     func_apply_patch hikey-optee-4.9-new
 fi
 func_apply_patch x15-master-workarounds
-func_apply_patch x15-master-workarounds-lcr
+#func_apply_patch x15-master-workarounds-lcr
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-HIKEY
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-X15
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-JUNO
