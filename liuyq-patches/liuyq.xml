@@ -3,9 +3,9 @@
   <remote name="github4liuyq" fetch="https://github.com/" />
   <remote name="local" fetch="file:////SATA3/aosp-mirror/hikey/" />
 
+  <!--
   <project path="packages/apps/AndroidTerm" name="platform/external/AndroidTerm" revision="linaro-master" remote="linaro-android"/>
   <project path="packages/inputmethods/hackerskeyboard" name="liuyq/hackerskeyboard" revision="master" remote="github4liuyq"/>
-  <!--
   <project path="external/lzo" name="liuyq/lzo.git" revision="master" remote="github4liuyq"/>
   <project path="external/btrfs-progs" name="liuyq/btrfs-progs" revision="android-btrfs" remote="github4liuyq"/>
   <project path="packages/apps/0xbench" name="platform/packages/apps/0xbench.git" revision="linaro-master" remote="linaro-android"/>
@@ -18,14 +18,14 @@
   <!--
   <project path="external/bonnie" name="people/yongqin.liu/public/bonnie.git" revision="master" remote="linaro-other"/>
   -->
-  <project path="hardware/linaro/common" name="people/yongqin.liu/public/hardware/linaro/common.git" revision="linaro-android" remote="linaro-other" />
 <!--
+  <project path="hardware/linaro/common" name="people/yongqin.liu/public/hardware/linaro/common.git" revision="linaro-android" remote="linaro-other" />
   <project path="external/opencv-upstream" name="Itseez/opencv" revision="master" remote="github4liuyq" />
   <project path="external/ncurses" name="platform/external/ncurses" revision="linaro" groups="common" remote="linaro-android"/>
   <project path="external/opencv-upstream" name="liuyq/opencv" revision="master" remote="github4liuyq" />
--->
   <project path="android-tools/apks" name="liuyq/apks" revision="master" remote="github4liuyq" />
   <project path="android-tools/benchmarks" name="liuyq/benchmarks" revision="master" remote="github4liuyq" />
+-->
   <!--
   https://code.videolan.org/videolan/vlc-android.git
   <project path="android-tools/apks" name="liuyq/apks" revision="master" remote="github4liuyq" />
