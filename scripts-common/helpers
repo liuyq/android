@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# nproc command could be used here too
 CPUS=$(grep processor /proc/cpuinfo |wc -l)
 
 function export_config(){
