@@ -14,7 +14,7 @@ else
     exit 1
 fi
 
-branch="android-9.0.0_r3"
+branch="android-9.0.0_r8"
 
 LOCAL_MANIFEST="git://android-git.linaro.org/platform/manifest.git"
 LOCAL_MANIFEST_BRANCH="linaro-p-preview"
@@ -23,6 +23,10 @@ main "$@"
 
 if true; then
 ${BASE}/sync-projects.sh  \
+                          frameworks/base \
+                          system/core \
+                          system/sepolicy \
+                          system/bt \
                           android-patchsets \
                           android-build-configs \
                           device/linaro/hikey \
@@ -37,9 +41,9 @@ if [ -d kernel/linaro/hisilicon-4.4 ]; then
     ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.4
 fi
 
-${BASE}/sync-projects.sh \
-                        external/libdrm \
-                        device/ti/beagle-x15 \
+#${BASE}/sync-projects.sh \
+#                        external/libdrm \
+#                        device/ti/beagle-x15 \
 
 ${BASE}/sync-projects.sh \
                         external/optee_client \

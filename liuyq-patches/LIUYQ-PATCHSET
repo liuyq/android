@@ -47,7 +47,7 @@ if [ -d kernel/linaro/hisilicon-4.9 ]; then
 
     ## hikey_defconfig: add configs for webcam support
     ## http://android-review.linaro.org/17846
-    apply --linaro --local kernel/linaro/hisilicon-4.9 kernel/hikey-linaro 17846/2
+    apply --linaro --local kernel/linaro/hisilicon-4.9 kernel/hikey-linaro 17846/3
 fi
 ## add patches for webcam support
 ## http://android-review.linaro.org/17847
