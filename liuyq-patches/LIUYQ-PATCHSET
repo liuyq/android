@@ -21,7 +21,7 @@ fi
 
 ## hikey/BoardConfig.mk: set to use 720p for VGA monitor
 ## http://android-review.linaro.org/18234
-apply --linaro device/linaro/hikey 18234/1
+#apply --linaro device/linaro/hikey 18234/1
 
 ## lsusb.c: output manufacturer and product as well
 ## http://android-review.linaro.org/17812

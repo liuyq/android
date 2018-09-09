@@ -116,9 +116,9 @@ rm -fr out/target/product/hikey/obj/kernel
 #build_board_ver x15 master
 #export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-4.4
 build_board_ver hikey master
-#make -j"${CPUs}" vts cts
+#make -j"${CPUS}" vts cts
 
 #source build/envsetup.sh
 #lunch hikey-userdebug
-#make -j"${CPUs}" vts
-#mmm -j"${CPUs}" kernel/tests/net/test
+#make -j"${CPUS}" vts
+#mmm -j"${CPUS}" kernel/tests/net/test

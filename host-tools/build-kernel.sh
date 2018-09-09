@@ -87,6 +87,7 @@ F_KERNEL="${AOSP_ROOT}/out/target/product/hikey/kernel"
 F_RAMDISK="${AOSP_ROOT}/out/target/product/hikey/ramdisk.img"
 BIN_MKBOOTIMG="${AOSP_ROOT}/out/host/linux-x86/bin/mkbootimg"
 BOARD_KERNEL_CMDLINE="console=ttyFIQ0 androidboot.console=ttyFIQ0 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab video=HDMI-A-1:1280x720@60 printk.devkmsg=on video=vfb:640x480-32@30 vfb.videomemorysize=3145728"
+BOARD_KERNEL_CMDLINE="console=ttyFIQ0 androidboot.console=ttyFIQ0 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab printk.devkmsg=on"
 TARGET_BUILD_VARIANT="userdebug"
 VERITY_KEYID=""
 function make_bootimg(){
@@ -112,5 +113,5 @@ function build_single_version(){
 }
 
 build_single_version 4.14
-build_single_version 4.9
-build_single_version 4.4
+#build_single_version 4.9
+#build_single_version 4.4
