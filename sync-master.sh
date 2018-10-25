@@ -10,6 +10,8 @@ elif [ -d /home/yongqin.liu/aosp-mirror/platform/manifest.git ]; then
     export MIRROR="/home/yongqin.liu/aosp-mirror/platform/manifest.git"
 elif [ -d /development/android/aosp-mirror/platform/manifest.git ]; then
     export MIRROR="/development/android/aosp-mirror/platform/manifest.git"
+elif [ -d /data/android/aosp-mirror/platform/manifest.git ]; then
+    export MIRROR="/data/android/aosp-mirror/platform/manifest.git"
 else
     echo "Please specify value for MIRROR"
     exit 1
@@ -22,9 +24,10 @@ LOCAL_MANIFEST_BRANCH="linaro-master"
 
 main "$@"
 
-if true; then
+if false; then
 ${BASE}/sync-projects.sh  \
                           frameworks/base \
+                          system/core \
                           android-patchsets \
                           android-build-configs \
                           device/linaro/hikey \

@@ -9,12 +9,14 @@ elif [ -d /home/yongqin.liu/aosp-mirror/platform/manifest.git ]; then
     export MIRROR="/home/yongqin.liu/aosp-mirror/platform/manifest.git"
 elif [ -d /development/android/aosp-mirror/platform/manifest.git ]; then
     export MIRROR="/development/android/aosp-mirror/platform/manifest.git"
+elif [ -d /data/android/aosp-mirror/platform/manifest.git ]; then
+    export MIRROR="/data/android//aosp-mirror/platform/manifest.git"
 else
     echo "Please specify value for MIRROR"
     exit 1
 fi
 
-branch="android-8.1.0_r41"
+branch="android-8.1.0_r48"
 
 LOCAL_MANIFEST="git://android-git.linaro.org/platform/manifest.git"
 LOCAL_MANIFEST_BRANCH="linaro-oreo"
@@ -32,6 +34,8 @@ ${BASE}/sync-projects.sh  \
                           packages/inputmethods/LatinIME \
                           system/core \
                           hardware/interfaces \
+                          libcore \
+                          optee/optee_os \
                           device/linaro/bootloader/edk2 \
 
 #                        system/vold \
@@ -54,7 +58,6 @@ fi
 func_apply_patch O-RLCR-PATCHSET
 func_apply_patch hikey-o-workarounds
 func_apply_patch hikey-optee-o
-func_apply_patch optee-310-workarounds
 func_apply_patch hikey-optee-4.9
 #func_apply_patch hikey-clang-4.9
 func_apply_patch OREO-BOOTTIME-OPTIMIZATIONS-HIKEY
