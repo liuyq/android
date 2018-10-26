@@ -5,7 +5,7 @@ source ${BASE}/scripts-common/helpers
 
 sync_init_with_depth(){
     local groups_opt=$(get_manifest_groups)
-    while ! repo init --depth=1 ${groups_opt}; do
+    while ! repo init --depth=0 ${groups_opt}; do
         sleep 30
     done
 }

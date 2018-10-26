@@ -2,12 +2,18 @@
 ROOT_DIR=$(cd $(dirname $0); pwd)
 source ${ROOT_DIR}/scripts-common/helpers
 
-CPUS=8
+CPUS=$(nproc)
 
 targets="droidcore"
 #targets="selinuxtarballs"
 #targets="boottarball"
 variant="userdebug"
+
+# workaround for boot_fat.uefi.img for error:
+# AssertionError: Can only handle FAT with 1 reserved sector
+# git clone https://github.com/dosfstools/dosfstools -b v3.0.28
+# cd dosfstools && make
+export PATH=${ROOT_DIR}/dosfstools:${PATH}
 
 export SHOW_COMMANDS=showcommands
 #export ALLOW_MISSING_DEPENDENCIES=true

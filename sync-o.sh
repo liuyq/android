@@ -23,7 +23,7 @@ LOCAL_MANIFEST_BRANCH="linaro-oreo"
 
 main "$@"
 
-if true; then
+if false; then
 ${BASE}/sync-projects.sh  \
                           android-patchsets \
                           device/linaro/hikey \
