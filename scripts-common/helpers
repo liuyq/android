@@ -6,6 +6,10 @@ CPUS=$(grep processor /proc/cpuinfo |wc -l)
 function export_config(){
     local f_config=$1
     while read line; do
+        if echo "${line}"|tr -d '[:blank:]'|grep -q '^$'; then
+            continue
+        fi
+
         if ! echo $line |grep -q '^#'; then
             eval "export $line"
         fi
