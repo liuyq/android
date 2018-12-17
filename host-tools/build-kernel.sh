@@ -1,10 +1,9 @@
 #!/bin/bash -ex
 
-KERNEL_VERBOSE="V=1"
+KERNEL_VERBOSE="V=2 KBUILD_VERBOSE=1"
 KERNEL_TARGET="Image-dtb"
 KERNEL_TARGET="Image.gz-dtb"
 CPUS=$(grep processor /proc/cpuinfo |wc -l)
-
 
 MAKE="make"
 HOST_PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -27,6 +26,8 @@ function build_kernel(){
     ## prebuilts-master/clang/host/linux-x86/clang-4679922/bin/
     CLANG_PREBUILT_BIN=$(echo ${CLANG_PREBUILT_BIN}|sed 's/-master//')
     if [ ! -d ${CLANG_PREBUILT_BIN} ]; then
+#        echo "Failed to find the CLANG defined: ${CLANG_PREBUILT_BIN}"
+#        exit 1
         clang_default_ver=$(grep -rn "ClangDefaultVersion.*=" build/soong/cc/config/global.go|cut -d= -f2|tr -d '" ')
         CLANG_PREBUILT_BIN=prebuilts/clang/host/linux-x86/${clang_default_ver}/bin/
     fi
@@ -35,7 +36,7 @@ function build_kernel(){
 
     PATH=$PATH:${CLANG_PREBUILT_BIN}:${LINUX_GCC_CROSS_COMPILE_PREBUILTS_BIN}
     CMD_MKCONFIG="${MAKE} -j1 -C ${KERNEL_SRC} -j1 ${KERNEL_VERBOSE} O=${KERNEL_OUT} ARCH=${ARCH} CROSS_COMPILE=${KERNEL_TOOLS_PREFIX} ${DEFCONFIG}"
-    PATH=$PATH:${HOST_PATH} ${CMD_MKCONFIG} 2>&1 | tee ${KERNEL_OUT}/build-mkconfig.log 
+    PATH=$PATH:${HOST_PATH} ${CMD_MKCONFIG} 2>&1 | tee ${KERNEL_OUT}/build-mkconfig.log
 
 
     TOOLCHAIN_OPT="CROSS_COMPILE=${KERNEL_TOOLS_PREFIX}"
@@ -87,7 +88,7 @@ F_KERNEL="${AOSP_ROOT}/out/target/product/hikey/kernel"
 F_RAMDISK="${AOSP_ROOT}/out/target/product/hikey/ramdisk.img"
 BIN_MKBOOTIMG="${AOSP_ROOT}/out/host/linux-x86/bin/mkbootimg"
 BOARD_KERNEL_CMDLINE="console=ttyFIQ0 androidboot.console=ttyFIQ0 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab video=HDMI-A-1:1280x720@60 printk.devkmsg=on video=vfb:640x480-32@30 vfb.videomemorysize=3145728"
-BOARD_KERNEL_CMDLINE="console=ttyFIQ0 androidboot.console=ttyFIQ0 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab printk.devkmsg=on"
+BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime  printk.devkmsg=on overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
 TARGET_BUILD_VARIANT="userdebug"
 VERITY_KEYID=""
 function make_bootimg(){
@@ -106,12 +107,13 @@ KERNEL_OUT_BASE="${AOSP_ROOT}/out/target/product/hikey/obj"
 
 function build_single_version(){
     local ver=$1 && shift
-    rm -fr ${KERNEL_OUT_BASE}/kernel-${ver}/arch/arm64/boot/Image.gz-dtb
+    rm -fr ${KERNEL_OUT_BASE}/kernel-${ver}/arch/arm64/boot/${KERNEL_TARGET}
     rm -fr ${AOSP_ROOT}/out/target/product/hikey/boot-${ver}.img
     build_kernel "${KERNEL_SRC_BASE}/hisilicon-${ver}" ${KERNEL_OUT_BASE}/kernel-${ver}
-    make_bootimg ${KERNEL_OUT_BASE}/kernel-${ver}/arch/arm64/boot/Image.gz-dtb ${F_RAMDISK} ${AOSP_ROOT}/out/target/product/hikey/boot-${ver}.img
+    make_bootimg ${KERNEL_OUT_BASE}/kernel-${ver}/arch/arm64/boot/${KERNEL_TARGET} ${F_RAMDISK} ${AOSP_ROOT}/out/target/product/hikey/boot-${ver}.img
 }
 
+build_single_version 4.19
 build_single_version 4.14
-#build_single_version 4.9
-#build_single_version 4.4
+build_single_version 4.9
+build_single_version 4.4

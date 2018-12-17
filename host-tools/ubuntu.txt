@@ -1,3 +1,6 @@
+===========================
+Commands to identify for icr:
+/MSG nickserv identify <password>
 == icon path on launcher======
 
 2:32:03 liuyq: sdk_studio$ cat /home/liuyq/./.local/share/applications/jetbrains-studio.desktop
