@@ -101,13 +101,20 @@ PLATFORM_VERSION=Q
 #F_KERNEL="${AOSP_ROOT}/out/target/product/hikey/kernel"
 F_RAMDISK="${AOSP_ROOT}/out/target/product/hikey/ramdisk.img"
 BIN_MKBOOTIMG="${AOSP_ROOT}/out/host/linux-x86/bin/mkbootimg"
-BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime  printk.devkmsg=on overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
 TARGET_BUILD_VARIANT="userdebug"
 VERITY_KEYID=""
 function make_bootimg(){
     local F_KERNEL=$1 && shift
     local F_RAMDISK=$1 && shift
     local F_BOOTIMG=$1 && shift
+    local android_version=$1 && shift
+
+    if ! echo "${android_version}" | grep -q 'android-8\.'; then
+        #BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/system/etc/firmware efi=noruntime  printk.devkmsg=on overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
+        BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/system/etc/firmware efi=noruntime  printk.devkmsg=on"
+    else
+        BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime  printk.devkmsg=on overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
+    fi
 
     local INTERNAL_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} buildvariant=${TARGET_BUILD_VARIANT} ${VERITY_KEYID}"
     local INTERNAL_MKBOOTIMG_VERSION_ARGS="--os_version ${PLATFORM_VERSION} --os_patch_level ${PLATFORM_SECURITY_PATCH}"
@@ -127,18 +134,22 @@ function build_single_version(){
     build_kernel "${KERNEL_SRC_BASE}/hisilicon-${kernel_ver}" ${KERNEL_OUT_BASE}/kernel-${kernel_ver} ${config_path}
     make_bootimg ${KERNEL_OUT_BASE}/kernel-${kernel_ver}/arch/arm64/boot/${KERNEL_TARGET} \
                     ${F_RAMDISK} \
-                    ${AOSP_ROOT}/out/target/product/hikey/boot-${kernel_ver}.img
+                    ${AOSP_ROOT}/out/target/product/hikey/boot-${kernel_ver}.img \
+                    ${android_version}
 }
 
-#build_single_version 4.19 .
-#build_single_version 4.14 .
-#build_single_version 4.9 .
-#build_single_version 4.4 .
+build_single_version 4.19 .
+build_single_version 4.14 .
+build_single_version 4.9 .
+build_single_version 4.4 .
 
-build_single_version 4.14 p
-build_single_version 4.9 p
-build_single_version 4.4 p
+# need to repo sync the master kernel/configs
+#build_single_version 4.14 p
+#build_single_version 4.9 p
+#build_single_version 4.4 p
 
-#build_single_version 4.14 o-mr1
-#build_single_version 4.9 o-mr1
-#build_single_version 4.4 o-mr1
+# need to repo sync the master kernel/configs
+# and the master prebuilts/clang/host/linux-x86
+#build_single_version 4.14 . android-8.1.0_r48
+#build_single_version 4.9 o-mr1 android-8.1.0_r48
+#build_single_version 4.4 o-mr1 android-8.1.0_r48
