@@ -10,9 +10,11 @@ HOST_PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export PATH
 
 AOSP_ROOT=$(cd $(dirname $0)/..; pwd)
+
 function build_kernel(){
-    KERNEL_SRC=$1 && shift
-    KERNEL_OUT=$1 && shift
+    local KERNEL_SRC=$1 && shift
+    local KERNEL_OUT=$1 && shift
+    local CONFIG_FRAGMENTS_PATH=$1 && shift
     mkdir -p ${KERNEL_OUT}
 
     ## ARCH
@@ -35,10 +37,40 @@ function build_kernel(){
     KERNEL_TOOLS_PREFIX=${AOSP_ROOT}/${LINUX_GCC_CROSS_COMPILE_PREBUILTS_BIN}/${CROSS_COMPILE}
 
     PATH=$PATH:${CLANG_PREBUILT_BIN}:${LINUX_GCC_CROSS_COMPILE_PREBUILTS_BIN}
-    CMD_MKCONFIG="${MAKE} -j1 -C ${KERNEL_SRC} -j1 ${KERNEL_VERBOSE} O=${KERNEL_OUT} ARCH=${ARCH} CROSS_COMPILE=${KERNEL_TOOLS_PREFIX} ${DEFCONFIG}"
-    PATH=$PATH:${HOST_PATH} ${CMD_MKCONFIG} 2>&1 | tee ${KERNEL_OUT}/build-mkconfig.log
+    #CMD_MKCONFIG="${MAKE} -j1 -C ${KERNEL_SRC} -j1 ${KERNEL_VERBOSE} O=${KERNEL_OUT} ARCH=${ARCH} CROSS_COMPILE=${KERNEL_TOOLS_PREFIX} ${DEFCONFIG}"
+    #PATH=$PATH:${HOST_PATH} ${CMD_MKCONFIG} 2>&1 | tee ${KERNEL_OUT}/build-mkconfig.log
 
+    ################################# MAKE CONFIG #########
+    possible_configs="android-base.config \
+                      android-base-arm.config \
+                      android-base-arm64.config \
+                      android-recommended.config \
+                      android-recommended-arm.config \
+                      android-recommended-arm64.config \
+                      android-base.cfg \
+                      android-base-arm.cfg \
+                      android-base-arm64.cfg \
+                      android-recommended.cfg \
+                      android-recommended-arm.cfg \
+                      android-recommended-arm64.cfg \
+                      "
 
+    config_str='arch/arm64/configs/hikey_defconfig'
+    configs_dir="${AOSP_ROOT}/kernel/configs"
+    for config in ${possible_configs}; do
+        if [ -f ${configs_dir}/${CONFIG_FRAGMENTS_PATH}/${config} ]; then
+            config_str="${config_str} ${configs_dir}/${CONFIG_FRAGMENTS_PATH}/${config}"
+        fi
+    done
+
+    # set value for KERNEL_MAKE_CONFIG_CMDS
+    cd ${KERNEL_SRC} && KCONFIG_CONFIG=${KERNEL_OUT}/.merged.config ./scripts/kconfig/merge_config.sh -m ${config_str} && cd -
+    make -j1 ${KERNEL_VERBOSE} \
+        -C ${KERNEL_SRC} O=${KERNEL_OUT} \
+        ARCH=${ARCH} CROSS_COMPILE="${KERNEL_TOOLS_PREFIX}" \
+        KCONFIG_ALLCONFIG=${KERNEL_OUT}/.merged.config alldefconfig
+
+    ################################# MAKE KERNEL #########
     TOOLCHAIN_OPT="CROSS_COMPILE=${KERNEL_TOOLS_PREFIX}"
     if ${use_clang}; then
         ABS_CLANG=${AOSP_ROOT}/${CLANG_PREBUILT_BIN}/${CC}
@@ -58,24 +90,6 @@ function build_kernel(){
     PATH=$PATH:${HOST_PATH} ${KERNEL_MAKE_CMDS} 2>&1 | tee ${KERNEL_OUT}/build-kernel.log
 }
 
-
-function merge_kernel_config(){
-    export ARCH=arm64
-    export KERNEL_OUT=/development/android/master/out/target/product/hikey/obj/kernel
-    export KERNEL_SRC=/development/android/master/kernel/linaro/hisilicon
-    export KERNEL_CONFIG="\
-        arch/arm64/configs/hikey_defconfig \
-        configs/android-4.9/android-base.cfg \
-        configs/android-4.9/android-base-arm64.cfg \
-        configs/android-4.9/android-recommended.cfg \
-        "
-    export KCONFIG_CONFIG=${KERNEL_OUT}/.merged.config
-    #cd ${KERNEL_SRC} && ./scripts/kconfig/merge_config.sh -m $(KERNEL_CONFIG) && cd - && make -j1 -C $(KERNEL_SRC) O=$(KERNEL_OUT) ARCH=$(ARCH) KCONFIG_ALLCONFIG=$(KERNEL_OUT)/.merged.config alldefconfig
-    pushd ${KERNEL_SRC}
-    ./scripts/kconfig/merge_config.sh -m ${KERNEL_CONFIG}
-    popd
-    make -j1 -C ${KERNEL_SRC} O=${KERNEL_OUT} ARCH=${ARCH} KCONFIG_ALLCONFIG=${KERNEL_OUT}/.merged.config alldefconfig
-}
 ######################################################################
 ######################################################################
 ## build/make/core/version_defaults.mk
@@ -84,10 +98,9 @@ PLATFORM_VERSION=Q
 #PLATFORM_VERSION=QPR1
 
 
-F_KERNEL="${AOSP_ROOT}/out/target/product/hikey/kernel"
+#F_KERNEL="${AOSP_ROOT}/out/target/product/hikey/kernel"
 F_RAMDISK="${AOSP_ROOT}/out/target/product/hikey/ramdisk.img"
 BIN_MKBOOTIMG="${AOSP_ROOT}/out/host/linux-x86/bin/mkbootimg"
-BOARD_KERNEL_CMDLINE="console=ttyFIQ0 androidboot.console=ttyFIQ0 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab video=HDMI-A-1:1280x720@60 printk.devkmsg=on video=vfb:640x480-32@30 vfb.videomemorysize=3145728"
 BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime  printk.devkmsg=on overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
 TARGET_BUILD_VARIANT="userdebug"
 VERITY_KEYID=""
@@ -106,14 +119,26 @@ KERNEL_SRC_BASE="${AOSP_ROOT}/kernel/linaro"
 KERNEL_OUT_BASE="${AOSP_ROOT}/out/target/product/hikey/obj"
 
 function build_single_version(){
-    local ver=$1 && shift
-    rm -fr ${KERNEL_OUT_BASE}/kernel-${ver}/arch/arm64/boot/${KERNEL_TARGET}
-    rm -fr ${AOSP_ROOT}/out/target/product/hikey/boot-${ver}.img
-    build_kernel "${KERNEL_SRC_BASE}/hisilicon-${ver}" ${KERNEL_OUT_BASE}/kernel-${ver}
-    make_bootimg ${KERNEL_OUT_BASE}/kernel-${ver}/arch/arm64/boot/${KERNEL_TARGET} ${F_RAMDISK} ${AOSP_ROOT}/out/target/product/hikey/boot-${ver}.img
+    local kernel_ver=$1 && shift
+    local android_version=$1 && shift
+    local config_path=${android_version}/android-${kernel_ver}
+    rm -fr ${KERNEL_OUT_BASE}/kernel-${kernel_ver}/arch/arm64/boot/${KERNEL_TARGET}
+    rm -fr ${AOSP_ROOT}/out/target/product/hikey/boot-${kernel_ver}.img
+    build_kernel "${KERNEL_SRC_BASE}/hisilicon-${kernel_ver}" ${KERNEL_OUT_BASE}/kernel-${kernel_ver} ${config_path}
+    make_bootimg ${KERNEL_OUT_BASE}/kernel-${kernel_ver}/arch/arm64/boot/${KERNEL_TARGET} \
+                    ${F_RAMDISK} \
+                    ${AOSP_ROOT}/out/target/product/hikey/boot-${kernel_ver}.img
 }
 
-build_single_version 4.19
-build_single_version 4.14
-build_single_version 4.9
-build_single_version 4.4
+#build_single_version 4.19 .
+#build_single_version 4.14 .
+#build_single_version 4.9 .
+#build_single_version 4.4 .
+
+build_single_version 4.14 p
+build_single_version 4.9 p
+build_single_version 4.4 p
+
+#build_single_version 4.14 o-mr1
+#build_single_version 4.9 o-mr1
+#build_single_version 4.4 o-mr1
