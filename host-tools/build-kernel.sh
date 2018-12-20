@@ -109,8 +109,7 @@ function make_bootimg(){
     local F_BOOTIMG=$1 && shift
     local android_version=$1 && shift
 
-    if ! echo "${android_version}" | grep -q 'android-8\.'; then
-        #BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/system/etc/firmware efi=noruntime  printk.devkmsg=on overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
+    if echo "${android_version}" | grep -q 'o-'; then
         BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/system/etc/firmware efi=noruntime  printk.devkmsg=on"
     else
         BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime  printk.devkmsg=on overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
@@ -138,18 +137,18 @@ function build_single_version(){
                     ${android_version}
 }
 
-build_single_version 4.19 .
-build_single_version 4.14 .
-build_single_version 4.9 .
-build_single_version 4.4 .
+#build_single_version 4.19 .
+#build_single_version 4.14 .
+#build_single_version 4.9 .
+#build_single_version 4.4 .
 
 # need to repo sync the master kernel/configs
 #build_single_version 4.14 p
 #build_single_version 4.9 p
-#build_single_version 4.4 p
+build_single_version 4.4 p
 
 # need to repo sync the master kernel/configs
 # and the master prebuilts/clang/host/linux-x86
-#build_single_version 4.14 . android-8.1.0_r48
-#build_single_version 4.9 o-mr1 android-8.1.0_r48
-#build_single_version 4.4 o-mr1 android-8.1.0_r48
+#build_single_version 4.14 .
+#build_single_version 4.9 o-mr1
+#build_single_version 4.4 o-mr1
