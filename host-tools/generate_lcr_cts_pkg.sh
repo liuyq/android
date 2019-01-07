@@ -2,6 +2,21 @@
 
 PUBLISH_TOKEN=''
 
+cur_dir=$(pwd)
+parent_dir=$(cd $(dirname $0); pwd)
+
+LINARO_PLANS=""
+LINARO_PLANS="${LINARO_PLANS} cts-focused1.xml"
+LINARO_PLANS="${LINARO_PLANS} cts-focused2.xml"
+LINARO_PLANS="${LINARO_PLANS} cts-media.xml"
+LINARO_PLANS="${LINARO_PLANS} cts-media2.xml"
+LINARO_PLANS="${LINARO_PLANS} cts-opengl.xml"
+LINARO_PLANS="${LINARO_PLANS} cts-part1.xml"
+LINARO_PLANS="${LINARO_PLANS} cts-part2.xml"
+LINARO_PLANS="${LINARO_PLANS} cts-part3.xml"
+LINARO_PLANS="${LINARO_PLANS} cts-part4.xml"
+LINARO_PLANS="${LINARO_PLANS} cts-part5.xml"
+
 function prepareCtsDir(){
     local work_dir=$1
     local local_pkg=$2
@@ -52,10 +67,14 @@ function generateLCRCtsPackage(){
         local working_dir=$(mktemp -d -p /tmp/ -d CTS-XXX)
         mkdir ${working_dir}/ref ${working_dir}/src
 
+        ## https://developer.android.com/studio/releases/platform-tools
+        ## https://dl.google.com/android/repository/platform-tools_r28.0.0-linux.zip
         ## https://developer.android.com/studio/releases/build-tools
-        wget https://dl.google.com/android/repository/build-tools_r27.0.3-linux.zip -O ${working_dir}/build-tools_r27.0.3-linux.zip
-        pushd ${working_dir} && unzip ${working_dir}/build-tools_r27.0.3-linux.zip && popd
-        export PATH=${PATH}:${working_dir}/android-8.1.0
+        build_tools_ver="28.0.2"
+        wget https://dl.google.com/android/repository/build-tools_r${build_tools_ver}-linux.zip -O ${working_dir}/build-tools_r${build_tools_ver}-linux.zip
+        pushd ${working_dir} && unzip ${working_dir}/build-tools_r${build_tools_ver}-linux.zip && popd
+        #export PATH=${PATH}:${working_dir}/android-8.1.0
+        export PATH=${PATH}:${working_dir}/android-9
 
         prepareCtsDir "${working_dir}/ref" ${local_ref_pkg}
         prepareCtsDir "${working_dir}/src" "${local_src_pkg}"
@@ -64,11 +83,16 @@ function generateLCRCtsPackage(){
         cp ${working_dir}/src/android-cts/tools/cts-tradefed.jar ${working_dir}/src/cts-tradefed.jar && \
         rm -fr ${working_dir}/src/android-cts
 
-        mkdir -p ${working_dir}/src/android-cts/testcases/ ${working_dir}/src/android-cts/tools
+        mkdir -p ${working_dir}/src/android-cts/testcases/ ${working_dir}/src/android-cts/tools/config
         sed -i '/dEQP-EGL.functional.sharing.gles2.multithread.random.images.copyteximage2d/d' ${working_dir}/src/egl-master.txt > ${working_dir}/src/android-cts/testcases/egl-master.txt
 
-        cd ${working_dir}/ref/android-cts/tools/ && rm -fr config && jar -xf cts-tradefed.jar && mv config ${working_dir}/src/android-cts//tools
-        if ! diff ${working_dir}/ref//modules.sort ${working_dir}/src//modules.sort > ${working_dir}/diff.txt; then
+        cd ${working_dir}/ref/android-cts/tools/ && rm -fr config && jar -xf cts-tradefed.jar
+        for sub_plan in ${LINARO_PLANS}; do
+            mv config/${sub_plan} ${working_dir}/src/android-cts/tools/config/${sub_plan}
+        done
+        cd ${working_dir}
+
+        if ! diff ${working_dir}/ref/modules.sort ${working_dir}/src/modules.sort > ${working_dir}/diff.txt; then
             grep '^>' ${working_dir}/diff.txt|awk '{print $2}' > ${working_dir}/modules-src-only.txt
             grep '^<' ${working_dir}/diff.txt|awk '{print $2}' > ${working_dir}/modules-ref-only.txt
             cd ${working_dir}/src/android-cts//tools/config
@@ -100,10 +124,14 @@ function generateLCRCtsPackage(){
     fi
 }
 
-ref_pkg="/home/yongqin.liu/cts/863/android-cts-863-lcr.zip"
-src_pkg="/home/yongqin.liu/cts/aosp-master-06282018/android-cts-aosp-master-06282018.zip"
-dest_pkg="/home/yongqin.liu/cts/aosp-master-06282018/android-cts-aosp-master-06282018-lcr.zip"
-#generateLCRCtsPackage ${ref_pkg} ${src_pkg} ${dest_pkg}
+ref_pkg="${cur_dir}/android-cts-9.0_r4-linux_x86-arm-linaro.zip"
+src_pkg="${cur_dir}/android-cts-9.0_r5-linux_x86-arm.zip"
+dest_pkg="${cur_dir}/android-cts-9.0_r5-linux_x86-arm-linaro.zip"
+
+generateLCRCtsPackage ${ref_pkg} ${src_pkg} ${dest_pkg}
+#upload_to_s3 "${dest_pkg}" "cts/18.09"
+#upload_build_info_to_s3 "cts/18.09"
+
 
 #upload_to_s3 "${dest_pkg}" "cts/aosp-master"
 #upload_build_info_to_s3 "cts/aosp-master"
