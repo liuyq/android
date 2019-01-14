@@ -4,6 +4,9 @@ img_dir=${1}
 if [ -z "${img_dir}" ]; then
     img_dir="out/target/product/am57xevm"
 fi
+if [ ! -d "${img_dir}" ]; then
+    img_dir="out/target/product/beagle_x15"
+fi
 
 if ! [ -d ${img_dir} ]; then
     echo "The specified path is not a directory:${img_dir}"
@@ -40,7 +43,6 @@ function flash_image(){
 #flash_image boot ${img_dir}/boot.img
 flash_image boot ${img_dir}/boot_fit.img
 flash_image system ${img_dir}/system.img
-flash_image cache ${img_dir}/cache.img
 flash_image userdata ${img_dir}/userdata.img
 flash_image vendor ${img_dir}/vendor.img
 fastboot reboot
