@@ -31,10 +31,10 @@ function flash_image(){
     sleep 5
 }
 
-fastboot erase environment
-fastboot oem format
-flash_image xloader ${img_dir}/MLO
-flash_image bootloader ${img_dir}/u-boot.img
+#fastboot erase environment
+#fastboot oem format
+#flash_image xloader ${img_dir}/MLO
+#flash_image bootloader ${img_dir}/u-boot.img
 #flash_image environment ${img_dir}/am57xx-evm-reva3.dtb
 #flash_image recovery ${img_dir}/recovery.img
 #flash_image boot ${img_dir}/boot.img
@@ -44,3 +44,26 @@ flash_image cache ${img_dir}/cache.img
 flash_image userdata ${img_dir}/userdata.img
 flash_image vendor ${img_dir}/vendor.img
 fastboot reboot
+
+exit 0
+
+reset or fastboot reboot
+=> fastboot 0
+$ fastboot flash xloader MLO
+$ fastboot flash bootloader u-boot.img
+$ fastboot reboot
+=> env default -f -a
+=> setenv partitions $partitions_android
+=> env save
+=> fastboot 1
+$ fastboot oem format
+$ fastboot flash boot boot_fit.img
+$ fastboot flash recovery recovery.img
+$ fastboot flash vendor vendor.img
+$ fastboot flash system system.img
+$ fastboot flash userdata userdata.img
+$ fastboot reboot
+=> setenv bootargs "androidboot.serialno=${serial#} console=ttyS2,115200 androidboot.console=ttyS2 androidboot.hardware=beagle_x15board"
+=> setenv bootargs "androidboot.serialno=${serial#} console=ttyS2,115200 androidboot.console=ttyS2 androidboot.hardware=am57xevmboard"
+=> run findfdt
+=> run emmc_android_boot
