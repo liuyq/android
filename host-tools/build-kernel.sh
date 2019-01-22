@@ -55,6 +55,11 @@ function build_kernel(){
                       android-recommended-arm64.cfg \
                       "
 
+#    possible_configs="android-base.config \
+#                      android-recommended-arm64.config"
+#                      android-recommended.config \
+#    possible_configs=""
+    config_str='arch/arm64/configs/hikey960_defconfig'
     config_str='arch/arm64/configs/hikey_defconfig'
     configs_dir="${AOSP_ROOT}/kernel/configs"
     for config in ${possible_configs}; do
@@ -112,7 +117,12 @@ function make_bootimg(){
     if echo "${android_version}" | grep -q 'o-'; then
         BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/system/etc/firmware efi=noruntime  printk.devkmsg=on"
     else
-        BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime  printk.devkmsg=on overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
+        BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime  printk.devkmsg=on"
+        #BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
+        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab_v2"
+        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} rootwait ro init=/init root=/dev/dm-0"
+        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} dm=\"system none ro,0 1 android-verity 179:9\""
+        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} veritykeyid=id:7e4333f9bba00adfe0ede979e28ed1920492b40f"
     fi
 
     local INTERNAL_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} buildvariant=${TARGET_BUILD_VARIANT} ${VERITY_KEYID}"
@@ -137,15 +147,15 @@ function build_single_version(){
                     ${android_version}
 }
 
-#build_single_version 4.19 .
-#build_single_version 4.14 .
-#build_single_version 4.9 .
+build_single_version 4.19 .
+build_single_version 4.14 .
+build_single_version 4.9 .
 #build_single_version 4.4 .
 
 # need to repo sync the master kernel/configs
 #build_single_version 4.14 p
 #build_single_version 4.9 p
-build_single_version 4.4 p
+#build_single_version 4.4 p
 
 # need to repo sync the master kernel/configs
 # and the master prebuilts/clang/host/linux-x86
