@@ -113,22 +113,45 @@ function make_bootimg(){
     local F_RAMDISK=$1 && shift
     local F_BOOTIMG=$1 && shift
     local android_version=$1 && shift
+    local kernel_version=$1 && shift
 
     if echo "${android_version}" | grep -q 'o-'; then
         BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/system/etc/firmware efi=noruntime  printk.devkmsg=on"
     else
-        BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3 androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime  printk.devkmsg=on"
-        #BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
-        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab_v2"
-        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} rootwait ro init=/init root=/dev/dm-0"
-        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} dm=\"system none ro,0 1 android-verity 179:9\""
-        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} veritykeyid=id:7e4333f9bba00adfe0ede979e28ed1920492b40f"
+        BOARD_KERNEL_CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3"
+        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime"
+        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} init=/init"
+        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} androidboot.boot_devices=soc/f723d000.dwmmc0"
+        BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} printk.devkmsg=on"
+
+        if [ "X${kernel_version}" != "X4.19" ]; then
+
+            if [ "X${android_version}" = "Xp" ]; then
+                BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab"
+            else
+                BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} overlay_mgr.overlay_dt_entry=hardware_cfg_enable_android_fstab_v2"
+                BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} rootwait ro root=/dev/dm-0"
+                BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} dm=\"system none ro,0 1 android-verity 179:9\""
+                BOARD_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} veritykeyid=id:7e4333f9bba00adfe0ede979e28ed1920492b40f"
+            fi
+        fi
     fi
 
     local INTERNAL_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} buildvariant=${TARGET_BUILD_VARIANT} ${VERITY_KEYID}"
     local INTERNAL_MKBOOTIMG_VERSION_ARGS="--os_version ${PLATFORM_VERSION} --os_patch_level ${PLATFORM_SECURITY_PATCH}"
     local BOARD_MKBOOTIMG_ARGS=""
-    ${BIN_MKBOOTIMG}  --kernel ${F_KERNEL} --ramdisk ${F_RAMDISK} --cmdline "${INTERNAL_KERNEL_CMDLINE}" ${INTERNAL_MKBOOTIMG_VERSION_ARGS} ${BOARD_MKBOOTIMG_ARGS}  --output ${F_BOOTIMG}
+    ${BIN_MKBOOTIMG}  --kernel ${F_KERNEL} \
+        --ramdisk ${F_RAMDISK} \
+        --cmdline "${INTERNAL_KERNEL_CMDLINE}" \
+        ${INTERNAL_MKBOOTIMG_VERSION_ARGS} \
+        ${BOARD_MKBOOTIMG_ARGS}  \
+        --output ${F_BOOTIMG}
+    F_BOOTIMG_ANDROID=$(echo ${F_BOOTIMG}|sed 's/.img/-android.img/')
+    ${BIN_MKBOOTIMG}  --kernel ${F_KERNEL}\
+        --ramdisk ${F_RAMDISK} \
+        --cmdline "androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime init=/init androidboot.boot_devices=soc/f723d000.dwmmc0 console=ttyAMA3,115200 androidboot.console=ttyAMA3 printk.devkmsg=on buildvariant=userdebug" \
+        --os_version Q --os_patch_level 2019-01-05 \
+        --output ${F_BOOTIMG_ANDROID}
 }
 
 KERNEL_SRC_BASE="${AOSP_ROOT}/kernel/linaro"
@@ -141,15 +164,18 @@ function build_single_version(){
     rm -fr ${KERNEL_OUT_BASE}/kernel-${kernel_ver}/arch/arm64/boot/${KERNEL_TARGET}
     rm -fr ${AOSP_ROOT}/out/target/product/hikey/boot-${kernel_ver}.img
     build_kernel "${KERNEL_SRC_BASE}/hisilicon-${kernel_ver}" ${KERNEL_OUT_BASE}/kernel-${kernel_ver} ${config_path}
+    #make_bootimg /data/android/aosp/master/device/linaro/hikey-kernel/Image.gz-dtb-4.19 \
     make_bootimg ${KERNEL_OUT_BASE}/kernel-${kernel_ver}/arch/arm64/boot/${KERNEL_TARGET} \
                     ${F_RAMDISK} \
                     ${AOSP_ROOT}/out/target/product/hikey/boot-${kernel_ver}.img \
-                    ${android_version}
+                    "${android_version}" \
+                    "${kernel_ver}"
+
 }
 
 build_single_version 4.19 .
-build_single_version 4.14 .
-build_single_version 4.9 .
+#build_single_version 4.14 .
+#build_single_version 4.9 .
 #build_single_version 4.4 .
 
 # need to repo sync the master kernel/configs
