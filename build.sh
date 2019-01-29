@@ -112,9 +112,10 @@ function build_board_ver(){
 
 export CFG_TEE_SUPP_LOG_LEVEL=3
 #export TARGET_KERNEL_USE=4.14
+export TARGET_KERNEL_USE=4.19
 #export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-4.9
 
-rm -fr out/target/product/hikey/obj/kernel
+#rm -fr out/target/product/hikey/obj/kernel
 #build_board_ver hikey o
 #build_board_ver x15 o
 #build_board_ver hikey p
@@ -125,6 +126,9 @@ build_board_ver hikey master
 #make -j"${CPUS}" vts cts
 
 #source build/envsetup.sh
-#lunch hikey-userdebug
-#make -j"${CPUS}" vts
+#lunch aosp_arm64-userdebug
+#make -j"${CPUS}" vts cts
 #mmm -j"${CPUS}" kernel/tests/net/test
+#source build/envsetup.sh
+#lunch hikey-userdebug
+#make -j"${CPUS}" droidcore

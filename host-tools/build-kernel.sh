@@ -140,18 +140,27 @@ function make_bootimg(){
     local INTERNAL_KERNEL_CMDLINE="${BOARD_KERNEL_CMDLINE} buildvariant=${TARGET_BUILD_VARIANT} ${VERITY_KEYID}"
     local INTERNAL_MKBOOTIMG_VERSION_ARGS="--os_version ${PLATFORM_VERSION} --os_patch_level ${PLATFORM_SECURITY_PATCH}"
     local BOARD_MKBOOTIMG_ARGS=""
-    ${BIN_MKBOOTIMG}  --kernel ${F_KERNEL} \
-        --ramdisk ${F_RAMDISK} \
-        --cmdline "${INTERNAL_KERNEL_CMDLINE}" \
-        ${INTERNAL_MKBOOTIMG_VERSION_ARGS} \
-        ${BOARD_MKBOOTIMG_ARGS}  \
-        --output ${F_BOOTIMG}
-    F_BOOTIMG_ANDROID=$(echo ${F_BOOTIMG}|sed 's/.img/-android.img/')
-    ${BIN_MKBOOTIMG}  --kernel ${F_KERNEL}\
-        --ramdisk ${F_RAMDISK} \
-        --cmdline "androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime init=/init androidboot.boot_devices=soc/f723d000.dwmmc0 console=ttyAMA3,115200 androidboot.console=ttyAMA3 printk.devkmsg=on buildvariant=userdebug" \
-        --os_version Q --os_patch_level 2019-01-05 \
-        --output ${F_BOOTIMG_ANDROID}
+
+    if [ "X${kernel_version}" = "X4.19" ] || echo "${android_version}" | grep -q -e 'o-' -e 'p' ; then
+        ${BIN_MKBOOTIMG}  --kernel ${F_KERNEL} \
+            --ramdisk ${F_RAMDISK} \
+            --cmdline "${INTERNAL_KERNEL_CMDLINE}" \
+            ${INTERNAL_MKBOOTIMG_VERSION_ARGS} \
+            ${BOARD_MKBOOTIMG_ARGS}  \
+            --output ${F_BOOTIMG}
+    else
+        ${BIN_MKBOOTIMG}  --kernel ${F_KERNEL} \
+            --cmdline "${INTERNAL_KERNEL_CMDLINE}" \
+            ${INTERNAL_MKBOOTIMG_VERSION_ARGS} \
+            ${BOARD_MKBOOTIMG_ARGS}  \
+            --output ${F_BOOTIMG}
+    fi
+#    F_BOOTIMG_ANDROID=$(echo ${F_BOOTIMG}|sed 's/.img/-android.img/')
+#    ${BIN_MKBOOTIMG}  --kernel ${F_KERNEL}\
+#        --ramdisk ${F_RAMDISK} \
+#        --cmdline "androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime init=/init androidboot.boot_devices=soc/f723d000.dwmmc0 console=ttyAMA3,115200 androidboot.console=ttyAMA3 printk.devkmsg=on buildvariant=userdebug" \
+#        --os_version Q --os_patch_level 2019-01-05 \
+#        --output ${F_BOOTIMG_ANDROID}
 }
 
 KERNEL_SRC_BASE="${AOSP_ROOT}/kernel/linaro"
@@ -174,8 +183,8 @@ function build_single_version(){
 }
 
 build_single_version 4.19 .
-#build_single_version 4.14 .
-#build_single_version 4.9 .
+build_single_version 4.14 .
+build_single_version 4.9 .
 #build_single_version 4.4 .
 
 # need to repo sync the master kernel/configs
