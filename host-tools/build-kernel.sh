@@ -69,6 +69,7 @@ function build_kernel(){
     done
 
     # set value for KERNEL_MAKE_CONFIG_CMDS
+    cd ${KERNEL_SRC} && make mrproper && cd -
     cd ${KERNEL_SRC} && KCONFIG_CONFIG=${KERNEL_OUT}/.merged.config ./scripts/kconfig/merge_config.sh -m ${config_str} && cd -
     make -j1 ${KERNEL_VERBOSE} \
         -C ${KERNEL_SRC} O=${KERNEL_OUT} \
