@@ -26,6 +26,10 @@ if true; then
     cp -vf kernel/ti/x15/arch/arm/boot/dts/ti/am57xx-evm-reva3.dtbo device/ti/beagle_x15-kernel/4.14/am57xx-evm-reva3.dtbo
 
     KERNEL_PVR_DIR=${X15_KERNEL_DIR}/modules/eurasia_km/eurasiacon/build/linux2/omap_android
+    # defined OUT according to info from modules/eurasia_km/eurasiacon/build/linux2/config/core.m
+    PVR_MODULE_OUT=${X15_KERNEL_DIR}/modules/eurasia_km/eurasiacon/binary2_omap_android_release-liuyq
+    PVRSRVKM_KO_PATH=${PVR_MODULE_OUT}/target_armv7-a/pvrsrvkm.ko
+
     PVR_CROSS_COMPILE=${ANDROID_ROOT}/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-
     cd ${KERNEL_PVR_DIR} && \
         make -j$(nproc) \
@@ -36,10 +40,10 @@ if true; then
              KERNEL_CROSS_COMPILE=${PVR_CROSS_COMPILE} \
              EXCLUDED_APIS="composerhal,camerahal,unittests,sensorhal" \
              BUILD_PROP=${X15_KERNEL_DIR}/modules/eurasia_km/build.prop \
+             OUT=${PVR_MODULE_OUT} \
              KERNELDIR=${X15_KERNEL_DIR} && \
         cd -
-    PVRSRVKM_KO_PATH=modules/eurasia_km/eurasiacon/binary2_omap_android_release/target_armv7-a/pvrsrvkm.ko
-    cp ${X15_KERNEL_DIR}/${PVRSRVKM_KO_PATH} device/ti/beagle_x15-kernel/4.14/pvrsrvkm.ko
+    cp -v ${PVRSRVKM_KO_PATH} device/ti/beagle_x15-kernel/4.14/pvrsrvkm.ko
 
 fi
 
