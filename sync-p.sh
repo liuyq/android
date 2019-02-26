@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 export BASE=$(cd $(dirname $0);pwd)
 
 source ${BASE}/scripts-common/sync-common.sh
@@ -16,43 +16,13 @@ else
     exit 1
 fi
 
-branch="android-9.0.0_r22"
+branch="android-9.0.0_r33"
 
 LOCAL_MANIFEST="git://android-git.linaro.org/platform/manifest.git"
 LOCAL_MANIFEST_BRANCH="linaro-p-preview"
 
 main "$@"
 
-if false; then
-${BASE}/sync-projects.sh  \
-                          frameworks/base \
-                          system/core \
-                          system/sepolicy \
-                          system/bt \
-                          android-patchsets \
-                          android-build-configs \
-                          device/linaro/hikey \
-
-if [ -d kernel/linaro/hisilicon-4.14 ]; then
-    ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.14
-fi
-if [ -d kernel/linaro/hisilicon-4.9 ]; then
-    ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.9
-fi
-if [ -d kernel/linaro/hisilicon-4.4 ]; then
-    ${BASE}/sync-projects.sh kernel/linaro/hisilicon-4.4
-fi
-
-#${BASE}/sync-projects.sh \
-#                        external/libdrm \
-#                        device/ti/beagle-x15 \
-
-${BASE}/sync-projects.sh \
-                        external/optee_client \
-                        external/optee_test \
-                        optee/optee_os \
-
-fi
 #export http_proxy=192.168.0.102:37586
 #export https_proxy=192.168.0.102:37586
 
@@ -65,10 +35,6 @@ fi
 if [ -d kernel/linaro/hisilicon-4.9 ]; then
     func_apply_patch hikey-optee-4.9-new
 fi
-#func_apply_patch OREO-BOOTTIME-OPTIMIZATIONS-HIKEY
-#func_apply_patch x15-p-workarounds
-#func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-X15
-#func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-JUNO
 
 func_apply_patch LIUYQ-PATCHSET
 
