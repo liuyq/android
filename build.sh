@@ -114,8 +114,10 @@ function build_board_ver(){
 #export OUT_DIR=/data/android/aosp/out
 #SCAN_EXCLUDE_DIRS
 #export CFG_TEE_SUPP_LOG_LEVEL=3
-export TARGET_KERNEL_USE=4.19
-export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-4.19
+KERNEL_VER=4.19
+#KERNEL_VER=4.14
+export TARGET_KERNEL_USE=${KERNEL_VER}
+export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-${KERNEL_VER}
 
 rm -fr out/target/product/hikey/obj/kernel
 #build_board_ver hikey o
@@ -124,14 +126,14 @@ rm -fr out/target/product/hikey/obj/kernel
 #build_board_ver x15 p
 #build_board_ver x15 master
 #export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-4.4
-build_board_ver hikey master
 #make -j"${CPUS}" vts cts
 
-source build/envsetup.sh
-lunch aosp_arm64-userdebug
-make -j"${CPUS}" vts cts
+#source build/envsetup.sh
+#lunch aosp_arm64-userdebug
+#make -j"${CPUS}" cts
 #mmm -j"${CPUS}" kernel/tests/net/test
 #source build/envsetup.sh
 #lunch hikey-userdebug
 #make -j"${CPUS}" droidcore
 #make -j"${CPUS}" bootimage
+build_board_ver hikey master
