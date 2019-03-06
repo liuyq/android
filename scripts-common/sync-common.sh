@@ -2,6 +2,7 @@
 export BASE=`pwd`
 export MIRROR="https://android.googlesource.com/platform/manifest"
 repo_url="git://android.git.linaro.org/tools/repo"
+repo_url="/data/android/aosp-mirror/tools/repo.git"
 export base_manifest="default.xml"
 sync_linaro=true
 branch="master"

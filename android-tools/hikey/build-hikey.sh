@@ -117,8 +117,8 @@ function build_android(){
     fi
 }
 
-#build_android
+build_android
 # hack for edid test
 #CMDLINE="${CMDLINE} drm_kms_helper.edid_firmware=edid/2048x1152.bin"
-#build_hikey_bootimg 4.19 "${CMDLINE_4_19}"
+build_hikey_bootimg 4.19 "${CMDLINE_4_19}"
 build_hikey_bootimg 4.14 "${CMDLINE_4_14}"
