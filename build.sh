@@ -36,12 +36,12 @@ function build(){
     if [ -z "${product}" ]; then
         return
     fi
+    date +%Y-%m-%d-%H-%M >>time.log
     source build/envsetup.sh
     lunch ${product}-${variant}
 
     echo "Start to build:" >>time.log
-    date +%Y-%m-%d-%H-%M >>time.log
-    (time LANG=C make ${targets} -j${CPUS} ) 2>&1 |tee build-${product}.log
+    time make -j${CPUS} ${targets}
     date +%Y-%m-%d-%H-%M >>time.log
 }
 
@@ -108,23 +108,31 @@ function build_board_ver(){
     local android_board=${1:-hikey}
     local android_ver=${2:-master}
     export_config lcr-reference-${android_board}-${android_ver}
-    build ${TARGET_PRODUCT}
+    build ${TARGET_PRODUCT} 2>&1 |tee build-${TARGET_PRODUCT}.log
 }
 
 #export OUT_DIR=/data/android/aosp/out
 #SCAN_EXCLUDE_DIRS
 #export CFG_TEE_SUPP_LOG_LEVEL=3
-KERNEL_VER=4.19
 #KERNEL_VER=4.14
+#export TARGET_KERNEL_USE=${KERNEL_VER}
+#rm -fr out/target/product/beagle_x15/obj/kernel-${KERNEL_VER}
+#rm -fr out/target/product/beagle_x15/obj/pvrsrvkm
+#build_board_ver x15 master
+
+KERNEL_VER=4.19
+KERNEL_VER=4.14
 export TARGET_KERNEL_USE=${KERNEL_VER}
 export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-${KERNEL_VER}
-
+export KERNEL_OUT=out/target/product/hikey/obj/kernel-${KERNEL_VER}
 rm -fr out/target/product/hikey/obj/kernel
+rm -fr ${KERNEL_OUT}
+build_board_ver hikey master
+
 #build_board_ver hikey o
 #build_board_ver x15 o
 #build_board_ver hikey p
 #build_board_ver x15 p
-#build_board_ver x15 master
 #export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-4.4
 #make -j"${CPUS}" vts cts
 
@@ -136,4 +144,3 @@ rm -fr out/target/product/hikey/obj/kernel
 #lunch hikey-userdebug
 #make -j"${CPUS}" droidcore
 #make -j"${CPUS}" bootimage
-build_board_ver hikey master

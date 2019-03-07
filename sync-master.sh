@@ -62,7 +62,7 @@ if [ -d kernel/linaro/hisilicon-4.9 ]; then
     func_apply_patch hikey-optee-4.9-new
 fi
 func_apply_patch x15-master-workarounds
-#func_apply_patch x15-master-workarounds-lcr
+func_apply_patch x15-master-workarounds-lcr
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-HIKEY
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-X15
 #func_apply_patch NOUGAT-BOOTTIME-OPTIMIZATIONS-JUNO

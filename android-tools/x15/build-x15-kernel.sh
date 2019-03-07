@@ -88,7 +88,8 @@ function build_x15_kernel_pvr(){
     PVR_MODULE_OUT=${ANDROID_ROOT}/out/target/product/beagle_x15/obj/pvrsrvkm
     PVRSRVKM_KO_PATH=${PVR_MODULE_OUT}/target_armv7-a/pvrsrvkm.ko
 
-    PVR_CROSS_COMPILE=${ANDROID_ROOT}/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-
+    #PVR_CROSS_COMPILE=${ANDROID_ROOT}/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-
+    PVR_CROSS_COMPILE=${KERNEL_CROSS_COMPILE}
     make -j${CPUS} \
              -C ${KERNEL_PVR_DIR} \
              JAVAC=/bin/true \
