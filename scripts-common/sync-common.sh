@@ -82,7 +82,9 @@ func_sync_linaro(){
 
     cd ${BASE}
 
-    cp -uvf liuyq-patches/liuyq.xml .repo/local_manifests/liuyq.xml
+    if [ -f liuyq-patches/liuyq.xml ]; then
+        cp -uvf liuyq-patches/liuyq.xml .repo/local_manifests/liuyq.xml
+    fi
     if [ ! -d android-patchsets ]; then
         mkdir -p android-patchsets
     fi

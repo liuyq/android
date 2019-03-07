@@ -16,7 +16,7 @@ else
     exit 1
 fi
 
-branch="android-9.0.0_r33"
+branch="android-9.0.0_r34"
 
 LOCAL_MANIFEST="git://android-git.linaro.org/platform/manifest.git"
 LOCAL_MANIFEST_BRANCH="linaro-p-preview"
