@@ -42,6 +42,7 @@ flash_image vendor ${img_dir}/vendor.img
 fastboot reboot
 
 exit 0
+http://git.ti.com/cgit/cgit.cgi/ti-u-boot/ti-u-boot.git/tree/board/ti/am65x/README?h=ti-u-boot-2019.01
 https://wiki.linaro.org/Boards/AM65xEVM#Obtaining_and_Building_the_Software
 1. booting from eMMC
     SW2[0:3] = 0000
