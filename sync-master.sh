@@ -54,6 +54,7 @@ fi
 
 func_apply_patch MASTER-RLCR-PATCHSET
 func_apply_patch hikey-master-workarounds
+func_apply_patch hikey960-master-workarounds
 func_apply_patch hikey-optee-master
 if [ -d kernel/linaro/hisilicon-4.14 ]; then
     func_apply_patch hikey-optee-4.14

@@ -119,15 +119,18 @@ function build_board_ver(){
 #rm -fr out/target/product/beagle_x15/obj/kernel-${KERNEL_VER}
 #rm -fr out/target/product/beagle_x15/obj/pvrsrvkm
 #build_board_ver x15 master
+build_board_ver hikey960 master
 
-KERNEL_VER=4.19
-KERNEL_VER=4.14
-export TARGET_KERNEL_USE=${KERNEL_VER}
-export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-${KERNEL_VER}
-export KERNEL_OUT=out/target/product/hikey/obj/kernel-${KERNEL_VER}
-rm -fr out/target/product/hikey/obj/kernel
-rm -fr ${KERNEL_OUT}
-build_board_ver hikey master
+if false; then
+    KERNEL_VER=4.19
+    #KERNEL_VER=4.14
+    export TARGET_KERNEL_USE=${KERNEL_VER}
+    export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-${KERNEL_VER}
+    export KERNEL_OUT=out/target/product/hikey/obj/kernel-${KERNEL_VER}
+    rm -fr out/target/product/hikey/obj/kernel
+    rm -fr ${KERNEL_OUT}
+    build_board_ver hikey master
+fi
 
 #build_board_ver hikey o
 #build_board_ver x15 o
@@ -138,9 +141,13 @@ build_board_ver hikey master
 
 #source build/envsetup.sh
 #lunch aosp_arm64-userdebug
-#make -j"${CPUS}" cts
+#make -j"${CPUS}" vts
 #mmm -j"${CPUS}" kernel/tests/net/test
 #source build/envsetup.sh
 #lunch hikey-userdebug
 #make -j"${CPUS}" droidcore
 #make -j"${CPUS}" bootimage
+
+#source build/envsetup.sh
+#lunch hikey960-userdebug
+#make -j${CPUS} 2>&1 |tee build-hikey960.log
