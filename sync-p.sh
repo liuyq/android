@@ -1,6 +1,8 @@
 #!/bin/bash -x
 export BASE=$(cd $(dirname $0);pwd)
 
+cd ${BASE}
+
 source ${BASE}/scripts-common/sync-common.sh
 
 if [ -d /SATA3/aosp-mirror/platform/manifest.git ]; then
@@ -27,7 +29,10 @@ main "$@"
 #export https_proxy=192.168.0.102:37586
 
 func_apply_patch P-RLCR-PATCHSET
+
+func_apply_patch hikey-hikey960-common-p
 func_apply_patch hikey-p-workarounds
+func_apply_patch hikey960-p-workarounds
 func_apply_patch hikey-optee-p
 if [ -d kernel/linaro/hisilicon-4.14 ]; then
     func_apply_patch hikey-optee-4.14
@@ -37,6 +42,8 @@ if [ -d kernel/linaro/hisilicon-4.9 ]; then
 fi
 
 func_apply_patch LIUYQ-PATCHSET
+func_apply_patch x15-p-workarounds
+func_apply_patch am65x-p-workarounds
 
 #./build.sh
 exit
