@@ -119,7 +119,7 @@ function build_board_ver(){
 #rm -fr out/target/product/beagle_x15/obj/kernel-${KERNEL_VER}
 #rm -fr out/target/product/beagle_x15/obj/pvrsrvkm
 #build_board_ver x15 master
-build_board_ver hikey960 master
+#build_board_ver hikey960 master
 
 if false; then
     KERNEL_VER=4.19
@@ -134,14 +134,15 @@ fi
 
 #build_board_ver hikey o
 #build_board_ver x15 o
-#build_board_ver hikey p
+build_board_ver hikey960 p
+build_board_ver am65x p
 #build_board_ver x15 p
 #export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-4.4
 #make -j"${CPUS}" vts cts
 
 #source build/envsetup.sh
 #lunch aosp_arm64-userdebug
-#make -j"${CPUS}" vts
+#make -j"${CPUS}" cts vts
 #mmm -j"${CPUS}" kernel/tests/net/test
 #source build/envsetup.sh
 #lunch hikey-userdebug
