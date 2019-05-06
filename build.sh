@@ -122,14 +122,16 @@ function build_board_ver(){
 #build_board_ver hikey960 master
 
 if false; then
+    #board=hikey960
+    board=hikey
     KERNEL_VER=4.19
     #KERNEL_VER=4.14
     export TARGET_KERNEL_USE=${KERNEL_VER}
     export TARGET_KERNEL_SOURCE=kernel/linaro/hisilicon-${KERNEL_VER}
-    export KERNEL_OUT=out/target/product/hikey/obj/kernel-${KERNEL_VER}
-    rm -fr out/target/product/hikey/obj/kernel
+    export KERNEL_OUT=out/target/product/${board}/obj/kernel-${KERNEL_VER}
+    rm -fr out/target/product/${board}/obj/kernel
     rm -fr ${KERNEL_OUT}
-    build_board_ver hikey master
+    build_board_ver ${board} master
 fi
 
 #build_board_ver hikey o

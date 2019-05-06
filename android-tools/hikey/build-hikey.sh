@@ -5,6 +5,7 @@ AOSP_ROOT=$(cd $(dirname $0); pwd)
 CPUS=$(nproc)
 
 TOOLCHAIN=clang-r346389c
+TOOLCHAIN=clang-r349610
 
 CMDLINE="console=ttyAMA3,115200 androidboot.console=ttyAMA3"
 CMDLINE="${CMDLINE} androidboot.hardware=hikey firmware_class.path=/vendor/firmware efi=noruntime"
@@ -117,8 +118,9 @@ function build_android(){
     fi
 }
 
-build_android
+#build_android
 # hack for edid test
 #CMDLINE="${CMDLINE} drm_kms_helper.edid_firmware=edid/2048x1152.bin"
-build_hikey_bootimg 4.19 "${CMDLINE_4_19}"
-build_hikey_bootimg 4.14 "${CMDLINE_4_14}"
+#build_hikey_bootimg 4.19 "${CMDLINE_4_19}"
+#build_hikey_bootimg 4.14 "${CMDLINE_4_14}"
+build_hikey_bootimg 4.9 "${CMDLINE_4_9}"
