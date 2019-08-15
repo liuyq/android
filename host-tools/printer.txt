@@ -1,0 +1,21 @@
+# https://www.cups.org/doc/options.html
+
+# 20:12:55 liuyq:lkft$ lpoptions -p Deskjet-2050-J510-series -l
+# PageSize/Media Size: Card4x6 Photo4x6 Photo4x6tab A6 Hagaki Card5x8 Photo2L Oufuku Photo5x7 Photo13x18 A5 6x8 Mutsugiri 8x10 FLSA B5 JB5 Executive Legal Photo10x15 Photo10x15tab *A4 Letter Statement EnvDL EnvC6 EnvC5 EnvCard EnvChou3 Env10 Custom.WIDTHxHEIGHT
+# InputSlot/Media Source: *Auto Main
+# ColorModel/Output Mode: CMYGray KGray *RGB
+# MediaType/Media Type: *Plain Photo
+# OutputMode/Print Quality: FastDraft *Normal Best Photo
+# 20:12:59 liuyq:lkft$
+#lpr -o landscape -o fit-to-page -o media=A4 filename.jpg
+
+#-o print-quality=5
+#    Specifies the output quality - draft (3), normal (4), or best (5).
+
+# lp -o media=Photo4x6,Photo -o ColorModel=RGB -o print-quality=6 filename.jpg
+
+# -o landscape will cause the page 1st printed on the right side
+# lp -n 1 -o print-quality=4  -o outputorder=normal -o number-up=2  -o number-up-layout=lrtb -o page-ranges=2,4 -o page-border=single  -o fit-to-page -o media=A4,plain -o ColorModel=KGray -o page-top=30 -o page-left=25  ~/Documents/DeviceTreeOverlays.pdf
+
+# echo {1..14..2}|tr ' ' ','
+# echo {2..14..2}|tr ' ' ','
