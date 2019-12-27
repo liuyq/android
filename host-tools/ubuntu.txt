@@ -62,3 +62,6 @@ sed -i '/namespace: tlxc/{ N; s/namespace: tlxc\n    connection: lxc/namespace: 
 check the resolution of one machine
 cat /sys/class/graphics/fb0/modes
 =============================
+sudo apt-cache search openjdk
+sudo update-alternatives --config java
+=============================
