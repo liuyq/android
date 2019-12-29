@@ -65,3 +65,14 @@ cat /sys/class/graphics/fb0/modes
 sudo apt-cache search openjdk
 sudo update-alternatives --config java
 =============================
+
+$ sudo apt-get install vsftpd
+$ sudo cat /etc/vsftpd.conf
+anonymous_enable=YES
+anon_root=/home/……/ftp
+no_anon_password=YES
+write_enable=YES
+anon_upload_enable=YES
+anon_mkdir_write_enable=YES
+$ sudo /etc/init.d/vsftpd restart
+=============================
