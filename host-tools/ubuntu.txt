@@ -62,8 +62,9 @@ sed -i '/namespace: tlxc/{ N; s/namespace: tlxc\n    connection: lxc/namespace: 
 check the resolution of one machine
 cat /sys/class/graphics/fb0/modes
 =============================
-sudo apt-cache search openjdk
-sudo update-alternatives --config java
+sudo apt-cache search openjdk  # search if there is any openjdk package we could install with apt-get command
+sudo dpkg -L libjson-c2:amd64  # list the installed filed by package of libjson-c2:amd64
+sudo update-alternatives --config java # update the default java version
 =============================
 
 $ sudo apt-get install vsftpd
