@@ -69,3 +69,16 @@ $ fastboot reboot
 => setenv bootargs "androidboot.serialno=${serial#} console=ttyS2,115200 androidboot.console=ttyS2 androidboot.hardware=am57xevmboard"
 => run findfdt
 => run emmc_android_boot
+
+####
+fastboot flash boot_a boot.img
+fastboot flash boot_b boot.img
+fastboot flash dtbo_a dtbo.img
+fastboot flash dtbo_b dtbo.img
+fastboot flash vbmeta_a vbmeta.img
+fastboot flash vbmeta_b vbmeta.img
+fastboot flash recovery recovery.img
+fastboot flash super super.img
+fastboot flash userdata userdata.img
+fastboot reboot
+
