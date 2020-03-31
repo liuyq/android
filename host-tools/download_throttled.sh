@@ -82,7 +82,7 @@ function download_aosp_master_db845c(){
     unzip otatools.zip ${lpunpack_files}
 
     rm -f super.img userdata.img
-    unzip db845c-img-6346374.zip super.img userdata.img
+    unzip db845c-img-${build_num}.zip super.img userdata.img
 
     rm -f super-raw.img
     ./bin/simg2img super.img super-raw.img
