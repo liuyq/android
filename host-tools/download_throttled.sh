@@ -124,6 +124,20 @@ function download_throttled_copped(){
     download_google_ci_prebuilts ${build_num} "hikey"
     # download_google_ci_prebuilts ${build_num} "beagle_x15"
     cd ${old_pwd}
+
+    for board in hikey hikey960; do
+        cd ${branch}/${build_num}/${board}-userdebug
+
+        local img_files="boot.img system.img vendor.img userdata.img"
+        rm -f ${img_files}
+        unzip ${board}-img-${build_num}.zip ${img_files}
+
+        for f in ${img_files}; do
+            xz -T 0 $f
+        done
+
+        cd -
+   done
 }
 
 function download_android10_gsi(){
@@ -185,8 +199,8 @@ function copy_to_testdata(){
 #download_aosp_master_db845c 6339422
 
 #download_android10_gsi 6337924
-#download_throttled_copped 6345223
-download_aosp_master_db845c 6346374
+download_throttled_copped 6345223
+#download_aosp_master_db845c 6346374
 #download_cts_vts 6346234
 #download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/30/master"
 
