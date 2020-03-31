@@ -68,7 +68,7 @@ function download_aosp_master_db845c(){
     cd ${branch}/${build_num}
     echo "https://ci.android.com/builds/branches/${branch}/grid?head=${build_num}&tail=${build_num}" >url.txt
 
-    #download_google_ci_prebuilts ${build_num} "db845c"
+    download_google_ci_prebuilts ${build_num} "db845c"
 
     cd ${old_pwd}
 
