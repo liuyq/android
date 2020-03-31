@@ -51,15 +51,15 @@ exit 0
 
 reset or fastboot reboot
 => fastboot 0
-$ fastboot flash xloader MLO
-$ fastboot flash bootloader u-boot.img
+$ fastboot flash xloader MLO # flash MLO to the partition
+$ fastboot flash bootloader u-boot.img # flash u-boot.img to the partition
 $ fastboot reboot
-=> env default -f -a
-=> setenv partitions $partitions_android
-=> env save
+=> env default -f -a # load the all the defined environments
+=> setenv partitions $partitions_android # set partitions environment with the value in partitions_android environment
+=> env save # save change on partitions environment
 => fastboot 1
-$ fastboot oem format
-$ fastboot flash boot boot_fit.img
+$ fastboot oem format # recreate the parititons again
+$ fastboot flash boot boot_fit.img # flash other images
 $ fastboot flash recovery recovery.img
 $ fastboot flash vendor vendor.img
 $ fastboot flash system system.img

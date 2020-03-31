@@ -77,3 +77,6 @@ anon_upload_enable=YES
 anon_mkdir_write_enable=YES
 $ sudo /etc/init.d/vsftpd restart
 =============================
+search "desktop sharing" to open the settings application
+use Remmina to access the remote ubuntu host
+=============================
