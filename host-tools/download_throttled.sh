@@ -152,6 +152,12 @@ function download_android10_gsi(){
     download_google_ci_prebuilts ${build_num} "aosp_arm64"
 
     cd ${old_pwd}
+
+    cd ${branch}/${build_num}/aosp_arm64-userdebug
+    rm -fr system.img
+    unzip aosp_arm64-img-${build_num}.zip system.img
+    xz -T 0 system.img
+    cd -
 }
 
 function copy_to_testdata(){
@@ -195,11 +201,11 @@ function copy_to_testdata(){
 #download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/30/master"
 #download_aosp_master_db845c 6339422
 
-#download_android10_gsi 6337924
 #download_throttled_copped 6345223
 #download_aosp_master_db845c 6346374
-#download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/30/master"
-download_vts 6349140
+#download_vts 6349140
+#download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/31/master"
+download_android10_gsi 6337924
 
 
 #copy_to_testdata aosp-master-throttled-copped/6177515
@@ -207,4 +213,4 @@ download_vts 6349140
 #copy_to_testdata aosp-android10-gsi/6177234
 #copy_to_testdata "android/android-cts/aosp-arm64-userdebug/26/master"
 #copy_to_testdata 96boards/dragonboard845c/linaro/aosp-master/209
-copy_to_testdata aosp-master-throttled/6349140
+#copy_to_testdata aosp-master-throttled/6349140
