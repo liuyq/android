@@ -41,23 +41,28 @@ function flash_image(){
 #flash_image environment ${img_dir}/am57xx-evm-reva3.dtb
 #flash_image recovery ${img_dir}/recovery.img
 #flash_image boot ${img_dir}/boot.img
-flash_image boot ${img_dir}/boot_fit.img
-flash_image system ${img_dir}/system.img
+flash_image boot_a ${img_dir}/boot.img
+flash_image boot_b ${img_dir}/boot.img
+flash_image dtbo_a ${img_dir}/dbto.img
+flash_image dtbo_b ${img_dir}/dbto.img
+flash_image vbmeta_a ${img_dir}/vbmeta.img
+flash_image vbmeta_b ${img_dir}/vbmeta.img
+flash_image recovery ${img_dir}/recovery.img
+flash_image super ${img_dir}/super.img
 flash_image userdata ${img_dir}/userdata.img
-flash_image vendor ${img_dir}/vendor.img
 fastboot reboot
 
 exit 0
 
 reset or fastboot reboot
-=> fastboot 0
+=> fastboot 0 # operate on sdcard?
 $ fastboot flash xloader MLO # flash MLO to the partition
 $ fastboot flash bootloader u-boot.img # flash u-boot.img to the partition
 $ fastboot reboot
 => env default -f -a # load the all the defined environments
 => setenv partitions $partitions_android # set partitions environment with the value in partitions_android environment
 => env save # save change on partitions environment
-=> fastboot 1
+=> fastboot 1 # boot from emmc
 $ fastboot oem format # recreate the parititons again
 $ fastboot flash boot boot_fit.img # flash other images
 $ fastboot flash recovery recovery.img
@@ -69,6 +74,7 @@ $ fastboot reboot
 => setenv bootargs "androidboot.serialno=${serial#} console=ttyS2,115200 androidboot.console=ttyS2 androidboot.hardware=am57xevmboard"
 => run findfdt
 => run emmc_android_boot
+=> part list mmc 1 # list partitions for mmc 1
 
 ####
 fastboot flash boot_a boot.img
@@ -82,3 +88,13 @@ fastboot flash super super.img
 fastboot flash userdata userdata.img
 fastboot reboot
 
+# "card voltage select 0" usually means loose connection
+# erase emmc:
+=> mmc dev 1 0
+=> mmc rescan
+=> mmc erase 0 0x400
+=> mmc erase 0 0x4000
+=> mmc erase 0 0x40000
+=> mmc erase 0 0x400000
+# mmc dev 0 is sdcard
+# dev 1 is emmc .
