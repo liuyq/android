@@ -97,18 +97,48 @@ function download_aosp_master_db845c(){
     cd -
 }
 
-function download_throttled(){
+function download_throttled_x15(){
     local build_num=$1 && shift
     local branch=aosp-master-throttled
+    local board="beagle_x15"
 
     mkdir -p ${branch}/${build_num}
     local old_pwd=${PWD}
     cd ${branch}/${build_num}
     echo "https://ci.android.com/builds/branches/${branch}/grid?head=${build_num}&tail=${build_num}" >url.txt
 
-    download_google_ci_prebuilts ${build_num} "beagle_x15"
+    download_google_ci_prebuilts ${build_num} "${board}"
 
     cd ${old_pwd}
+
+    cd ${branch}/${build_num}/${board}-userdebug
+    local url="https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw"
+    download_till_finished ${url}/otatools.zip
+    download_till_finished ${url}/super_misc_info.txt
+    download_till_finished ${url}/build.prop
+
+    lpunpack_files="bin/avbtool bin/lpunpack bin/simg2img lib64/libbase.so lib64/liblog.so lib64/liblp.so lib64/libsparse-host.so lib64/libc++.so lib64/libcrypto-host.so lib64/libcrypto_utils.so lib64/libext4_utils.so lib64/libz-host.so"
+    rm -f ${lpunpack_files}
+    unzip otatools.zip ${lpunpack_files}
+
+    rm -f super.img userdata.img recovery.img
+    unzip ${board}-img-${build_num}.zip super.img userdata.img recovery.img
+
+    rm -f super-raw.img
+    ./bin/simg2img super.img super-raw.img
+
+    rm -f system_a.img system.img vendor_a.img vendor.img
+    ./bin/lpunpack -p system_a -p vendor_a super-raw.img
+    mv -f system_a.img system.img
+    mv -f vendor_a.img vendor.img
+
+    rm -f system.img.xz vendor.img.xz recovery.img.xz
+    for f in system.img vendor.img recovery.img; do
+        xz -T 0 $f
+    done
+
+    rm -f super-raw.img super.img
+    cd -
 }
 
 function download_throttled_copped(){
@@ -205,7 +235,8 @@ function copy_to_testdata(){
 #download_aosp_master_db845c 6346374
 #download_vts 6349140
 #download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/31/master"
-download_android10_gsi 6337924
+#download_android10_gsi 6337924
+download_throttled_x15 6390383
 
 
 #copy_to_testdata aosp-master-throttled-copped/6177515
