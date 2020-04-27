@@ -232,11 +232,11 @@ function copy_to_testdata(){
 #download_aosp_master_db845c 6339422
 
 #download_throttled_copped 6345223
-#download_aosp_master_db845c 6346374
 #download_vts 6349140
 #download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/31/master"
 #download_android10_gsi 6337924
-download_throttled_x15 6390383
+#download_throttled_x15 6390383
+download_aosp_master_db845c 6433458
 
 
 #copy_to_testdata aosp-master-throttled-copped/6177515
