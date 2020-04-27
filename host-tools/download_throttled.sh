@@ -217,31 +217,17 @@ function copy_to_testdata(){
         lkft/aosp-stable/${url_build} \
         --server=https://testdata.linaro.org/
 }
-#download_throttled_copped 6177515
-#download_android10_gsi 6177234
-#download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/26/master"
-#download_linaro_ci_prebuilts "96boards/dragonboard845c/linaro/aosp-master/221"
-
-# 2020-03-03
-#download_throttled_copped 6253847
-#download_android10_gsi 6254317
-#download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/27/master"
-#download_aosp_master_db845c 6269227
-#download_linaro_ci_prebuilts "96boards/dragonboard845c/linaro/aosp-master/229"
-#download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/30/master"
-#download_aosp_master_db845c 6339422
 
 #download_throttled_copped 6345223
 #download_vts 6349140
 #download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/31/master"
-#download_android10_gsi 6337924
 #download_throttled_x15 6390383
-download_aosp_master_db845c 6433458
-
+#download_aosp_master_db845c 6433458
+download_android10_gsi 6429841
 
 #copy_to_testdata aosp-master-throttled-copped/6177515
 #copy_to_testdata aosp-master/6269227/db845c-userdebug
-#copy_to_testdata aosp-android10-gsi/6177234
 #copy_to_testdata "android/android-cts/aosp-arm64-userdebug/26/master"
 #copy_to_testdata 96boards/dragonboard845c/linaro/aosp-master/209
 #copy_to_testdata aosp-master-throttled/6349140
+copy_to_testdata aosp-android10-gsi/6429841
