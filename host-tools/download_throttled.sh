@@ -164,6 +164,7 @@ function download_throttled_copped(){
         unzip ${board}-img-${build_num}.zip ${img_files}
 
         for f in ${img_files}; do
+            rm -f ${f}.xz
             xz -T 0 $f
         done
 
@@ -188,6 +189,30 @@ function download_android10_gsi(){
     rm -fr system.img
     unzip aosp_arm64-img-${build_num}.zip system.img
     xz -T 0 system.img
+    cd -
+}
+
+function download_lkft_aosp_master_x15(){
+    local build_num=$1 && shift
+
+    local target_dir=android/lkft/lkft-aosp-master-x15/${build_num}
+    local base_url=http://snapshots.linaro.org/android/lkft/lkft-aosp-master-x15/${build_num}
+
+    mkdir -p ${target_dir}
+    cd ${target_dir}
+
+    ANDROID_IMAGE_FILES="boot.img dtb.img dtbo.img super.img vbmeta.img userdata.img ramdisk.img ramdisk-debug.img"
+    for img in ${ANDROID_IMAGE_FILES}; do
+        download_till_finished ${base_url}/4.14-${img}
+    done
+    for img in ${ANDROID_IMAGE_FILES}; do
+        download_till_finished ${base_url}/4.19-${img}
+    done
+    for img in ${ANDROID_IMAGE_FILES}; do
+        download_till_finished ${base_url}/aosp-${img}
+    done
+    download_till_finished ${base_url}/u-boot.img
+    download_till_finished ${base_url}/MLO
     cd -
 }
 
@@ -220,11 +245,12 @@ function copy_to_testdata(){
 }
 
 #download_vts 6485479
-#download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/31/master"
+#download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/32/master"
 #download_throttled_x15 6390383
 #download_android10_gsi 6429841
 download_aosp_master_db845c 6485810
 download_throttled_copped 6485711
+#download_lkft_aosp_master_x15 105
 
 copy_to_testdata aosp-master/6485810/db845c-userdebug
 copy_to_testdata aosp-master-throttled-copped/6485711
