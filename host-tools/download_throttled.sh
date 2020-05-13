@@ -88,6 +88,7 @@ function download_aosp_master_db845c(){
     ./bin/simg2img super.img super-raw.img
 
     rm -f product.img system.img system_ext.img vendor.img
+    rm -f product.img.xz system.img.xz system_ext.img.xz vendor.img.xz
     ./bin/lpunpack -p product -p system -p system_ext -p vendor super-raw.img
     for f in product.img system.img system_ext.img vendor.img; do
         xz -T 0 $f
@@ -218,16 +219,15 @@ function copy_to_testdata(){
         --server=https://testdata.linaro.org/
 }
 
-#download_throttled_copped 6345223
-#download_vts 6349140
+#download_vts 6485479
 #download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/31/master"
 #download_throttled_x15 6390383
-#download_aosp_master_db845c 6433458
-download_android10_gsi 6429841
+#download_android10_gsi 6429841
+download_aosp_master_db845c 6485810
+download_throttled_copped 6485711
 
-#copy_to_testdata aosp-master-throttled-copped/6177515
-#copy_to_testdata aosp-master/6269227/db845c-userdebug
+copy_to_testdata aosp-master/6485810/db845c-userdebug
+copy_to_testdata aosp-master-throttled-copped/6485711
 #copy_to_testdata "android/android-cts/aosp-arm64-userdebug/26/master"
-#copy_to_testdata 96boards/dragonboard845c/linaro/aosp-master/209
 #copy_to_testdata aosp-master-throttled/6349140
-copy_to_testdata aosp-android10-gsi/6429841
+#copy_to_testdata aosp-android10-gsi/6429841
