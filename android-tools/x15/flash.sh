@@ -43,8 +43,8 @@ function flash_image(){
 #flash_image boot ${img_dir}/boot.img
 flash_image boot_a ${img_dir}/boot.img
 flash_image boot_b ${img_dir}/boot.img
-flash_image dtbo_a ${img_dir}/dtbo.img
-flash_image dtbo_b ${img_dir}/dtbo.img
+#flash_image dtbo_a ${img_dir}/dtbo.img
+#flash_image dtbo_b ${img_dir}/dtbo.img
 flash_image vbmeta_a ${img_dir}/vbmeta.img
 flash_image vbmeta_b ${img_dir}/vbmeta.img
 flash_image recovery ${img_dir}/recovery.img
