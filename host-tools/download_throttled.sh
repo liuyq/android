@@ -186,7 +186,7 @@ function download_android10_gsi(){
     cd ${old_pwd}
 
     cd ${branch}/${build_num}/aosp_arm64-userdebug
-    rm -fr system.img
+    rm -fr system.img system.img.xz
     unzip aosp_arm64-img-${build_num}.zip system.img
     xz -T 0 system.img
     cd -
@@ -203,13 +203,13 @@ function download_lkft_aosp_master_x15(){
 
     ANDROID_IMAGE_FILES="boot.img dtb.img dtbo.img super.img vbmeta.img userdata.img ramdisk.img ramdisk-debug.img"
     for img in ${ANDROID_IMAGE_FILES}; do
-        download_till_finished ${base_url}/4.14-${img}
+        download_till_finished ${base_url}/4.14-${img}.xz
     done
     for img in ${ANDROID_IMAGE_FILES}; do
-        download_till_finished ${base_url}/4.19-${img}
+        download_till_finished ${base_url}/4.19-${img}.xz
     done
     for img in ${ANDROID_IMAGE_FILES}; do
-        download_till_finished ${base_url}/aosp-${img}
+        download_till_finished ${base_url}/aosp-${img}.xz
     done
     download_till_finished ${base_url}/u-boot.img
     download_till_finished ${base_url}/MLO
@@ -244,16 +244,17 @@ function copy_to_testdata(){
         --server=https://testdata.linaro.org/
 }
 
-#download_vts 6485479
-#download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/32/master"
 #download_throttled_x15 6390383
-#download_android10_gsi 6429841
-download_aosp_master_db845c 6485810
-download_throttled_copped 6485711
-#download_lkft_aosp_master_x15 105
+#download_vts 6524388
+#download_throttled_copped 6524047
+#download_aosp_master_db845c 6524104
+#download_android10_gsi 6508875
+#download_lkft_aosp_master_x15 107
+download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/33/master"
 
-copy_to_testdata aosp-master/6485810/db845c-userdebug
-copy_to_testdata aosp-master-throttled-copped/6485711
+
+#copy_to_testdata aosp-master/6485810/db845c-userdebug
+#copy_to_testdata aosp-master-throttled-copped/6485711
 #copy_to_testdata "android/android-cts/aosp-arm64-userdebug/26/master"
 #copy_to_testdata aosp-master-throttled/6349140
 #copy_to_testdata aosp-android10-gsi/6429841
