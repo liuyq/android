@@ -134,7 +134,7 @@ function download_throttled_x15(){
     mv -f vendor_a.img vendor.img
 
     rm -f system.img.xz vendor.img.xz recovery.img.xz
-    for f in system.img vendor.img recovery.img; do
+    for f in system.img vendor.img recovery.img userdata.img; do
         xz -T 0 $f
     done
 
@@ -201,15 +201,23 @@ function download_lkft_aosp_master_x15(){
     mkdir -p ${target_dir}
     cd ${target_dir}
 
-    ANDROID_IMAGE_FILES="boot.img dtb.img dtbo.img super.img vbmeta.img userdata.img ramdisk.img ramdisk-debug.img"
+    ANDROID_IMAGE_FILES="boot.img dtb.img dtbo.img super.img vbmeta.img userdata.img ramdisk.img ramdisk-debug.img recovery.img"
+    rm -fr 4.14 4.19 aosp
+    mkdir -p 4.14 4.19 aosp
     for img in ${ANDROID_IMAGE_FILES}; do
         download_till_finished ${base_url}/4.14-${img}.xz
+        xz -T0 -k -d 4.14-${img}.xz
+        mv 4.14-${img} 4.14/${img}
     done
     for img in ${ANDROID_IMAGE_FILES}; do
         download_till_finished ${base_url}/4.19-${img}.xz
+        xz -T0 -k -d 4.19-${img}.xz
+        mv 4.19-${img} 4.19/${img}
     done
     for img in ${ANDROID_IMAGE_FILES}; do
         download_till_finished ${base_url}/aosp-${img}.xz
+        xz -T0 -k -d aosp-${img}.xz
+        mv aosp-${img} aosp/${img}
     done
     download_till_finished ${base_url}/u-boot.img
     download_till_finished ${base_url}/MLO
@@ -244,13 +252,13 @@ function copy_to_testdata(){
         --server=https://testdata.linaro.org/
 }
 
-#download_throttled_x15 6390383
+download_throttled_x15 6540005
 #download_vts 6524388
 #download_throttled_copped 6524047
 #download_aosp_master_db845c 6524104
 #download_android10_gsi 6508875
 #download_lkft_aosp_master_x15 107
-download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/33/master"
+#download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/34/master"
 
 
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
