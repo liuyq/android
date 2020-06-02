@@ -1,0 +1,14 @@
+$ ssh -N -L6520:localhost:6520 user@arm64host
+(another terminal)
+$ adb connect 127.0.0.1:6520
+$ adb shell
+
+For vnc:
+
+$ ssh -N -L6444:localhost:6444 user@arm64host
+(another terminal)
+$ java -jar tightvnc-jviewer.jar -host=localhost -port=6444 -showConnectionDialog=no -Encoding=tight -ScalingFactor=100
+
+$ launch_cvd -num_instances=4
+
+https://www.tightvnc.com/download/2.8.3/tvnjviewer-2.8.3-bin-gnugpl.zip
