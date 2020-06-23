@@ -80,3 +80,14 @@ $ sudo /etc/init.d/vsftpd restart
 search "desktop sharing" to open the settings application
 use Remmina to access the remote ubuntu host
 =============================
+
+/etc/apt/sources.list
+=============================
+grub rescue  error: symbol 'grub_file_filters' not found problem with 19.10
+
+create one 19.10 bootable usb drive
+and boot/try ubuntu
+run following command:
+$ sudo mount /dev/sdb1 /mnt
+$ sudo grub-install --root-directory=/mnt /dev/sdb
+=============================
