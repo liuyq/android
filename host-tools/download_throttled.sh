@@ -133,8 +133,8 @@ function download_throttled_x15(){
     mv -f system_a.img system.img
     mv -f vendor_a.img vendor.img
 
-    rm -f system.img.xz vendor.img.xz recovery.img.xz
     for f in system.img vendor.img recovery.img userdata.img; do
+        rm ${f}.xz
         xz -T 0 $f
     done
 

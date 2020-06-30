@@ -48,3 +48,8 @@ android-tools/benchmarks/
 android-build-configs/
 compatibility/
 test
+cuttlefish-modules/
+goldfish-modules/
+common/
+prebuilts-master/
+build.config
