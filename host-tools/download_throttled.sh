@@ -82,7 +82,7 @@ function download_aosp_master_db845c(){
     unzip otatools.zip ${lpunpack_files}
 
     rm -f super.img userdata.img
-    unzip db845c-img-${build_num}.zip super.img userdata.img
+    unzip db845c-img-${build_num}.zip super.img userdata.img boot.img
 
     rm -f super-raw.img
     ./bin/simg2img super.img super-raw.img
@@ -94,7 +94,7 @@ function download_aosp_master_db845c(){
         xz -T 0 $f
     done
 
-    rm -f super-raw.img super.img
+    rm -f super-raw.img
     cd -
 }
 
@@ -252,10 +252,10 @@ function copy_to_testdata(){
         --server=https://testdata.linaro.org/
 }
 
-download_throttled_x15 6540005
+#download_throttled_x15 6540005
 #download_vts 6524388
 #download_throttled_copped 6524047
-#download_aosp_master_db845c 6524104
+download_aosp_master_db845c 6638446
 #download_android10_gsi 6508875
 #download_lkft_aosp_master_x15 107
 #download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/34/master"
