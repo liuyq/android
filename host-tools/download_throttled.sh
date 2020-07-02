@@ -254,8 +254,8 @@ function copy_to_testdata(){
 
 #download_throttled_x15 6540005
 #download_vts 6524388
-#download_throttled_copped 6524047
-download_aosp_master_db845c 6638446
+download_throttled_copped 6640860
+#download_aosp_master_db845c 6638446
 #download_android10_gsi 6508875
 #download_lkft_aosp_master_x15 107
 #download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/34/master"
