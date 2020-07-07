@@ -256,7 +256,7 @@ function copy_to_testdata(){
 #download_vts 6657004
 #download_throttled_copped 6640860
 #download_aosp_master_db845c 6638446
-#download_android10_gsi 6508875
+download_android10_gsi 6643609
 #download_lkft_aosp_master_x15 107
 #download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/34/master"
 
@@ -264,5 +264,5 @@ function copy_to_testdata(){
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
 #copy_to_testdata aosp-master-throttled-copped/6485711
 #copy_to_testdata "android/android-cts/aosp-arm64-userdebug/26/master"
-copy_to_testdata aosp-master-throttled/6657004
-#copy_to_testdata aosp-android10-gsi/6429841
+#copy_to_testdata aosp-master-throttled/6657004
+#copy_to_testdata aosp-android10-gsi/6643609
