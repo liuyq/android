@@ -40,7 +40,7 @@ function download_google_ci_prebuilts(){
     cd ${old_pwd}
 }
 
-function download_vts(){
+function download_vts_cts(){
     local build_num=$1 && shift
     local branch="aosp-master-throttled"
     local dir_target="${branch}/${build_num}/test_suites_arm64"
@@ -53,6 +53,7 @@ function download_vts(){
 
     #download_till_finished ${url}/android-cts.zip
     download_till_finished ${url}/android-vts.zip
+    download_till_finished ${url}/android-cts.zip
     download_till_finished ${url}/manifest_${build_num}.xml
     cp manifest_${build_num}.xml pinned-manifest.xml
 
@@ -252,13 +253,11 @@ function copy_to_testdata(){
         --server=https://testdata.linaro.org/
 }
 
-#download_throttled_x15 6657004
-#download_vts 6657004
-#download_throttled_copped 6640860
-#download_aosp_master_db845c 6638446
-download_android10_gsi 6643609
-#download_lkft_aosp_master_x15 107
-#download_linaro_ci_prebuilts "android/android-cts/aosp-arm64-userdebug/34/master"
+download_throttled_x15 6708474
+download_vts_cts 6708474
+download_throttled_copped 6710602
+download_aosp_master_db845c 6710609
+download_android10_gsi 6704824
 
 
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
