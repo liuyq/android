@@ -253,8 +253,8 @@ function copy_to_testdata(){
         --server=https://testdata.linaro.org/
 }
 
-download_throttled_x15 6708474
-download_vts_cts 6708474
+download_throttled_x15 6713931
+download_vts_cts 6713931
 download_throttled_copped 6710602
 download_aosp_master_db845c 6710609
 download_android10_gsi 6704824
