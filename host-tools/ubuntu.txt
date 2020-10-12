@@ -79,6 +79,16 @@ $ sudo /etc/init.d/vsftpd restart
 =============================
 search "desktop sharing" to open the settings application
 use Remmina to access the remote ubuntu host
+
+# using xrdp service to access ubuntu desktop remotely
+sudo apt update
+sudo apt install ubuntu-desktop # or sudo apt install xubuntu-desktop
+sudo apt install xrdp
+sudo systemctl status xrdp
+sudo adduser xrdp ssl-cert
+sudo systemctl restart xrdp
+vi /etc/xrdp/xrdp.ini
+sudo ufw allow from 192.168.33.0/24 to any port 3389 # or sudo ufw allow 3389
 =============================
 
 /etc/apt/sources.list
@@ -106,3 +116,17 @@ done
 # reduce video size with ffmpeg
 # ffmpeg -i VID_20200814_104245-new.mp4 -b 4420k -s 480x270 VID_20200814_104245-new-480.mp4
 =============================
+https://www.expressvpn.com/support/troubleshooting/set-dns-servers-for-linux/
+sudo apt-get install resolvconf
+sudo cat /etc/resolvconf/resolv.conf.d/base
+    nameserver 8.8.8.8
+    nameserver 8.8.4.4
+If Google DNS is blocked for you, please try:
+        Neustar DNS Advantage (156.154.70.1 and 156.154.71.1),
+        Level3 DNS (4.2.2.1 and 4.2.2.2)
+sudo mv /etc/resolv.conf /etc/resolv.conf.backup
+sudo ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
+sudo resolvconf -u
+sudo /etc/init.d/networking restart
+=============================
+
