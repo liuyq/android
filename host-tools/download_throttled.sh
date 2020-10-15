@@ -83,7 +83,7 @@ function download_aosp_master_db845c(){
     unzip otatools.zip ${lpunpack_files}
 
     rm -f super.img userdata.img
-    unzip db845c-img-${build_num}.zip super.img userdata.img boot.img
+    unzip db845c-img-${build_num}.zip super.img userdata.img boot.img cache.img
 
     rm -f super-raw.img
     ./bin/simg2img super.img super-raw.img
@@ -154,7 +154,6 @@ function download_throttled_copped(){
 
     download_google_ci_prebuilts ${build_num} "hikey960"
     download_google_ci_prebuilts ${build_num} "hikey"
-    # download_google_ci_prebuilts ${build_num} "beagle_x15"
     cd ${old_pwd}
 
     for board in hikey hikey960; do
@@ -253,11 +252,11 @@ function copy_to_testdata(){
         --server=https://testdata.linaro.org/
 }
 
-download_aosp_master_db845c 6831914
-download_throttled_x15 6832201
-download_throttled_copped 6832107
-download_android10_gsi 6821766
-download_vts_cts 6832201
+download_aosp_master_db845c 6906746
+#download_throttled_x15 6832201
+download_throttled_copped 6905322
+#download_android10_gsi 6821766
+download_vts_cts 6906440
 
 
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
