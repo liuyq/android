@@ -38,4 +38,5 @@ function flash_image(){
 flash_image boot ${img_dir}/boot.img
 flash_image super ${img_dir}/super.img
 flash_image userdata ${img_dir}/userdata.img
+flash_image cache ${img_dir}/cache.img
 fastboot reboot
