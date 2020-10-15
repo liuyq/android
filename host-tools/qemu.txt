@@ -1,4 +1,13 @@
-udo qemu-system-x86_64 -m 20480 -hda winxp2.img -smp cores=4 -cpu host -enable-kvm -machine accel=kvm:tcg -usb -usbdevice host:0b95:772b  -usb -usbdevice host:148f:760b -net user -net nic,model=rtl8139
+https://mudongliang.github.io/2017/09/27/how-to-install-qemu-kvm-qemu-kvm-and-gui-virt-manager-in-ubuntu.html
+sudo apt-get install qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
+E: Package 'libvirt-bin' has no installation candidate
+E: Unable to locate package ubuntu-vm-builder
+
+sudo apt install qemu-utils qemu-system-x86
+
+qemu-system-x86_64 -m 10240 -hda ubuntu2004.img -smp cores=4 -cpu host -enable-kvm -machine accel=kvm:tcg -cdrom winxp_nec.iso -boot d
+
+sudo qemu-system-x86_64 -m 20480 -hda winxp2.img -smp cores=4 -cpu host -enable-kvm -machine accel=kvm:tcg -usb -usbdevice host:0b95:772b  -usb -usbdevice host:148f:760b -net user -net nic,model=rtl8139
 1:37:14 liuyq: test-definitions$ sudo  dpkg -S /usr/bin/qemu-system-x86_64
 qemu-system-x86: /usr/bin/qemu-system-x86_64
 01:37:43 liuyq: test-definitions$
@@ -12,8 +21,8 @@ qemu-system-x86_64 -machine accel=kvm:tcg -m 512 -nographic -net nic,macaddr=DE:
 https://en.wikibooks.org/wiki/QEMU/Images
 
 1. qemu-img create -f qcow2 winxp.img 3G
-   qemu-img create -f qcow2 ubunt1404.img 20G
-   qemu-system-x86_64 -m 1024 -hda winxp.img -cdrom winxp_nec.iso -boot d
+   qemu-img create -f qcow2 ubuntu1404.img 20G
+   qemu-system-x86_64 -m 10240 -hda winxp.img -cdrom winxp_nec.iso -boot d
    Or
    qemu-system-x86_64 -m 256 -hda winxp.img -cdrom /dev/cdrom -boot d
 
