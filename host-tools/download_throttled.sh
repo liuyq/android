@@ -172,9 +172,19 @@ function download_throttled_copped(){
    done
 }
 
+function download_android11_gsi(){
+    local build_num=$1 && shift
+    download_gsi "aosp-android11-gsi" ${build_num}
+}
+
 function download_android10_gsi(){
     local build_num=$1 && shift
-    local branch=aosp-android10-gsi
+    download_gsi "aosp-android10-gsi" ${build_num}
+}
+
+function download_gsi(){
+    local branch=$1 && shift
+    local build_num=$1 && shift
 
     mkdir -p ${branch}/${build_num}
     local old_pwd=${PWD}
@@ -252,11 +262,11 @@ function copy_to_testdata(){
         --server=https://testdata.linaro.org/
 }
 
-download_aosp_master_db845c 6906746
+#download_aosp_master_db845c 6906746
 #download_throttled_x15 6832201
-download_throttled_copped 6905322
-#download_android10_gsi 6821766
-download_vts_cts 6906440
+#download_throttled_copped 6905322
+download_android11_gsi 6907610
+#download_vts_cts 6906440
 
 
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
