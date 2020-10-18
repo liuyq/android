@@ -129,4 +129,18 @@ sudo ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
 sudo resolvconf -u
 sudo /etc/init.d/networking restart
 =============================
+samba:
 
+when check the samba log file, like /var/log/samba/log.laptop
+following errors are reported:
+    process_usershare_file: stat of /var/lib/samba/usershares/incoming failed. Permission denied
+
+http://www.voidcn.com/article/p-shjiojjj-bva.html
+原因是Samba不会将用户与系统同步.
+这解决了我的问题,在Kubuntu 14.10：
+    sudo apt-get install libpam-smbpass
+    sudo service samba restart
+
+如果您不想与PAM同步用户,只需将用户添加到Samba的密码数据库：
+    sudo smbpasswd -a <user>
+之后,用户将能够在Samba机器上打开共享文件夹.
