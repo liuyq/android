@@ -269,10 +269,11 @@ function copy_to_testdata(){
 #download_vts_cts 6906440
 #download_linaro_ci_prebuilts android/lkft/hikey960/16
 #download_linaro_ci_prebuilts android/lkft/db845c/21
-download_linaro_ci_prebuilts android/lkft/x15/14
-download_linaro_ci_prebuilts android/lkft/hikey960/8
-download_linaro_ci_prebuilts android/lkft/db845c/7
-download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/304
+#download_linaro_ci_prebuilts android/lkft/x15/14
+#download_linaro_ci_prebuilts android/lkft/hikey960/8
+#download_linaro_ci_prebuilts android/lkft/db845c/7
+download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/304/android-vts-11.0_r1
+download_linaro_ci_prebuilts android/android-cts/aosp-arm64-userdebug/38/android-cts-11.0_r1
 
 
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
