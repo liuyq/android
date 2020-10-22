@@ -13,12 +13,12 @@ function download_linaro_ci_prebuilts(){
     local url_build=$1 && shift
     local f_list="list.html"
     local url_snapshots="https://snapshots.linaro.org/"
-    wget "https://snapshots.linaro.org/${url_build}" -O ${f_list}
-
-    url_files=$(grep "<a href=\"/${url_build}/" ${f_list} |cut -d\" -f2|grep -v "/$")
 
     mkdir -p ${url_build}
     cd ${url_build}
+    wget "https://snapshots.linaro.org/${url_build}" -O ${f_list}
+    url_files=$(grep "<a href=\"/${url_build}/" ${f_list} |cut -d\" -f2|grep -v "/$")
+
     for url_f in ${url_files}; do
        download_till_finished "${url_snapshots}/${url_f}"
     done
@@ -265,8 +265,14 @@ function copy_to_testdata(){
 #download_aosp_master_db845c 6906746
 #download_throttled_x15 6832201
 #download_throttled_copped 6905322
-download_android11_gsi 6907610
+#download_android11_gsi 6907610
 #download_vts_cts 6906440
+#download_linaro_ci_prebuilts android/lkft/hikey960/16
+#download_linaro_ci_prebuilts android/lkft/db845c/21
+download_linaro_ci_prebuilts android/lkft/x15/14
+download_linaro_ci_prebuilts android/lkft/hikey960/8
+download_linaro_ci_prebuilts android/lkft/db845c/7
+download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/304
 
 
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
