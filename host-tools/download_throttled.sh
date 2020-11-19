@@ -61,8 +61,20 @@ function download_vts_cts(){
 }
 
 function download_aosp_master_db845c(){
-    local build_num=$1 && shift
     local branch="aosp-master"
+    local build_num=$1 && shift
+    download_google_db845c "${branch}" "${build_num}"
+}
+
+function download_android11_gsi_db845c(){
+    local branch="aosp-android11-gsi"
+    local build_num=$1 && shift
+    download_google_db845c "${branch}" "${build_num}"
+}
+
+function download_google_db845c(){
+    local branch="$1" && shift
+    local build_num=$1 && shift
 
     mkdir -p ${branch}/${build_num}
     local old_pwd=${PWD}
@@ -89,10 +101,14 @@ function download_aosp_master_db845c(){
     ./bin/simg2img super.img super-raw.img
 
     rm -f product.img system.img system_ext.img vendor.img
-    rm -f product.img.xz system.img.xz system_ext.img.xz vendor.img.xz
     ./bin/lpunpack -p product -p system -p system_ext -p vendor super-raw.img
-    for f in product.img system.img system_ext.img vendor.img; do
+    for f in super.img product.img system.img system_ext.img vendor.img; do
+        rm -f ${f}.xz
         xz -T 0 $f
+    done
+    for f in userdata.img cache.img; do
+        rm -f ${f}.xz
+        xz -k -T 0 $f
     done
 
     rm -f super-raw.img
@@ -263,13 +279,14 @@ function copy_to_testdata(){
 }
 
 #download_aosp_master_db845c 6906746
+download_android11_gsi_db845c 6982659
 #download_throttled_x15 6832201
-#download_throttled_copped 6922500
+#download_throttled_copped 6976423
 #download_android11_gsi 6907610
 #download_vts_cts 6906440
 #download_linaro_ci_prebuilts android/lkft/hikey960/16
 #download_linaro_ci_prebuilts android/lkft/db845c/21
-download_linaro_ci_prebuilts android/lkft/x15/25
+#download_linaro_ci_prebuilts android/lkft/x15/25
 #download_linaro_ci_prebuilts android/lkft/hikey960/8
 #download_linaro_ci_prebuilts android/lkft/db845c/24
 #download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/304/android-vts-11.0_r1
