@@ -280,9 +280,9 @@ function copy_to_testdata(){
 
 #download_aosp_master_db845c 6906746
 download_android11_gsi_db845c 6982659
+download_android11_gsi 6982659
 #download_throttled_x15 6832201
 #download_throttled_copped 6976423
-#download_android11_gsi 6907610
 #download_vts_cts 6906440
 #download_linaro_ci_prebuilts android/lkft/hikey960/16
 #download_linaro_ci_prebuilts android/lkft/db845c/21
