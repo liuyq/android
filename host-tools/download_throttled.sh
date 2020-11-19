@@ -281,7 +281,7 @@ function copy_to_testdata(){
 function download_google_release_cts(){
     local tag="android-cts-11.0_r2"
     local url="https://dl.google.com/dl/android/cts/${tag}-linux_x86-arm.zip"
-    local target_dir="google/released-cts"
+    local target_dir="google-released-cts"
     mkdir -p ${target_dir}
     cd ${target_dir}
     download_till_finished ${url}
