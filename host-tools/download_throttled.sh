@@ -281,10 +281,11 @@ function copy_to_testdata(){
 function download_google_release_cts(){
     local tag="${1}" && shift
     local url="https://dl.google.com/dl/android/cts/${tag}-linux_x86-arm.zip"
-    local target_dir="google-released-cts"
+    local target_dir="google-released-cts/${tag}"
     mkdir -p ${target_dir}
     cd ${target_dir}
     download_till_finished ${url}
+    mv ${tag}-linux_x86-arm.zip android-cts.zip
     cd -
 }
 
@@ -298,9 +299,9 @@ function download_google_release_cts(){
 ########## download android11 images ########
 #download_android11_gsi_db845c 6982659
 #download_android11_gsi 6982659
-#download_google_release_cts android-cts-11_r2
+download_google_release_cts android-cts-11_r2
 #download_linaro_ci_prebuilts android/lkft/db845c/24
-download_linaro_ci_prebuilts android/lkft/hikey960/26
+#download_linaro_ci_prebuilts android/lkft/hikey960/26
 #download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/304/android-vts-11.0_r1
 #download_linaro_ci_prebuilts android/android-cts/aosp-arm64-userdebug/38/android-cts-11.0_r1
 
