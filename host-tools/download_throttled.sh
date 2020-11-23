@@ -299,11 +299,14 @@ function download_google_release_cts(){
 ########## download android11 images ########
 #download_android11_gsi_db845c 6982659
 #download_android11_gsi 6982659
-download_google_release_cts android-cts-11_r2
+#download_google_release_cts android-cts-11_r2
 #download_linaro_ci_prebuilts android/lkft/db845c/24
 #download_linaro_ci_prebuilts android/lkft/hikey960/26
-download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/305/android-vts-11.0_r2
+#download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/305/android-vts-11.0_r2
 #download_linaro_ci_prebuilts android/android-cts/aosp-arm64-userdebug/38/android-cts-11.0_r1
+
+########## download android10 images ########
+download_android10_gsi 6989986
 
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
 #copy_to_testdata aosp-master-throttled-copped/6485711
