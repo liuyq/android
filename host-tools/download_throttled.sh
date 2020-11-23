@@ -284,6 +284,7 @@ function download_google_release_cts(){
     local target_dir="google-released-cts/${tag}"
     mkdir -p ${target_dir}
     cd ${target_dir}
+    echo ${url} >url.txt
     download_till_finished ${url}
     mv ${tag}-linux_x86-arm.zip android-cts.zip
     cd -
