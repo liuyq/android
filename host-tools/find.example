@@ -5,3 +5,4 @@ find hardware/ -name Android.mk -exec sed -i '/^LOCAL_ARM_MODE := arm/d'  \{\} \
 find packages/apps/ -name Android.mk -exec sed -i '/^LOCAL_ARM_MODE := arm/d'  \{\} \;
 find external/ -name Android.mk -exec sed -i '/^LOCAL_ARM_MODE := arm/d'  \{\} \;
 find external/libvpx/ -name '*.mk' -exec sed -i '/LOCAL_ARM_MODE := arm/d'  \{\} \;
+find ./ -name *.rej -type f -exec rm -v \{\} \;

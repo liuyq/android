@@ -53,3 +53,6 @@ goldfish-modules/
 common/
 prebuilts-master/
 build.config
+common-modules
+hikey-modules
+hikey-modules-linaro
