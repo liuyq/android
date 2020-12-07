@@ -107,3 +107,10 @@ http://www.ti.com/product/AM5728/datasheet
         PART NUMBER PACKAGE BODY SIZE
         AM5728  FCBGA (760) 23.0 mm × 23.0 mm
         AM5726  FCBGA (760) 23.0 mm × 23.0 mm
+
+
+OMAP (Open Multimedia Applications Platform)
+https://en.wikipedia.org/wiki/OMAP
+
+Sitara ARM Processor:
+https://en.wikipedia.org/wiki/Sitara_ARM_Processor
