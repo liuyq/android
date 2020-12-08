@@ -164,3 +164,6 @@ http://www.voidcn.com/article/p-shjiojjj-bva.html
     sudo smbpasswd -a <user>
 之后,用户将能够在Samba机器上打开共享文件夹.
 =============================
+/etc/sudoers
+%sudo   ALL=(ALL:ALL) NOPASSWD: ALL
+=============================
