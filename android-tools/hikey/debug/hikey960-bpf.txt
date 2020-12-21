@@ -1,0 +1,113 @@
+1. error reported by vts_kernel_net_tests bpf_test.BpfTest
+    ======================================================================
+    ERROR: testRdOnlyMap (bpf_test.BpfTest)
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+      File "/data/local/tmp/vts_kernel_net_tests/kernel_net_tests_bin/bpf_test.py", line 216, in testRdOnlyMap
+        TOTAL_ENTRIES, map_flags=BPF_F_RDONLY)
+      File "/data/local/tmp/vts_kernel_net_tests/kernel_net_tests_bin/bpf.py", line 190, in CreateMap
+        return BpfSyscall(BPF_MAP_CREATE, attr)
+      File "/data/local/tmp/vts_kernel_net_tests/kernel_net_tests_bin/bpf.py", line 185, in BpfSyscall
+        csocket.MaybeRaiseSocketError(ret)
+      File "/data/local/tmp/vts_kernel_net_tests/kernel_net_tests_bin/csocket.py", line 109, in MaybeRaiseSocketError
+        raise socket.error(errno, os.strerror(errno))
+    error: [Errno 1] Operation not permitted
+
+    ======================================================================
+
+2. how to reproduce
+    build the vts_kernel_net_tests binary for debugging, and run kernel_net_tests locally
+        $ ./android-vts/tools/vts-tradefed run commandAndExit -m vts_kernel_net_tests.
+    or
+        $ source build/envsetup.sh
+        $ lunch aosp_arm64-userdebug
+        $ mmm kernel/tests/net/test
+        $ adb root # the test needs to be run with root permission
+        # push files to device
+        $ adb push android-vts/testcases/vts_kernel_net_tests/arm64/kernel_net_tests_bin /data/local/tmp/kernel_net_tests_bin_64
+        # run test on the device side, the single test unit could be specified
+        $ adb shell /data/local/tmp/kernel_net_tests_bin_64 bpf_test.BpfTest
+
+        or use the out/target/product/generic_arm64/data/nativetest/vts_kernel_net_tests/kernel_net_tests_bin file for the 32bit test.
+
+3. bpf_test.BpfTest in the test tree
+    https://cs.android.com/android/platform/superproject/+/master:kernel/tests/net/test/bpf_test.py
+
+4. bpf related files in the kernel tree
+    based on kernel android12-5.4
+
+    * kernel/bpf/syscall.c
+    * include/linux/bpf_types.h
+    * kernel/bpf/hashtab.c
+
+4.1 kernel/bpf/syscall.c
+
+    defines all the system calls, like BPF_MAP_CREATE:
+    which is impletmented by the map_create function
+
+    BPF suppor many types of memory allocation, find_and_alloc_map is called
+    when allocate the memory for bpf related operations,
+    according to the supported types defined by bpf_map_types:
+
+        static const struct bpf_map_ops * const bpf_map_types[] = {
+        #define BPF_PROG_TYPE(_id, _name, prog_ctx_type, kern_ctx_type)
+        #define BPF_MAP_TYPE(_id, _ops) \
+            [_id] = &_ops,
+        #include <linux/bpf_types.h>
+        #undef BPF_PROG_TYPE
+        #undef BPF_MAP_TYPE
+        };
+
+    bpf_map_charge_init
+        -> bpf_charge_memlock
+
+    bpf_charge_memlock
+        will check the value set by setrlimit memlock command,
+        if the pages required is bigger than that, then -EPERM will be returned
+
+        static int bpf_charge_memlock(struct user_struct *user, u32 pages)
+        {
+            unsigned long memlock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+
+            if (atomic_long_add_return(pages, &user->locked_vm) > memlock_limit) {
+                atomic_long_sub(pages, &user->locked_vm);
+                return -EPERM;
+            }
+            return 0;
+        }
+
+4.2 include/linux/bpf_types.h
+    defines for bpf_map_types, like
+
+    BPF_MAP_TYPE(BPF_MAP_TYPE_HASH_OF_MAPS, htab_of_maps_map_ops)
+
+4.3 memory allocation related files, like kernel/bpf/hashtab.c
+
+    defines bpf_map_ops for different memory allocation types
+    different kernel versions might have different fields,
+    but in general it's similar
+
+    like the variant of htab_map_ops is a type of bpf_map_ops type,
+    defined in as following:
+
+        const struct bpf_map_ops htab_map_ops = {
+            .map_alloc_check = htab_map_alloc_check,
+            .map_alloc = htab_map_alloc,
+            .map_free = htab_map_free,
+            .map_get_next_key = htab_map_get_next_key,
+            .map_lookup_elem = htab_map_lookup_elem,
+            .map_update_elem = htab_map_update_elem,
+            .map_delete_elem = htab_map_delete_elem,
+            .map_gen_lookup = htab_map_gen_lookup,
+            .map_seq_show_elem = htab_map_seq_show_elem,
+        };
+
+    htab_map_alloc
+        -> bpf_map_charge_init in kernel/bpf/syscall.c
+
+5. Misc
+    with the following commit in 5.10, it is changed to use memcg based memory check
+
+        80ee81e0403c48f4eb342f7c8d40477c89b8836a
+        bpf: Eliminate rlimit-based memory accounting infra for bpf maps
+    so "setrlimit memlock" is not required any more for 5.10 kernels and later
