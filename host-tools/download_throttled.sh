@@ -291,23 +291,23 @@ function download_google_release_cts(){
 }
 
 ########## download aosp master images ########
-download_aosp_master_db845c 7056960
-#download_throttled_x15 6832201
-download_linaro_ci_prebuilts android/lkft/x15/34
-download_throttled_copped 7056988
-download_vts_cts 7056913
+#download_aosp_master_db845c 7056960
+#download_throttled_x15 7056913
+download_linaro_ci_prebuilts android/lkft/x15/36
+#download_throttled_copped 7056988
+#download_vts_cts 7056913
 
 ########## download android11 images ########
 ##download_linaro_ci_prebuilts android/lkft/db845c/24
-download_android11_gsi_db845c 7056242
-download_android11_gsi 7056242
-download_linaro_ci_prebuilts android/lkft/hikey960/35
+#download_android11_gsi_db845c 7056242
+#download_android11_gsi 7056242
+#download_linaro_ci_prebuilts android/lkft/hikey960/35
 ##download_linaro_ci_prebuilts android/android-cts/aosp-arm64-userdebug/38/android-cts-11.0_r1
 #download_google_release_cts android-cts-11_r2
 #download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/305/android-vts-11.0_r2
 
 ########## download android10 images ########
-download_android10_gsi 7046085
+#download_android10_gsi 7046085
 
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
 #copy_to_testdata aosp-master-throttled-copped/6485711
