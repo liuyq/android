@@ -1,5 +1,6 @@
 #!/bin/bash -ex
 
+# https://ci.android.com/builds/branches/aosp-master-throttled-copped/grid?head=6986658&tail=6922500
 
 function download_till_finished(){
     local img_url=$1 && shift
@@ -293,9 +294,9 @@ function download_google_release_cts(){
 ########## download aosp master images ########
 #download_aosp_master_db845c 7056960
 #download_throttled_x15 7056913
-download_linaro_ci_prebuilts android/lkft/x15/36
+#download_linaro_ci_prebuilts android/lkft/x15/36
 #download_throttled_copped 7056988
-#download_vts_cts 7056913
+download_vts_cts 7070335
 
 ########## download android11 images ########
 ##download_linaro_ci_prebuilts android/lkft/db845c/24
