@@ -1,9 +1,13 @@
+
+
 https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04
 https://www.postgresql.org/download/linux/ubuntu/
 https://help.ubuntu.com/community/PostgreSQL
-
+https://www.postgresql.org/about/news/arm64-on-aptpostgresqlorg-2033/
 1. Create the file /etc/apt/sources.list.d/pgdg.list, and add a line for the repository
    deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main
+
+   deb https://apt.postgresql.org/pub/repos/apt buster-pgdg main #for arm64
 
 2. Import the repository signing key, and update the package lists
    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
