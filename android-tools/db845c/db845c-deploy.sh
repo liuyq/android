@@ -39,4 +39,5 @@ flash_image boot ${img_dir}/boot.img
 flash_image super ${img_dir}/super.img
 flash_image userdata ${img_dir}/userdata.img
 flash_image cache ${img_dir}/cache.img
+flash_image vendor_boot ${img_dir}/vendor_boot.img
 fastboot reboot

@@ -114,3 +114,10 @@ https://en.wikipedia.org/wiki/OMAP
 
 Sitara ARM Processor:
 https://en.wikipedia.org/wiki/Sitara_ARM_Processor
+
+
+LAVA support for u-boot recovery for TI GPEVM (X15 with screen) board
+https://projects.linaro.org/browse/LSS-313
+
+Please setup CI loop for U-Boot on X15 board
+https://projects.linaro.org/browse/LSS-1007
