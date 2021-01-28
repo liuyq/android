@@ -92,24 +92,32 @@ function download_google_db845c(){
     download_till_finished ${url}/super_misc_info.txt
 
     lpunpack_files="bin/lpunpack bin/simg2img lib64/libbase.so lib64/liblog.so lib64/liblp.so lib64/libsparse-host.so lib64/libc++.so lib64/libcrypto-host.so lib64/libcrypto_utils.so lib64/libext4_utils.so lib64/libz-host.so"
-    rm -f ${lpunpack_files}
+    rm -fr bin lib64
     unzip otatools.zip ${lpunpack_files}
 
-    rm -f super.img userdata.img
-    unzip db845c-img-${build_num}.zip super.img userdata.img boot.img cache.img
+    rm -f android-info.txt super.img userdata.img boot.img cache.img
+    unzip db845c-img-${build_num}.zip
 
     rm -f super-raw.img
     ./bin/simg2img super.img super-raw.img
 
-    rm -f product.img system.img system_ext.img vendor.img
-    ./bin/lpunpack -p product -p system -p system_ext -p vendor super-raw.img
-    for f in super.img product.img system.img system_ext.img vendor.img; do
-        rm -f ${f}.xz
-        xz -T 0 $f
+    for f in product system system_ext vendor; do
+        [ -f ${f}.img ] && rm -f ${f}.img
+        [ -f ${f}_a.img ] && rm -f ${f}_a.img
+        [ -f ${f}_b.img ] && rm -f ${f}_b.img
     done
-    for f in userdata.img cache.img; do
+    ./bin/lpunpack super-raw.img
+    for f in product system system_ext vendor; do
+        [ -f ${f}_b.img ] && rm -f ${f}_b.img
+        [ -f ${f}_a.img ] && mv -v ${f}_a.img ${f}.img
+        [ -f ${f}.img ] && rm -f ${f}.img.xz && xz -T 0 ${f}.img
+    done
+
+    for f in boot.img super.img userdata.img cache.img; do
         rm -f ${f}.xz
-        xz -k -T 0 $f
+        if [ -f ${f} ]; then
+            xz -k -T 0 $f
+        fi
     done
 
     rm -f super-raw.img
@@ -186,7 +194,45 @@ function download_throttled_copped(){
         done
 
         cd -
-   done
+    done
+
+    if [ "X${board}X" = "Xhikey960X" ]; then
+        cd ${branch}/${build_num}/${board}-userdebug
+        local url="https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw"
+        download_till_finished ${url}/otatools.zip
+        download_till_finished ${url}/super.img
+        download_till_finished ${url}/super_misc_info.txt
+        download_till_finished ${url}/build.prop
+
+        lpunpack_files="bin/lpunpack bin/simg2img lib64/libbase.so lib64/liblog.so lib64/liblp.so lib64/libsparse-host.so lib64/libc++.so lib64/libcrypto-host.so lib64/libcrypto_utils.so lib64/libext4_utils.so lib64/libz-host.so"
+        rm -fr bin lib64
+        unzip otatools.zip ${lpunpack_files}
+
+        rm -f super-raw.img
+        ./bin/simg2img super.img super-raw.img
+
+        for f in product system system_ext vendor; do
+            [ -f ${f}.img ] && rm -f ${f}.img
+            [ -f ${f}_a.img ] && rm -f ${f}_a.img
+            [ -f ${f}_b.img ] && rm -f ${f}_b.img
+        done
+        ./bin/lpunpack super-raw.img
+        for f in product system system_ext vendor; do
+            [ -f ${f}_b.img ] && rm -f ${f}_b.img
+            [ -f ${f}_a.img ] && mv -v ${f}_a.img ${f}.img
+            [ -f ${f}.img ] && rm -f ${f}.img.xz && xz -T 0 ${f}.img
+        done
+
+        for f in boot.img super.img userdata.img; do
+            rm -f ${f}.xz
+            if [ -f ${f} ]; then
+                xz -k -T 0 $f
+            fi
+        done
+        rm -f super-raw.img
+
+        cd -
+   fi
 }
 
 function download_android11_gsi(){
@@ -292,23 +338,23 @@ function download_google_release_cts(){
 }
 
 ########## download aosp master images ########
-#download_aosp_master_db845c 7056960
+download_aosp_master_db845c 7105493
 #download_throttled_x15 7056913
-#download_linaro_ci_prebuilts android/lkft/x15/36
-#download_throttled_copped 7056988
-download_vts_cts 7070335
+download_linaro_ci_prebuilts android/lkft/x15/38
+download_throttled_copped 7105199
+download_vts_cts 7104983
 
 ########## download android11 images ########
 ##download_linaro_ci_prebuilts android/lkft/db845c/24
-#download_android11_gsi_db845c 7056242
-#download_android11_gsi 7056242
-#download_linaro_ci_prebuilts android/lkft/hikey960/35
+download_android11_gsi_db845c 7104566
+download_android11_gsi 7104566
+download_linaro_ci_prebuilts android/lkft/hikey960/39
 ##download_linaro_ci_prebuilts android/android-cts/aosp-arm64-userdebug/38/android-cts-11.0_r1
 #download_google_release_cts android-cts-11_r2
 #download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/305/android-vts-11.0_r2
 
 ########## download android10 images ########
-#download_android10_gsi 7046085
+download_android10_gsi 7103164
 
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
 #copy_to_testdata aosp-master-throttled-copped/6485711
