@@ -224,9 +224,9 @@ function download_throttled_copped(){
         done
 
         for f in boot.img super.img userdata.img; do
-            rm -f ${f}.xz
             if [ -f ${f} ]; then
-                xz -k -T 0 $f
+                rm -f ${f}.xz
+                xz -T 0 $f
             fi
         done
         rm -f super-raw.img
