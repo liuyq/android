@@ -1,5 +1,7 @@
 #!/bin/bash
 
+dir_parent=$(cd $(dirname ${0}); pwd)
+
 img_dir=${1}
 if [ -z "${img_dir}" ]; then
     img_dir="out/target/product/hikey960"
@@ -35,9 +37,18 @@ function flash_image(){
     sleep 2
 }
 
+if [ -f ${img_dir}/prm_table.img ]; then
+    flash_image ptable ${img_dir}/prm_table.img
+else
+    flash_image ptable ${dir_parent}/prm_ptable-hikey960-system.img
+fi
 flash_image boot ${img_dir}/boot.img
 flash_image dts "${img_dir}"/dt.img
-flash_image system ${img_dir}/system.img
-flash_image vendor ${img_dir}/vendor.img
+if [ -f ${img_dir}/super.img ]; then
+    flash_image super ${img_dir}/super.img
+else
+    flash_image system ${img_dir}/system.img
+    flash_image vendor ${img_dir}/vendor.img
+fi
 flash_image userdata ${img_dir}/userdata.img
 fastboot reboot
