@@ -37,8 +37,10 @@ function flash_image(){
     sleep 2
 }
 
-if [ -f ${img_dir}/prm_table.img ]; then
-    flash_image ptable ${img_dir}/prm_table.img
+if [ -f ${img_dir}/prm_ptable.img ]; then
+    flash_image ptable ${img_dir}/prm_ptable.img
+elif [ -f ${img_dir}/super.img ]; then
+    flash_image ptable ${dir_parent}/prm_ptable-hikey960-super.img
 else
     flash_image ptable ${dir_parent}/prm_ptable-hikey960-system.img
 fi
