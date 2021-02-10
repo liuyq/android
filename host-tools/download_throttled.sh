@@ -116,7 +116,7 @@ function download_google_db845c(){
     for f in boot.img super.img userdata.img cache.img; do
         rm -f ${f}.xz
         if [ -f ${f} ]; then
-            xz -k -T 0 $f
+            xz -T 0 $f
         fi
     done
 
@@ -338,23 +338,23 @@ function download_google_release_cts(){
 }
 
 ########## download aosp master images ########
-download_aosp_master_db845c 7105493
+#download_aosp_master_db845c 7105493
 #download_throttled_x15 7056913
-download_linaro_ci_prebuilts android/lkft/x15/38
-download_throttled_copped 7105199
-download_vts_cts 7104983
+#download_linaro_ci_prebuilts android/lkft/x15/38
+#download_throttled_copped 7105199
+#download_vts_cts 7104983
 
 ########## download android11 images ########
 ##download_linaro_ci_prebuilts android/lkft/db845c/24
-download_android11_gsi_db845c 7104566
-download_android11_gsi 7104566
-download_linaro_ci_prebuilts android/lkft/hikey960/39
+#download_android11_gsi_db845c 7104566
+#download_android11_gsi 7104566
+download_linaro_ci_prebuilts android/lkft/hikey960/46
 ##download_linaro_ci_prebuilts android/android-cts/aosp-arm64-userdebug/38/android-cts-11.0_r1
 #download_google_release_cts android-cts-11_r2
 #download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/305/android-vts-11.0_r2
 
 ########## download android10 images ########
-download_android10_gsi 7103164
+#download_android10_gsi 7103164
 
 #copy_to_testdata aosp-master/6485810/db845c-userdebug
 #copy_to_testdata aosp-master-throttled-copped/6485711
