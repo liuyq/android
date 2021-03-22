@@ -191,14 +191,25 @@ function download_throttled_copped(){
     for board in hikey hikey960; do
         cd ${branch}/${build_num}/${board}-userdebug
 
-        local img_files="boot.img system.img vendor.img userdata.img"
-        rm -f ${img_files}
-        unzip ${board}-img-${build_num}.zip ${img_files}
+        if [ "X${board}X" = "Xhikey960X" ]; then
+            local img_files="android-info.txt boot.img super.img userdata.img"
+            rm -f ${img_files}
+            unzip ${board}-img-${build_num}.zip ${img_files}
 
-        for f in ${img_files}; do
-            rm -f ${f}.xz
-            xz -T 0 $f
-        done
+            for f in ${img_files}; do
+                rm -f ${f}.xz
+                xz -T 0 $f
+            done
+        else
+            local img_files="android-info.txt boot.img system.img vendor.img userdata.img"
+            rm -f ${img_files}
+            unzip ${board}-img-${build_num}.zip ${img_files}
+
+            for f in ${img_files}; do
+                rm -f ${f}.xz
+                xz -T 0 $f
+            done
+        fi
 
         cd -
     done
@@ -207,7 +218,7 @@ function download_throttled_copped(){
         cd ${branch}/${build_num}/${board}-userdebug
         local url="https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw"
         download_till_finished ${url}/otatools.zip
-        download_till_finished ${url}/super.img
+        #download_till_finished ${url}/super.img
         download_till_finished ${url}/super_misc_info.txt
         download_till_finished ${url}/build.prop
 
@@ -216,6 +227,7 @@ function download_throttled_copped(){
         unzip otatools.zip ${lpunpack_files}
 
         rm -f super-raw.img
+        xz -d super.img.xz
         ./bin/simg2img super.img super-raw.img
 
         for f in product system system_ext vendor; do
@@ -347,7 +359,7 @@ function download_google_release_cts(){
 ########## download aosp master images ########
 download_aosp_master_db845c 7225696
 #download_throttled_x15 7056913
-#download_linaro_ci_prebuilts android/lkft/x15/51
+download_linaro_ci_prebuilts android/lkft/x15/64
 download_throttled_copped 7225617
 download_vts_cts 7225423
 
