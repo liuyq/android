@@ -8,11 +8,11 @@ function download_till_finished(){
 
     if [ -z "${target_path}" ]; then
         while ! wget --max-redirect 50 -c ${img_url}; do
-            sleep 30
+            sleep 5
         done
     else
         while ! wget --max-redirect 50 -c ${img_url} -O ${target_path}; do
-            sleep 30
+            sleep 5
         done
     fi
 }
@@ -357,16 +357,16 @@ function download_google_release_cts(){
 }
 
 ########## download aosp master images ########
-download_aosp_master_db845c 7231550
+#download_aosp_master_db845c 7231550
 ##download_throttled_x15 7056913
-download_linaro_ci_prebuilts android/lkft/x15/65
-download_throttled_copped 7231066
-download_vts_cts 7231248
+#download_linaro_ci_prebuilts android/lkft/x15/65
+#download_throttled_copped 7231066
+download_vts_cts 7243325
 ########## upload aosp master files #####################
 #copy_to_testdata aosp-master/7231550
 #copy_to_testdata android/lkft/x15/65
 #copy_to_testdata aosp-master-throttled-copped/7231066
-#copy_to_testdata aosp-master-throttled/7231248
+copy_to_testdata aosp-master-throttled/7243325
 
 ########## download android11 images ########
 ##download_linaro_ci_prebuilts android/lkft/db845c/24
