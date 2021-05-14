@@ -1,0 +1,31 @@
+android-mainline-branch:
+arch/arm/boot/dts/
+    am57xx-beagle-x15-revc.dts
+        am57xx-beagle-x15-common.dtsi
+            am5728.dtsi
+                dra74x.dtsi
+                    dra7.dtsi
+                        #include <dt-bindings/bus/ti-sysc.h>
+                        #include <dt-bindings/clock/dra7.h>
+                        #include <dt-bindings/interrupt-controller/arm-gic.h>
+                        #include <dt-bindings/pinctrl/dra.h>
+                        #include <dt-bindings/clock/dra7.h>
+                        #include "omap4-cpu-thermal.dtsi"
+                            #include <dt-bindings/thermal/thermal.h>
+                        #include "omap5-gpu-thermal.dtsi"
+                            #include <dt-bindings/thermal/thermal.h>
+                        #include "omap5-core-thermal.dtsi"
+                            #include <dt-bindings/thermal/thermal.h>
+                        #include "dra7-dspeve-thermal.dtsi"
+                            #include <dt-bindings/thermal/thermal.h>
+                        #include "dra7-iva-thermal.dtsi"
+                            #include <dt-bindings/thermal/thermal.h>
+                        #include "dra7-l4.dtsi"
+                        #include "dra7xx-clocks.dtsi"
+                am57-pruss.dtsi
+            am57xx-commercial-grade.dtsi
+            dra74x-mmc-iodelay.dtsi
+            dra74-ipu-dsp-common.dtsi
+                dra7-ipu-dsp-common.dtsi
+            dt-bindings/gpio/gpio.h
+            dt-bindings/interrupt-controller/irq.h
