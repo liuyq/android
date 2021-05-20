@@ -361,24 +361,24 @@ function download_google_release_cts(){
 ##download_throttled_x15 7056913
 #download_linaro_ci_prebuilts android/lkft/x15/83
 #download_throttled_copped 7368501
-#download_vts_cts 7243325
+download_vts_cts 7380661
 ########## upload aosp master files #####################
 #copy_to_testdata aosp-master/7249715
 #copy_to_testdata android/lkft/x15/65
 #copy_to_testdata aosp-master-throttled-copped/7231066
-#copy_to_testdata aosp-master-throttled/7243325
+#copy_to_testdata aosp-master-throttled/7380661
 
 ########## download android11 images ########
 ##download_linaro_ci_prebuilts android/lkft/db845c/24
-download_android11_gsi_db845c 7356985
-download_android11_gsi 7356985
-download_linaro_ci_prebuilts android/lkft/hikey960/84
+#download_android11_gsi_db845c 7356985
+#download_android11_gsi 7356985
+#download_linaro_ci_prebuilts android/lkft/hikey960/84
 ##download_linaro_ci_prebuilts android/android-cts/aosp-arm64-userdebug/38/android-cts-11.0_r1
 #download_google_release_cts android-cts-11_r3
 #download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/310/android-vts-11.0_r3
 
 ########## download android10 images ########
-download_android10_gsi 7345029
+#download_android10_gsi 7345029
 
 ########## upload android11 files #####################
 #copy_to_testdata aosp-android11-gsi/7217213
