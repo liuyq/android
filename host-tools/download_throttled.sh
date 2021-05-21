@@ -357,11 +357,11 @@ function download_google_release_cts(){
 }
 
 ########## download aosp master images ########
-#download_aosp_master_db845c 7368857
+download_aosp_master_db845c 7386504
 ##download_throttled_x15 7056913
 #download_linaro_ci_prebuilts android/lkft/x15/83
-#download_throttled_copped 7368501
-download_vts_cts 7380661
+download_throttled_copped 7385880
+download_vts_cts 7384311
 ########## upload aosp master files #####################
 #copy_to_testdata aosp-master/7249715
 #copy_to_testdata android/lkft/x15/65
