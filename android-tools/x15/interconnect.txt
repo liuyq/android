@@ -1,0 +1,14 @@
+- spruhz6l.pdf
+    AM572x SitaraTM Processors Silicon Revision 2.0, 1.1
+    Texas Instruments SitaraTM Family of Products Technical Reference Manual
+
+    4 Dual Cortex-A15 MPU Subsystem
+        4.3.4.3.3 Local Interconnect and Synchronization Agent (LISA) Section Manager
+    5 DSP Subsystems
+        5.3.8 DSP L2 interconnect Network
+    14 Interconnect
+        14.1 Interconnect Overview
+        14.2 L3_MAIN Interconnect
+        14.3 L4 Interconnects
+
+
