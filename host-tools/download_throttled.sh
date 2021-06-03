@@ -45,6 +45,8 @@ function download_google_ci_prebuilts(){
     download_till_finished https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw/${board}-img-${build_num}.zip
     download_till_finished https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw/ramdisk-debug.img
     download_till_finished https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw/ramdisk.img
+    download_till_finished https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw/build.prop
+    grep ro.system.build.fingerprint build.prop |cut -d= -f2 > build_fingerprint.txt
     cd ${old_pwd}
 }
 
