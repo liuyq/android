@@ -374,7 +374,7 @@ download_vts_cts 7461538
 ##download_linaro_ci_prebuilts android/lkft/db845c/24
 download_android11_gsi_db845c 7441291
 download_android11_gsi 7441291
-download_linaro_ci_prebuilts android/lkft/hikey960/92
+download_linaro_ci_prebuilts android/lkft/hikey960/90
 ##download_linaro_ci_prebuilts android/android-cts/aosp-arm64-userdebug/38/android-cts-11.0_r1
 download_google_release_cts android-cts-11_r4
 #download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/310/android-vts-11.0_r3
@@ -384,7 +384,7 @@ download_google_release_cts android-cts-11_r4
 
 ########## upload android11 files #####################
 #copy_to_testdata aosp-android11-gsi/7441291
-#copy_to_testdata android/lkft/hikey960/92
+#copy_to_testdata android/lkft/hikey960/90
 #copy_to_testdata google-released-cts/android-cts-11_r4
 
 ########## upload android10 files #####################
