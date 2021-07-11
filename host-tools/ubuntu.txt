@@ -171,3 +171,7 @@ for errors report like the following when run "git pull" or "git fetch --all":
     error: refs/tags/android-mainline-5.7 does not point to a valid object!
 delete the invalid tags with the following command:
     git fetch --all  2>&1 |grep 'error:' | awk '{print $2}' | cut -d/ -f3|sort|uniq|while read line; do git tag -d ${line}; done
+
+===========================
+awk -F'\t' '{print $2, "---", $1}' /tmp/work/ci-data.txt |sort >android.txt
+=============================================
