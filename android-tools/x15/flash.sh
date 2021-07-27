@@ -1,4 +1,6 @@
 #!/bin/bash
+# https://wiki-archive.linaro.org/Boards/BeagleBoard-X15
+# https://linaro.atlassian.net/wiki/spaces/CTT/pages/25111140766/BeagleBoard+X15
 
 img_dir=${1}
 if [ -z "${img_dir}" ]; then

@@ -1,11 +1,22 @@
 # https://developer.android.com/studio/run/device.html
 # https://github.com/M0Rf30/android-udev-rules
 
+apt install android-sdk-platform-tools-common
+    /lib/udev/rules.d/51-android.rules
 
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 
 sudo usermod -aG plugdev $USER
+# if not do this, it's not possible to input with the x15 board
+sudo usermod -a -G dialout $USER
+
+# Select "Serial port setup" menu item and choose next settings:
+#
+#    Serial Device: /dev/ttyUSB0
+#    Bps/Par/Bits: 115200 8N1
+#    Hardware Flow Control: No
+# Then select "Save setup as dfl" and "Exit from Minicom".
 
 # adb protocol on hikey (8G version)
 SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", ATTR{idProduct}=="4ee7", MODE="0600", OWNER="liuyq"
