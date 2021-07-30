@@ -336,7 +336,7 @@ function copy_to_testdata(){
     #dir_remote=lkft/aosp-stable/android-lcr-reference-am65x-p-auto/12
 
     local url_build=$1 && shift
-    local no_build_info=$1 && shift
+    local no_build_info=$1
 
 #    rm -f linaro-cp.py
 #    wget https://git.linaro.org/ci/publishing-api.git/plain/linaro-cp.py -O linaro-cp.py
@@ -364,13 +364,13 @@ function download_google_release_cts(){
 }
 
 ########## download aosp master images ########
-download_aosp_master_db845c 7588766
+download_aosp_master_db845c 7596271
 ##download_throttled_x15 7056913
 download_linaro_ci_prebuilts android/lkft/x15/105
 download_throttled_copped 7589192
-download_vts_cts 7588766
+download_vts_cts 7596271
 ########## upload aosp master files #####################
-#copy_to_testdata aosp-master/7585935
+#copy_to_testdata aosp-master/7596271
 #copy_to_testdata android/lkft/x15/91
 #copy_to_testdata aosp-master-throttled-copped/7585565
 ##copy_to_testdata aosp-master-throttled/7380661
