@@ -175,3 +175,8 @@ delete the invalid tags with the following command:
 ===========================
 awk -F'\t' '{print $2, "---", $1}' /tmp/work/ci-data.txt |sort >android.txt
 =============================================
+Chinese Input Method:
+sudo apt-get install fcitx
+Settings -> Region & Language -> Input Sources -> Chinese(Intelligent Pinyin)
+=============================================
+
