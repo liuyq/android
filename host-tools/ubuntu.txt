@@ -179,4 +179,10 @@ Chinese Input Method:
 sudo apt-get install fcitx
 Settings -> Region & Language -> Input Sources -> Chinese(Intelligent Pinyin)
 =============================================
-
+Create windows U drive installation:
+https://github.com/WoeUSB/WoeUSB-ng
+$ sudo apt install git p7zip-full python3-pip python3-wxgtk4.0
+$ sudo pip3 install WoeUSB-ng
+$ woeusbgui or woeusb
+$ sudo woeusb --device  --target-filesystem NTFS --verbose /tmp/win7_64bit.iso /dev/sdb
+=============================================
