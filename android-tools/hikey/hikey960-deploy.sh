@@ -53,4 +53,5 @@ else
     flash_image vendor ${img_dir}/vendor.img
 fi
 flash_image userdata ${img_dir}/userdata.img
+fastboot format cache
 fastboot reboot
