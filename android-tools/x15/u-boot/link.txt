@@ -1,6 +1,2 @@
-http://snapshots.linaro.org/components/kernel/u-boot/latest/am57xx_evm/
-<fabo> liuyq: http://snapshots.linaro.org/components/kernel/u-boot/latest/am57xx_evm/
-<fabo> liuyq: we have a mainline U-Boot CI
-<liuyq> fabo, is there any release for that link? I see there is latest  in the link, it might be changed. but for test report in the future, we need to write with a fix url, and I think lava said also needs to use a fixed version of the firmware
-<liuyq> s/said/side/
-<fabo> liuyq: we don't flash u-boot each time. if you really need a fixed version for doc purpose, ask the lab to mirror it
+https://linaro.atlassian.net/wiki/spaces/CTT/pages/25111140766/BeagleBoard+X15
+https://images.validation.linaro.org/snapshots.linaro.org/android/lkft/lkft-aosp-master-x15/107/
