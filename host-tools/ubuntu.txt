@@ -186,3 +186,13 @@ $ sudo pip3 install WoeUSB-ng
 $ woeusbgui or woeusb
 $ sudo woeusb --device  --target-filesystem NTFS --verbose /tmp/win7_64bit.iso /dev/sdb
 =============================================
+Power OFF and ON USB device in linux (ubuntu)
+https://loginroot.com/power-off-and-on-usb-device-in-linux-ubuntu/
+
+$ echo '2-1.1' > /sys/bus/usb/drivers/usb/unbind # turn off
+$ echo '2-1.1' > /sys/bus/usb/drivers/usb/bind # turn on
+
+$ cd /sys/bus/usb/devices2-1.1/power
+$ echo suspend > level # to turn off device
+$ echo on > level # to turn on the device
+=============================================
