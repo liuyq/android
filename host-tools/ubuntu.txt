@@ -196,3 +196,14 @@ $ cd /sys/bus/usb/devices2-1.1/power
 $ echo suspend > level # to turn off device
 $ echo on > level # to turn on the device
 =============================================
+ssh git@git.linaro.org info
+ssh git@git.linaro.org help
+ssh git@git.linaro.org <COMMAND> -h
+
+How to create a remote repository
+https://wiki-archive.linaro.org/Platform/Systems/Git
+# To create a new repository on the server, push your local repository to the desired path:
+$ git push ssh://git@git.linaro.org:/path/to/repo.git
+# If you need to push to a defined branch, like mybranch:
+$ git push ssh://git@git.linaro.org:/path/to/repo.git mybranch
+=============================================
