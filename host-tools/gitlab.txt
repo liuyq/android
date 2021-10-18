@@ -1,0 +1,22 @@
+https://gitlab.com/Linaro/lkft/users/yongqin.liu
+    New project -> Run CI/CD pipelines for external repositories -> fill in "Git repository URL"
+    Settings -> CI/CD -> General pipelines -> Expend -> CI/CD configuration file
+    Start a new pipeline to see if there is any gitlab file syntax error
+        https://gitlab.com/Linaro/lkft/users/yongqin.liu/android-common-weekly/-/pipelines/new
+    use ci/lint to validate the gitlab ci files
+
+How to use gitlab from private projects:
+    https://docs.gitlab.com/ee/ci/pipelines/settings.html#specify-a-custom-cicd-configuration-file
+
+Predefined variables reference:
+    https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+CI/CD pipelines all tiers
+    https://docs.gitlab.com/ee/ci/pipelines/
+Keyword reference for the .gitlab-ci.yml file
+    https://docs.gitlab.com/ee/ci/yaml/#workflow
+
+
+https://docs.gitlab.com/ee/ci/jobs/job_control.html#use-onlychanges-with-scheduled-pipelines
+    Use only:changes with scheduled pipelines
+    only:changes always evaluates as true in Scheduled pipelines. All files are considered to have changed when a scheduled pipeline runs
+
