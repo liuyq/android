@@ -44,4 +44,5 @@ flash_image cache ${img_dir}/cache.img
 flash_image userdata ${img_dir}/userdata.img
 #fastboot flash -S 256M userdata ${img_dir}/userdata.img
 #fastboot reboot
-fastboot continue
+#fastboot continue
+fastboot boot ${img_dir}/boot.img
