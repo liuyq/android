@@ -176,8 +176,10 @@ delete the invalid tags with the following command:
 awk -F'\t' '{print $2, "---", $1}' /tmp/work/ci-data.txt |sort >android.txt
 =============================================
 Chinese Input Method:
+sudo apt-get install language-pack-zh-hans language-pack-en-base ibus-pinyin ibus-sunpinyin
 sudo apt-get install fcitx
 Settings -> Region & Language -> Input Sources -> Chinese(Intelligent Pinyin)
+pinyin.sogo.com/linux
 =============================================
 Create windows U drive installation:
 https://github.com/WoeUSB/WoeUSB-ng
