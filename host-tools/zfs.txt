@@ -1,0 +1,6 @@
+To list all ZFS snapshots, enter this into Terminal:
+    sudo zfs list -t snapshot
+    zfs list -t snapshot -o name,creation
+    zfs list -o space
+To delete a snapshot you no longer need, you can do this:
+    sudo zfs destroy rpool/USERDATA/jason_xkcd2z@FRI21-07-09
