@@ -88,6 +88,8 @@ fastboot flash vbmeta_b vbmeta.img
 fastboot flash recovery recovery.img
 fastboot flash super super.img
 fastboot flash userdata userdata.img
+fastboot format metadata
+fastboot format misc
 fastboot reboot
 
 # "card voltage select 0" usually means loose connection
