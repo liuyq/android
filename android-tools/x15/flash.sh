@@ -52,6 +52,9 @@ flash_image vbmeta_b ${img_dir}/vbmeta.img
 flash_image recovery ${img_dir}/recovery.img
 flash_image super ${img_dir}/super.img
 flash_image userdata ${img_dir}/userdata.img
+# format would cause error of "FAILED (remote: failed to set partition)"
+fastboot erase metadata
+fastboot erase misc
 fastboot reboot
 
 exit 0
