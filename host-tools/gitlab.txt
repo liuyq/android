@@ -1,3 +1,6 @@
+DevOps Platform
+https://about.gitlab.com/solutions/devops-platform/
+
 https://gitlab.com/Linaro/lkft/users/yongqin.liu
     New project -> Run CI/CD pipelines for external repositories -> fill in "Git repository URL"
     Settings -> CI/CD -> General pipelines -> Expend -> CI/CD configuration file
@@ -20,3 +23,13 @@ https://docs.gitlab.com/ee/ci/jobs/job_control.html#use-onlychanges-with-schedul
     Use only:changes with scheduled pipelines
     only:changes always evaluates as true in Scheduled pipelines. All files are considered to have changed when a scheduled pipeline runs
 
+
+Problems:
+1. if the one job failed, then the job that needs it will be "skip",
+   would like this to be blocked status, so that when the failed jobs
+   resubmitted and run successfully, it could be continued
+
+   but would that cause the pipeline not finished?
+
+   and how to resubmit the skipped job?
+   A: need to resubmit the job it needs
