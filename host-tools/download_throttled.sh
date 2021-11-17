@@ -370,7 +370,8 @@ download_throttled_copped 7918216
 ##download_throttled_x15 7056913
 download_linaro_ci_prebuilts android/lkft/lkft-master-x15/139
 ########## upload aosp master files #####################
-#copy_to_testdata aosp-master/7918279
+#copy_to_testdata aosp-master/7918279/db845c-userdebug
+#copy_to_testdata aosp-master/7918279/test_suites_arm64
 #copy_to_testdata android/lkft/x15/139
 #copy_to_testdata aosp-master-throttled-copped/7918216
 ##copy_to_testdata aosp-master-throttled/7380661
@@ -384,8 +385,9 @@ download_linaro_ci_prebuilts android/lkft/lkft-android11-hikey960/140
 #download_google_release_cts android-cts-11_r5
 #download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/312/android-vts-11.0_r5
 ########## upload android11 files #####################
-#copy_to_testdata aosp-android11-gsi/7916795
-#copy_to_testdata android/lkft/hikey960/140
+#copy_to_testdata aosp-android11-gsi/7916795/aosp_arm64-userdebug
+#copy_to_testdata aosp-android11-gsi/7916795/db845c-userdebug
+#copy_to_testdata android/lkft/lkft-android11-hikey960/140
 #copy_to_testdata google-released-cts/android-cts-11_r4
 #copy_to_testdata google-released-cts/android-cts-11_r4
 
