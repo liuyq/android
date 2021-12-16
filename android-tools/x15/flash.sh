@@ -45,6 +45,8 @@ function flash_image(){
 #flash_image boot ${img_dir}/boot.img
 flash_image boot_a ${img_dir}/boot.img
 flash_image boot_b ${img_dir}/boot.img
+## NOTE: falsh of the dtbo_a/b partitions would cause the board failed to boot
+## and need to reflash the u-boot to recover
 #flash_image dtbo_a ${img_dir}/dtbo.img
 #flash_image dtbo_b ${img_dir}/dtbo.img
 flash_image vbmeta_a ${img_dir}/vbmeta.img
@@ -91,8 +93,8 @@ fastboot flash vbmeta_b vbmeta.img
 fastboot flash recovery recovery.img
 fastboot flash super super.img
 fastboot flash userdata userdata.img
-fastboot format metadata
-fastboot format misc
+fastboot erase metadata
+fastboot erase misc
 fastboot reboot
 
 # "card voltage select 0" usually means loose connection
