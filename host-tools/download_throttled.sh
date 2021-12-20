@@ -383,7 +383,7 @@ download_android11_gsi 8004584
 download_linaro_ci_prebuilts android/lkft/lkft-android11-hikey960/150
 ##download_linaro_ci_prebuilts android/android-cts/aosp-arm64-userdebug/38/android-cts-11.0_r1
 download_google_release_cts android-cts-11_r6
-#download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/313/android-vts-11.0_r6
+download_linaro_ci_prebuilts android/android-vts/aosp-arm64-userdebug/313/android-vts-11.0_r6
 ########## upload android11 files #####################
 #copy_to_testdata aosp-android11-gsi/8004584/aosp_arm64-userdebug
 #copy_to_testdata aosp-android11-gsi/8004584/db845c-userdebug
