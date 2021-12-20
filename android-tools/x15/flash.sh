@@ -2,6 +2,24 @@
 # https://wiki-archive.linaro.org/Boards/BeagleBoard-X15
 # https://linaro.atlassian.net/wiki/spaces/CTT/pages/25111140766/BeagleBoard+X15
 
+# echo 0x10 >/sys/module/drm/parameters/debug
+#    Bit 0 (0x01)  will enable CORE messages (drm core code)
+#    Bit 1 (0x02)  will enable DRIVER messages (drm controller code)
+#    Bit 2 (0x04)  will enable KMS messages (modesetting code)
+#    Bit 3 (0x08)  will enable PRIME messages (prime code)
+#    Bit 4 (0x10)  will enable ATOMIC messages (atomic code)
+#    Bit 5 (0x20)  will enable VBL messages (vblank code)
+#    Bit 7 (0x80)  will enable LEASE messages (leasing code)
+#    Bit 8 (0x100) will enable DP messages (displayport code)
+#    module_param_named(debug, drm_debug, int, 0600);
+#    drivers/gpu/drm/drm_drv.c
+#
+# echo 8 > /proc/sys/kernel/printk
+# The first value in our output is the current console_loglevel. This is the information we were looking for: the value, 4 in this case, represents the log level currently used. As said before this means that only messages adopting a severity level higher than it, will be displayed on the console.
+# The second value in the output represents the default_message_loglevel. This value is automatically used for messages without a specific log level: if a message is not associated with a log level, this one will be used for it.
+# The third value in the output reports the minimum_console_loglevel status. It indicates the minimum loglevel which can be used for console_loglevel. The level here used it’s 1, the highest.
+# Finally, the last value represents the default_console_loglevel, which is the default loglevel used for console_loglevel at boot time.
+
 img_dir=${1}
 if [ -z "${img_dir}" ]; then
     img_dir="out/target/product/am57xevm"
