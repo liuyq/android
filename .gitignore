@@ -56,3 +56,4 @@ build.config
 common-modules
 hikey-modules
 hikey-modules-linaro
+android-build-configs-private
