@@ -257,6 +257,11 @@ function download_throttled_copped(){
    fi
 }
 
+function download_android12_gsi(){
+    local build_num=$1 && shift
+    download_gsi "aosp-android12-gsi" ${build_num}
+}
+
 function download_android11_gsi(){
     local build_num=$1 && shift
     download_gsi "aosp-android11-gsi" ${build_num}
