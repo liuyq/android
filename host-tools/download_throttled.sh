@@ -373,7 +373,7 @@ function download_google_release_cts(){
 #download_aosp_master_db845c 8108944
 download_linaro_ci_prebuilts android/lkft/lkft-master-db845c/175
 download_vts_cts 8188504
-download_throttled_copped 8186619
+download_throttled_copped 8189361
 download_throttled_x15 8188427
 #download_linaro_ci_prebuilts android/lkft/lkft-master-x15/139
 ########## upload aosp master files #####################
@@ -381,7 +381,7 @@ download_throttled_x15 8188427
 copy_to_testdata android/lkft/lkft-master-db845c/175
 copy_to_testdata aosp-master/8188504/test_suites_arm64
 ##copy_to_testdata android/lkft/x15/139
-copy_to_testdata aosp-master-throttled-copped/8186619
+copy_to_testdata aosp-master-throttled-copped/8189361
 copy_to_testdata aosp-master-throttled/8188427
 
 ########## download android11 images ########
