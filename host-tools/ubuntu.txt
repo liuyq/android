@@ -178,8 +178,10 @@ awk -F'\t' '{print $2, "---", $1}' /tmp/work/ci-data.txt |sort >android.txt
 Chinese Input Method:
 sudo apt-get install language-pack-zh-hans language-pack-en-base ibus-pinyin ibus-sunpinyin
 sudo apt-get install fcitx
-Settings -> Region & Language -> Input Sources -> Chinese(Intelligent Pinyin)
+Settings -> Region & Language -> Input Sources -> Chinese(China)-> Chinese(Intelligent Pinyin)
 pinyin.sogo.com/linux
+Settings -> Region & Language -> Manage Installed Languages -> Keyboard input method system -> fcitx
+(not sure what other options like IBus, XIM, none means)
 =============================================
 Create windows U drive installation:
 https://github.com/WoeUSB/WoeUSB-ng
