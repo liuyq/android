@@ -47,6 +47,7 @@ function download_google_ci_prebuilts(){
     download_till_finished https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw/ramdisk.img
     download_till_finished https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw/build.prop
     download_till_finished https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw/manifest_${build_num}.xml
+    download_till_finished https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw/userdebug_plat_sepolicy.cil
     grep ro.system.build.fingerprint build.prop |cut -d= -f2 > build_fingerprint.txt
     cd ${old_pwd}
 }
@@ -383,6 +384,9 @@ copy_to_testdata aosp-master/8188504/test_suites_arm64
 ##copy_to_testdata android/lkft/x15/139
 copy_to_testdata aosp-master-throttled-copped/8189361
 copy_to_testdata aosp-master-throttled/8188427
+
+########## download android12 images ########
+#download_android12_gsi 8224675
 
 ########## download android11 images ########
 ##download_linaro_ci_prebuilts android/lkft/db845c/24
