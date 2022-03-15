@@ -182,6 +182,7 @@ Settings -> Region & Language -> Input Sources -> Chinese(China)-> Chinese(Intel
 pinyin.sogo.com/linux
 Settings -> Region & Language -> Manage Installed Languages -> Keyboard input method system -> fcitx
 (not sure what other options like IBus, XIM, none means)
+https://amigotechnotes.wordpress.com/2020/04/24/install-and-use-chinese-input-in-ubuntu/
 =============================================
 Create windows U drive installation:
 https://github.com/WoeUSB/WoeUSB-ng
