@@ -38,6 +38,7 @@ sudo apt-get install audio-recorder
 sudo apt-get install nfs-kernel-server nfs-common
 #/etc/exports
 #/SATA3/aosp-mirror  *(insecure,rw,sync,no_subtree_check,no_root_squash)
+sudo service nfs-server restart
 
 sudo apt-get install pybootchartgui
 sudo apt-get install owncloud-client
