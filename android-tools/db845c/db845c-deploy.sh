@@ -1,5 +1,11 @@
 #!/bin/bash
 
+product=$(fastboot getvar product 2>&1 |grep product|awk '{print $2}')
+if [ "X${product}" != "XSuperEDK2k" ]; then
+    echo "This is not a dragonboard845c board: ${product}"
+    exit 1
+fi
+
 img_dir=${1}
 if [ -z "${img_dir}" ]; then
     img_dir="out/target/product/db845c"

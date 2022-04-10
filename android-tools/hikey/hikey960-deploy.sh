@@ -1,5 +1,11 @@
 #!/bin/bash
 
+product=$(fastboot getvar product 2>&1 |grep product|awk '{print $2}')
+if [ "X${product}" != "Xhikey960" ]; then
+    echo "This is not a hikey960 board: ${product}"
+    exit 1
+fi
+
 dir_parent=$(cd $(dirname ${0}); pwd)
 
 img_dir=${1}

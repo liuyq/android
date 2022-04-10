@@ -2,6 +2,11 @@
 # https://wiki-archive.linaro.org/Boards/BeagleBoard-X15
 # https://linaro.atlassian.net/wiki/spaces/CTT/pages/25111140766/BeagleBoard+X15
 
+product=$(fastboot getvar product 2>&1 |grep product|awk '{print $2}')
+if [ "X${product}" != "Xam57xx_evm_reva3" ]; then
+    echo "This is not a Beagleboard-X15 board: ${product}"
+    exit 1
+fi
 # echo 0x10 >/sys/module/drm/parameters/debug
 #    Bit 0 (0x01)  will enable CORE messages (drm core code)
 #    Bit 1 (0x02)  will enable DRIVER messages (drm controller code)
