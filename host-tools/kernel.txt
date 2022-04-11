@@ -1,0 +1,6 @@
+https://patchwork.kernel.org/ for patches
+https://patchwork.kernel.org/project/linux-arm-msm/list/
+https://patchwork.kernel.org/project/linux-omap/list/
+https://patchwork.kernel.org/project/linux-arm-kernel/list/
+https://lore.kernel.org/
+https://www.kernel.org/lore.html

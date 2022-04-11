@@ -2,6 +2,19 @@
 # https://wiki-archive.linaro.org/Boards/BeagleBoard-X15
 # https://linaro.atlassian.net/wiki/spaces/CTT/pages/25111140766/BeagleBoard+X15
 
+
+num_fastboot_devices=$(fastboot devices|wc -l)
+if [ ${num_fastboot_devices} -eq 0 ]; then
+    echo "No fastboot devices available, please check and try again"
+    exit 1
+elif [ ${num_fastboot_devices} -ne 1 ] && [ -z "${ANDROID_SERIAL}" ]; then
+    # for local multiple devices support
+    export ANDROID_SERIAL="0e005017394200e2"
+elif [ ${num_fastboot_devices} -ne 1 ] && [ -z "${ANDROID_SERIAL}" ]; then
+    device_serial=$(fastboot devices|awk '{print $1}')
+    export ANDROID_SERIAL="${device_serial}"
+fi
+
 product=$(fastboot getvar product 2>&1 |grep product|awk '{print $2}')
 if [ "X${product}" != "Xam57xx_evm_reva3" ]; then
     echo "This is not a Beagleboard-X15 board: ${product}"
