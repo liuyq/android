@@ -2,22 +2,30 @@
 # https://wiki-archive.linaro.org/Boards/BeagleBoard-X15
 # https://linaro.atlassian.net/wiki/spaces/CTT/pages/25111140766/BeagleBoard+X15
 
+local_android_serial="0e005017394200e2"
+local_android_product="am57xx_evm_reva3"
 
+if adb devices|grep ${local_android_serial}; then
+    adb -s ${local_android_serial} reboot bootloader
+    sleep 5
+    fastboot devices
+    sleep 3
+fi
 num_fastboot_devices=$(fastboot devices|wc -l)
 if [ ${num_fastboot_devices} -eq 0 ]; then
     echo "No fastboot devices available, please check and try again"
     exit 1
 elif [ ${num_fastboot_devices} -ne 1 ] && [ -z "${ANDROID_SERIAL}" ]; then
     # for local multiple devices support
-    export ANDROID_SERIAL="0e005017394200e2"
+    export ANDROID_SERIAL="${local_android_serial}"
 elif [ ${num_fastboot_devices} -ne 1 ] && [ -z "${ANDROID_SERIAL}" ]; then
     device_serial=$(fastboot devices|awk '{print $1}')
     export ANDROID_SERIAL="${device_serial}"
 fi
 
 product=$(fastboot getvar product 2>&1 |grep product|awk '{print $2}')
-if [ "X${product}" != "Xam57xx_evm_reva3" ]; then
-    echo "This is not a Beagleboard-X15 board: ${product}"
+if [ "X${product}" != "X${local_android_product}" ]; then
+    echo "This is not a ${local_android_product} board: ${product}"
     exit 1
 fi
 # echo 0x10 >/sys/module/drm/parameters/debug
@@ -59,8 +67,10 @@ function flash_image(){
     fi
 
     if [ ! -f "${file_img}" ]; then
+        echo "${file_img} does not exist"
         return
     fi
+
     echo "======= Flash ${partition} partition with file $file_img =============="
     #/SATA3/nougat/out/host/linux-x86/bin/fastboot flash -w ${partition} ${file_img}
     fastboot flash ${partition} ${file_img}
@@ -69,7 +79,7 @@ function flash_image(){
         exit 1
     fi
     # sleep 2 after flash
-    sleep 5
+    sleep 2
 }
 
 #fastboot erase environment
