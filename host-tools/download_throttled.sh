@@ -178,6 +178,20 @@ function download_throttled_x15(){
     cd -
 }
 
+function download_throttled_copped_cuttefish(){
+    local build_num=$1 && shift
+    local branch=aosp-master-throttled-copped
+
+    mkdir -p ${branch}/${build_num}
+    local old_pwd=${PWD}
+    cd ${branch}/${build_num}
+    echo "https://ci.android.com/builds/branches/${branch}/grid?head=${build_num}&tail=${build_num}" >url.txt
+
+    download_google_ci_prebuilts ${build_num} "aosp_cf_arm64_only_phone"
+    download_till_finished https://ci.android.com/builds/submitted/${build_num}/${board}-userdebug/latest/raw/cvd-host_package.tar.gz
+    cd ${old_pwd}
+}
+
 function download_throttled_copped(){
     local build_num=$1 && shift
     local branch=aosp-master-throttled-copped
@@ -380,10 +394,11 @@ function download_google_release_cts(){
 
 ########## download aosp master images ########
 #download_aosp_master_db845c 8108944
-#download_linaro_ci_prebuilts android/lkft/lkft-master-db845c/193
+#download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-db845c/258
 #download_vts_cts 8300816
 #download_master_gsi 8302533
 #download_throttled_copped 8189361
+#download_throttled_copped_cuttefish 8372938
 #download_linaro_ci_prebuilts android/lkft/lkft-master-hikey960/194
 #download_linaro_ci_prebuilts android/lkft/lkft-master-hikey/195
 #download_throttled_x15 8299446
