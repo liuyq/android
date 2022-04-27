@@ -14,11 +14,11 @@ fi
 num_fastboot_devices=$(fastboot devices|wc -l)
 if [ ${num_fastboot_devices} -eq 0 ]; then
     echo "No fastboot devices available, please check and try again"
-    exit 1
+    export ANDROID_SERIAL="${local_android_serial}"
 elif [ ${num_fastboot_devices} -ne 1 ] && [ -z "${ANDROID_SERIAL}" ]; then
     # for local multiple devices support
     export ANDROID_SERIAL="${local_android_serial}"
-elif [ ${num_fastboot_devices} -ne 1 ] && [ -z "${ANDROID_SERIAL}" ]; then
+elif [ ${num_fastboot_devices} -eq 1 ] && [ -z "${ANDROID_SERIAL}" ]; then
     device_serial=$(fastboot devices|awk '{print $1}')
     export ANDROID_SERIAL="${device_serial}"
 fi
