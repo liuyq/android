@@ -399,8 +399,8 @@ download_vts_cts 8540343
 download_master_gsi 8540343
 #download_throttled_copped 8189361
 #download_throttled_copped_cuttefish 8372938
-download_linaro_ci_prebuilts android/lkft/lkft-master-hikey960/315
-download_linaro_ci_prebuilts android/lkft/lkft-master-hikey/316
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-hikey960/315
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-hikey/316
 download_throttled_x15 8539522
 #download_linaro_ci_prebuilts android/lkft/lkft-master-x15/139
 ########## upload aosp master files #####################
