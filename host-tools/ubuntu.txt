@@ -217,3 +217,12 @@ $ git push ssh://git@git.linaro.org:/path/to/repo.git mybranch
 openvpn:
 sudo nmcli connection edit 0360614b-68fb-4564-80e3-6a5f4c0ce03f
 /etc/NetworkManager/system-connections/my-VPN
+
+=============================================
+resize the picture image size
+$ sudo apt-get install imagemagick
+$ mogrify -resize 50% *.png      # keep image aspect ratio
+$ mogrify -resize 320x240 *.png  # keep image aspect ratio
+$ mogrify -resize 320x240! *.png # don't keep image aspect ratio
+$ mogrify -resize x240 *.png     # don't keep image aspect ratio
+$ mogrify -resize 320x *.png     # don't keep image aspect ratio
