@@ -4,3 +4,17 @@ https://patchwork.kernel.org/project/linux-omap/list/
 https://patchwork.kernel.org/project/linux-arm-kernel/list/
 https://lore.kernel.org/
 https://www.kernel.org/lore.html
+
+Request to cherry-pick changes to some stable branch:
+Example: "Please help to apply commit 32b6170ca59c"
+
+    to:	stable@vger.kernel.org
+    cc:	Tom Gall <tom.gall@linaro.org>,
+    Alistair Strachan <alistair.strachan@linaro.org>,
+    Greg Kroah-Hartman <gregkh@google.com>,
+    "avid S. Miller" <davem@davemloft.net>,
+    John Stultz <john.stultz@linaro.org>,
+    Thomas Egerer <hakke_007@gmx.de>,
+    Herbert Xu <herbert@gondor.apana.org.au>
+    date:	8 Aug 2018, 16:19
+    subject:	Please help to apply commit 32b6170ca59c("ipv4+ipv6: Make INET*_ESP select CRYPTO_ECHAINIV")into the 4.4 stable kernel
