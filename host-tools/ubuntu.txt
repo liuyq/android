@@ -226,3 +226,10 @@ $ mogrify -resize 320x240 *.png  # keep image aspect ratio
 $ mogrify -resize 320x240! *.png # don't keep image aspect ratio
 $ mogrify -resize x240 *.png     # don't keep image aspect ratio
 $ mogrify -resize 320x *.png     # don't keep image aspect ratio
+=============================================
+22:21:41 P15v:android-report$ echo "Hello ix.io"|nc termbin.com 9999
+https://termbin.com/luhw
+22:35:38 P15v:android-report$ echo Hello world. | curl -F 'f:1=<-' ix.io
+http://ix.io/3T8z
+23:05:47 P15v:android-report$
+=============================================
