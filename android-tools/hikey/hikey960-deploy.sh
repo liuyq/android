@@ -1,6 +1,7 @@
 #!/bin/bash
 
-local_android_serial="616A34F301931D53"
+#local_android_serial="616A34F301931D53"
+local_android_serial="78B3BF5501937821"
 local_android_product="hikey960"
 
 if adb devices|grep ${local_android_serial}; then
