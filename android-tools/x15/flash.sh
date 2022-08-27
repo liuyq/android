@@ -103,6 +103,9 @@ flash_image userdata ${img_dir}/userdata.img
 # format would cause error of "FAILED (remote: failed to set partition)"
 fastboot erase metadata
 fastboot erase misc
+sleep 5
+fastboot reboot
+sleep 5
 fastboot reboot
 
 exit 0
