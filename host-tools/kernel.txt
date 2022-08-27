@@ -4,6 +4,7 @@ https://patchwork.kernel.org/project/linux-omap/list/
 https://patchwork.kernel.org/project/linux-arm-kernel/list/
 https://lore.kernel.org/
 https://www.kernel.org/lore.html
+https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/omapdrm/omap_gem.c#L603
 
 Request to cherry-pick changes to some stable branch:
 Example: "Please help to apply commit 32b6170ca59c"
@@ -18,3 +19,28 @@ Example: "Please help to apply commit 32b6170ca59c"
     Herbert Xu <herbert@gondor.apana.org.au>
     date:	8 Aug 2018, 16:19
     subject:	Please help to apply commit 32b6170ca59c("ipv4+ipv6: Make INET*_ESP select CRYPTO_ECHAINIV")into the 4.4 stable kernel
+
+https://www.kernel.org/doc/html/latest/process/5.Posting.html?highlight=stable
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#submittingpatches
+https://www.kernel.org/doc/html/latest/maintainer/configure-git.html
+https://www.kernel.org/doc/html/latest/process/email-clients.html#email-clients
+https://git-scm.com/docs/git-send-email
+https://www.freedesktop.org/wiki/Software/PulseAudio/HowToUseGitSendEmail/
+https://wiki-archive.linaro.org/Resources/HowTo/Git/GitSendEmail?highlight=%28send-email%29
+https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+https://security.google.com/settings/security/apppasswords
+    $ git send-email --annotate 0001-mmc-core-Allow-host-controllers-to-require-R1B-for-C.patch --suppress-cc=all --to=yongqin.liu@linaro.or
+    0001-mmc-core-Allow-host-controllers-to-require-R1B-for-C.patch
+    To whom should the emails be sent (if anyone)? yongqin.liu@linaro.org
+    Message-ID to be used as In-Reply-To for the first email (if any)? CAMSo37WW9veYH6=tHqUR2pa_7YX1UuzHqLBHit60P2QyzQmCEw@mail.gmail.com
+    Password for 'smtp://yongqin.liu@linaro.org@smtp.gmail.com:587':
+    5.7.9 Application-specific password required. Learn more at
+    5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 10-20020a62150a000000b0050dc76281d3sm9535650pfv.173 - gsmtp
+    $
+
+how to find the message id?
+https://www.spinics.net/lists/stable/msg563532.html
+$ git send-email --suppress-cc=all --to=yongqin@linaro.org --cc=yongqin.liu@linaro.org tested-by/ --in-reply-to=CAMSo37WW9veYH6=tHqUR2pa_7YX1UuzHqLBHit60P2QyzQmCEw@mail.gmail.com --thread --no-chain-reply-to
+
+Generate a summary information about the changes in a file for update
+$ git format-patch -n4 --cover-letter -o test
