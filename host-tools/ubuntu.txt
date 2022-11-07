@@ -233,3 +233,16 @@ https://termbin.com/luhw
 http://ix.io/3T8z
 23:05:47 P15v:android-report$
 =============================================
+How to upgrade Ubuntu 21.10 to 22.04 after EOL?
+https://serverfault.com/questions/1106691/how-to-upgrade-ubuntu-21-10-to-22-04-after-eol
+
+Solution
+    Edit your /etc/apt/sources.list and replace http://ports.ubuntu.com/ubuntu-ports by http://old-releases.ubuntu.com/ubuntu/. Then, re-run the commands.
+Step by step:
+    Save a backup of /etc/apt/sources.list (althought you can also comment lines with #, but a backup is better for your own reference to leave the system as it was, just in case)
+    Replace the URLs in /etc/apt/sources.list by using http://old-releases.ubuntu.com/ubuntu/ instead of http://ports.ubuntu.com/ubuntu-ports
+    Run sudo apt-get update, which should run fine now.
+    Run sudo apt-get dist-upgrade, which should also run fine now.
+    And finally, run do-release-upgrade (a reboot might be needed before running this command)
+More information:
+    https://help.ubuntu.com/community/EOLUpgrades
