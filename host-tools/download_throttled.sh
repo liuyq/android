@@ -158,8 +158,8 @@ function download_throttled_x15(){
     rm -f ${lpunpack_files}
     unzip otatools.zip ${lpunpack_files}
 
-    rm -f super.img userdata.img recovery.img
-    unzip ${board}-img-${build_num}.zip super.img userdata.img recovery.img
+    rm -f boot.img vbmeta.img super.img userdata.img recovery.img
+    unzip ${board}-img-${build_num}.zip boot.img vbmeta.img super.img userdata.img recovery.img
 
     rm -f super-raw.img
     ./bin/simg2img super.img super-raw.img
@@ -169,12 +169,12 @@ function download_throttled_x15(){
     mv -f system_a.img system.img
     mv -f vendor_a.img vendor.img
 
-    for f in system.img vendor.img recovery.img userdata.img; do
+    for f in boot.img vbmeta.img super.img system.img vendor.img recovery.img userdata.img; do
         rm -f ${f}.xz
         xz -T 0 $f
     done
 
-    rm -f super-raw.img super.img
+    rm -f super-raw.img
     cd -
 }
 
