@@ -402,20 +402,21 @@ function download_hikey960_super_prm_ptable(){
 
 ########## download aosp master images ########
 #download_vts_cts 9416978
-download_master_gsi 9416978
-download_throttled_x15 9417135
+#download_master_gsi 9416978
+#download_throttled_x15 9417135
 #download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-db845c/887
 #download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-hikey960/888
 #download_hikey960_super_prm_ptable android/lkft/lkft-aosp-master-hikey960/888
 #download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-hikey/889
 #download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-x15/713
+#download_linaro_ci_prebuilts android/lcr-reference-x15-master-auto/53
 ########## upload aosp master files #####################
 #copy_to_testdata aosp-master/9403551/test_suites_arm64
 #copy_to_testdata aosp-master/9403551/aosp_arm64-userdebug
 #copy_to_testdata aosp-master-throttled/9403208
 #copy_to_testdata android/lkft/lkft-aosp-master-db845c/868
-#copy_to_testdata android/lkft/lkft-aosp-master-hikey960/869
-#copy_to_testdata android/lkft/lkft-aosp-master-hikey/870
+#copy_to_testdata android/lkft/lkft-aosp-master-hikey960/888
+#copy_to_testdata android/lkft/lkft-aosp-master-hikey/889
 #copy_to_testdata android/lkft/lkft-aosp-master-x15/713
 
 ########## download android13 images ########
