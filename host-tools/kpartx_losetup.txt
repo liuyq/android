@@ -14,3 +14,6 @@ sudo losetup -a
 
 sudo kpartx -l
 sudo losetup -a
+sudo lsblk -o NAME,LABEL # check the label of the disks
+sudo blkid -o list # check the label of the disks
+tree /dev/disk/by-label/
