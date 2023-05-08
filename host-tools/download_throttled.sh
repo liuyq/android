@@ -408,7 +408,7 @@ function download_hikey960_super_prm_ptable(){
 ########## download aosp master images ########
 download_vts_cts 9962505
 download_master_gsi 9962505
-download_throttled_x15 9961752
+download_throttled_x15 10072465
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-db845c/1184
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-hikey960/1185
 download_hikey960_super_prm_ptable android/lkft/lkft-aosp-master-hikey960/1185
