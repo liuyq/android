@@ -405,6 +405,46 @@ function download_hikey960_super_prm_ptable(){
     wget -c "${url_ptable}" -O "${url_build}/prm_ptable.img"
 }
 
+function download_hikey_uefi_firmware(){
+    local build_num="${1}"
+    local dir_prefix="reference-platform/components/uefi-staging/"
+    local url_prefix="https://snapshots.linaro.org/${dir_prefix}/"
+    local url_suffix="/hikey/release/"
+
+    local dir_local="${dir_prefix}/${build_num}/${url_suffix}"
+    mkdir -p "${dir_local}"
+    cd "${dir_local}"
+    for f in MD5SUMS.txt fip.bin hisi-idt.py l-loader.bin nvme.img optee-arm-plat-hikey.tar.xz prm_ptable.img recovery.bin sec_ptable.img ; do
+        wget -c "${url_prefix}/${build_num}/${url_suffix}/${f}"
+    done
+    md5sum -c MD5SUMS.txt || true
+    cd -
+}
+function download_hikey960_uefi_firmware(){
+    local build_num="${1}"
+    local dir_prefix="reference-platform/components/uefi-staging/"
+    local url_prefix="https://snapshots.linaro.org/${dir_prefix}/"
+    local url_suffix="/hikey960/release/"
+
+    local dir_local="${dir_prefix}/${build_num}/${url_suffix}"
+    mkdir -p "${dir_local}"
+    cd "${dir_local}"
+    for f in MD5SUMS.txt config fip.bin \
+            hikey_idt hisi-sec_uce_boot.img hisi-sec_usb_xloader.img hisi-sec_xloader.img \
+            l-loader.bin prm_ptable.img recovery.bin sec_ptable.img ; do
+        wget -c "${url_prefix}/${build_num}/${url_suffix}/${f}"
+    done
+    md5sum -c MD5SUMS.txt || true
+    cd -
+}
+
+
+########## download hikey/hikey960 uefi firmware ########
+download_hikey_uefi_firmware 123
+download_hikey960_uefi_firmware 123
+########## upload firmware files #####################
+#copy_to_testdata reference-platform/components/uefi-staging/123
+
 ########## download aosp master images ########
 download_vts_cts 9962505
 download_master_gsi 9962505
