@@ -499,6 +499,7 @@ download_android11_gsi_db845c 9942623
 download_android11_gsi 9942623
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-hikey960/1172
 download_hikey960_super_prm_ptable android/lkft/lkft-aosp-android11-hikey960/1172
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-hikey/1239
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-cts/1175
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-vts/1176
 ########## upload android11 files #####################
