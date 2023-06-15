@@ -446,66 +446,66 @@ function download_hikey960_uefi_firmware(){
 #copy_to_testdata reference-platform/components/uefi-staging/123
 
 ########## download aosp master images ########
-download_vts_cts 10139922
-download_master_gsi 10139922
+download_vts_cts 10314606
+download_master_gsi 10314606
 #download_throttled_x15 10072465
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-db845c/1253
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-hikey960/1254
-download_hikey960_super_prm_ptable android/lkft/lkft-aosp-master-hikey960/1254
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-hikey/1251
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-x15/1252
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-db845c/1315
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-hikey960/1316
+download_hikey960_super_prm_ptable android/lkft/lkft-aosp-master-hikey960/1316
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-hikey/1317
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-master-x15/1318
 #download_linaro_ci_prebuilts android/lcr-reference-x15-master-auto/53
 ########## upload aosp master files #####################
-#copy_to_testdata aosp-master/10139922/test_suites_arm64
-#copy_to_testdata aosp-master/10139922/aosp_arm64-userdebug
-#copy_to_testdata aosp-master-throttled/9961752
-#copy_to_testdata android/lkft/lkft-aosp-master-db845c/1253
-#copy_to_testdata android/lkft/lkft-aosp-master-hikey960/1254
-#copy_to_testdata android/lkft/lkft-aosp-master-hikey/1251
-#copy_to_testdata android/lkft/lkft-aosp-master-x15/1252
+#copy_to_testdata aosp-master/10314606/test_suites_arm64
+#copy_to_testdata aosp-master/10314606/aosp_arm64-userdebug
+##copy_to_testdata aosp-master-throttled/9961752
+#copy_to_testdata android/lkft/lkft-aosp-master-db845c/1315
+#copy_to_testdata android/lkft/lkft-aosp-master-hikey960/1316
+#copy_to_testdata android/lkft/lkft-aosp-master-hikey/1317
+#copy_to_testdata android/lkft/lkft-aosp-master-x15/1318
 
 ########## download android13 images ########
-download_android13_gsi 10059754
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-db845c/1246
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-hikey960/1247
-download_hikey960_super_prm_ptable android/lkft/lkft-aosp-android13-hikey960/1247
+download_android13_gsi 10301695
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-db845c/1312
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-hikey960/1313
+download_hikey960_super_prm_ptable android/lkft/lkft-aosp-android13-hikey960/1313
 #download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-cts/708
-#download_google_release_cts android-cts-13_r3
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-vts/1248
+#download_google_release_cts android-cts-13_r4
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-vts/1314
 ########## upload android13 files #####################
-#copy_to_testdata aosp-android13-gsi/10059754/aosp_arm64-userdebug
-#copy_to_testdata android/lkft/lkft-aosp-android13-db845c/1246
-#copy_to_testdata android/lkft/lkft-aosp-android13-hikey960/1247
+#copy_to_testdata aosp-android13-gsi/10301695/aosp_arm64-userdebug
+#copy_to_testdata android/lkft/lkft-aosp-android13-db845c/1312
+#copy_to_testdata android/lkft/lkft-aosp-android13-hikey960/1313
 #copy_to_testdata android/lkft/lkft-aosp-android13-cts/708
-#copy_to_testdata google-released-cts/android-cts-13_r3
-#copy_to_testdata android/lkft/lkft-aosp-android13-vts/1248
+#copy_to_testdata google-released-cts/android-cts-13_r4
+#copy_to_testdata android/lkft/lkft-aosp-android13-vts/1314
 
 ########## download android12 images ########
-download_android12_gsi 10034597
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android12-hikey960/1242
-download_hikey960_super_prm_ptable android/lkft/lkft-aosp-android12-hikey960/1242
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android12-db845c/1243
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android12-cts/1244
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android12-vts/1245
+download_android12_gsi 10258191
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android12-hikey960/1308
+download_hikey960_super_prm_ptable android/lkft/lkft-aosp-android12-hikey960/1308
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android12-db845c/1309
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android12-cts/1310
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android12-vts/1311
 ########## upload android12 files #####################
-#copy_to_testdata aosp-android12-gsi/10034597/aosp_arm64-userdebug
-#copy_to_testdata android/lkft/lkft-aosp-android12-hikey960/1242
-#copy_to_testdata android/lkft/lkft-aosp-android12-db845c/1243
-#copy_to_testdata android/lkft/lkft-aosp-android12-cts/1244
-#copy_to_testdata android/lkft/lkft-aosp-android12-vts/1245
+#copy_to_testdata aosp-android12-gsi/10258191/aosp_arm64-userdebug
+#copy_to_testdata android/lkft/lkft-aosp-android12-hikey960/1308
+#copy_to_testdata android/lkft/lkft-aosp-android12-db845c/1309
+#copy_to_testdata android/lkft/lkft-aosp-android12-cts/1310
+#copy_to_testdata android/lkft/lkft-aosp-android12-vts/1311
 
 ########## download android11 images ########
-download_android11_gsi_db845c 9942623
-download_android11_gsi 9942623
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-hikey960/1237
-download_hikey960_super_prm_ptable android/lkft/lkft-aosp-android11-hikey960/1237
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-hikey/1239
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-cts/1240
-download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-vts/1241
+download_android11_gsi_db845c 10280024
+download_android11_gsi 10280024
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-hikey960/1303
+download_hikey960_super_prm_ptable android/lkft/lkft-aosp-android11-hikey960/1303
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-hikey/1305
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-cts/1306
+download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-vts/1307
 ########## upload android11 files #####################
-#copy_to_testdata aosp-android11-gsi/9942623/aosp_arm64-userdebug
-#copy_to_testdata aosp-android11-gsi/9942623/db845c-userdebug
-#copy_to_testdata android/lkft/lkft-aosp-android11-hikey960/1237
-#copy_to_testdata android/lkft/lkft-aosp-android11-hikey/1239
-#copy_to_testdata android/lkft/lkft-aosp-android11-cts/1240
-#copy_to_testdata android/lkft/lkft-aosp-android11-vts/1241
+#copy_to_testdata aosp-android11-gsi/10280024/aosp_arm64-userdebug
+#copy_to_testdata aosp-android11-gsi/10280024/db845c-userdebug
+#copy_to_testdata android/lkft/lkft-aosp-android11-hikey960/1303
+#copy_to_testdata android/lkft/lkft-aosp-android11-hikey/1305
+#copy_to_testdata android/lkft/lkft-aosp-android11-cts/1306
+#copy_to_testdata android/lkft/lkft-aosp-android11-vts/1307
