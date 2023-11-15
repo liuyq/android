@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -ex
 # https://wiki-archive.linaro.org/Boards/BeagleBoard-X15
 # https://linaro.atlassian.net/wiki/spaces/CTT/pages/25111140766/BeagleBoard+X15
 
@@ -48,16 +48,16 @@ fi
 
 img_dir=${1}
 if [ -z "${img_dir}" ]; then
-    img_dir="out/target/product/am57xevm"
-fi
-if [ ! -d "${img_dir}" ]; then
     img_dir="out/target/product/beagle_x15"
 fi
+#if [ ! -d "${img_dir}" ]; then
+#    img_dir="out/target/product/beagle_x15"
+#fi
 
-if ! [ -d ${img_dir} ]; then
-    echo "The specified path is not a directory:${img_dir}"
-    exit 1
-fi
+#if ! [ -d ${img_dir} ]; then
+#    echo "The specified path is not a directory:${img_dir}"
+#    exit 1
+#fi
 
 function flash_image(){
     local partition=$1
@@ -65,9 +65,46 @@ function flash_image(){
     if [ -z "${partition}" ] || [ -z "${file_img}" ]; then
         return
     fi
+    temp_file=false
+    if echo "${file_img}"|grep -E "^http://|^https://"; then
+        f_img_local=$(mktemp -u "/tmp/${partition}-XXX.img")
+        ## + wget -c http://192.168.1.14:8000/android/lkft/lkft-aosp-main-db845c/1662/images//cache.img --progress=dot:mega -O /tmp/cache-GNu.img
+        ## --2023-10-19 14:08:42--  http://192.168.1.14:8000/android/lkft/lkft-aosp-main-db845c/1662/images//cache.img
+        ## Connecting to 192.168.1.14:8000... connected.
+        ## HTTP request sent, awaiting response... 404 File not found
+        ## 2023-10-19 14:08:42 ERROR 404: File not found.
+        is_xz_file=false
+        if wget --spider "${file_img}"; then
+            cmd_wget="wget -c ${file_img} --progress=dot:giga -O ${f_img_local}"
+        elif wget --spider "${file_img}.xz"; then
+            cmd_wget="wget -c ${file_img}.xz --progress=dot:giga -O ${f_img_local}.xz"
+            is_xz_file=true
+        else
+            echo "Neither ${file_img} nor ${file_img}.xz exists"
+            return
+        fi
+        if ${cmd_wget}; then
+            ${is_xz_file} && xz -d "${f_img_local}.xz"
+            file_img="${f_img_local}"
+            temp_file=true
+        else
+            rm -f "${f_img_local}"
+            return
+        fi
+    fi
 
-    if [ ! -f "${file_img}" ]; then
-        echo "${file_img} does not exist"
+    if [ -f "${file_img}" ]; then
+        :
+    elif [ -f "${file_img}.xz" ]; then
+        f_img_local=$(mktemp -u "/tmp/${partition}-XXX.img")
+        if xz -c -d "${file_img}.xz" >"${f_img_local}"; then
+            temp_file=true
+            file_img="${f_img_local}"
+        else
+            return
+        fi
+    else
+        echo "Neither ${file_img} nor ${file_img}.xz exists"
         return
     fi
 
@@ -77,6 +114,8 @@ function flash_image(){
     if [ $? -ne 0 ]; then
         echo "Failed to deploy ${file_img}"
         exit 1
+    elif ${temp_file}; then
+        rm ${file_img}
     fi
     # sleep 2 after flash
     sleep 2
