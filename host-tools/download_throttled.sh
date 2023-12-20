@@ -454,7 +454,7 @@ download_linaro_ci_prebuilts android/lkft/lkft-aosp-main-vts/1904
 #download_throttled_x15 10072465
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-main-db845c/1900
 #download_linaro_ci_prebuilts android/lkft/lkft-aosp-main-hikey960/1901
-#download_hikey960_super_prm_ptable android/lkft/lkft-aosp-main-hikey960/1901
+download_hikey960_super_prm_ptable android/lkft/lkft-aosp-main-linaro-hikey960/1902
 download_hikey960_super_prm_ptable android/lkft/lkft-aosp-main-linaro-hikey960/1902
 ########## upload aosp master files #####################
 #copy_to_testdata android/lkft/lkft-aosp-main-cts/1780
