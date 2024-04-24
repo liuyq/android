@@ -438,6 +438,35 @@ function download_hikey960_uefi_firmware(){
     cd -
 }
 
+function download_tuxsuite_prebuilts(){
+    # tuxsuite url is something like this: https://storage.tuxsuite.com/public/linaro/yongqin/oebuilds/2DD36r5rmUGPzpaeVxm0LYG8Gt2/
+    # tuxsuite url is something like this: https://storage.tuxsuite.com/public/linaro/lkft/oebuilds/2fUrAszJQ0dcGROzLdEw8IqGmxT/
+    local tuxsuite_download_url="${1}"
+    local tuxsuite_download_sha=$(basename "${tuxsuite_download_url}")
+    local dir_prebuilts="tuxsuite/${tuxsuite_download_sha}"
+
+    local f_finsihed="${dir_prebuilts}/download_finished"
+    if [ ! -f "${f_finsihed}" ]; then
+        local url_download=$(dirname "${tuxsuite_download_url}")/$(basename "${tuxsuite_download_url}")
+        mkdir -p "${dir_prebuilts}"
+        cd "${dir_prebuilts}"
+        local f_list="list.json"
+        download_till_finished "${url_download}/" "${f_list}"
+        local url_files=$(jq -r '.files[].Url' "${f_list}")
+
+        for f_name_or_url in ${url_files}; do
+            # according to issue here: https://gitlab.com/Linaro/tuxsuite/-/issues/173
+            # for the storage.tuxsuite.com server
+            f_name=$(basename "${f_name_or_url}")
+            ### TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL might have lava kisscache url
+            ### f_name_or_url will not have that
+            url_f="${url_download}/${f_name}"
+            download_till_finished "${url_f}" "${f_name}"
+        done
+        cd -
+        touch "${f_finsihed}"
+    fi
+}
 
 ########## download hikey/hikey960 uefi firmware ########
 #download_hikey_uefi_firmware 123
@@ -517,3 +546,7 @@ download_linaro_ci_prebuilts android/lkft/lkft-aosp-android11-vts/2285
 #copy_to_testdata android/lkft/lkft-aosp-android11-hikey/2305
 #copy_to_testdata android/lkft/lkft-aosp-android11-cts/2306
 #copy_to_testdata android/lkft/lkft-aosp-android11-vts/2285
+
+## downlaod tuxsuite prebuilts
+#download_tuxsuite_prebuilts https://storage.tuxsuite.com/public/linaro/lkft/oebuilds/2fUrAszJQ0dcGROzLdEw8IqGmxT/
+#download_tuxsuite_prebuilts https://storage.tuxsuite.com/public/linaro/lkft/oebuilds/2fSiLfQQIAXDUSHN3PwikNzvLPy/
