@@ -246,3 +246,11 @@ Step by step:
     And finally, run do-release-upgrade (a reboot might be needed before running this command)
 More information:
     https://help.ubuntu.com/community/EOLUpgrades
+
+====================
+python3 -m pip download pysocks
+python3 -m pip install PySocks*.whl
+pip install pysocks
+pip uninstall pysocks
+pip uninstall pysocks
+=============================
