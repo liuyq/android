@@ -42,9 +42,31 @@ fi
 #    exit 1
 #fi
 
-function flash_image(){
-    local partition=$1
-    local file_img=$2
+##############common functions ###############
+
+function check_file_existence(){
+    local target_file="${1}"
+    if echo "${target_file}"|grep -E "^http://|^https://"; then
+        is_xz_file=false
+        if wget --spider "${target_file}"; then
+            return 0
+        elif wget --spider "${target_file}.xz"; then
+            return 0
+        else
+            return 1
+        fi
+    elif [ -f "${target_file}" ]; then
+        return 0
+    elif [ -f "${target_file}.xz" ]; then
+        return 0
+    fi
+    return 1
+}
+
+function fastboot_wrapper(){
+    local fastboot_cmd="${1}"
+    local partition="${2}"
+    local file_img="${3}"
     if [ -z "${partition}" ] || [ -z "${file_img}" ]; then
         return
     fi
@@ -93,17 +115,35 @@ function flash_image(){
 
     echo "======= Flash ${partition} partition with file $file_img =============="
     #/SATA3/nougat/out/host/linux-x86/bin/fastboot flash -w ${partition} ${file_img}
-    fastboot flash ${partition} ${file_img}
-    if [ $? -ne 0 ]; then
+    if [ "X${fastboot_cmd}" = "Xboot" ]; then
+        fastboot "${fastboot_cmd}" "${file_img}"
+        ret=$?
+    else
+        fastboot "${fastboot_cmd}" "${partition}" "${file_img}"
+        ret=$?
+    fi
+    if [ $ret -ne 0 ]; then
         echo "Failed to deploy ${file_img}"
         exit 1
     elif ${temp_file}; then
-        rm ${file_img}
+        rm "${file_img}"
     fi
     # sleep 2 after flash
     sleep 2
 }
 
+function flash_image(){
+    local partition="${1}"
+    local file_img="${2}"
+    fastboot_wrapper "flash" "${partition}" "${file_img}"
+}
+
+function boot_image(){
+    local file_img="${1}"
+    fastboot_wrapper "boot" "boot" "${file_img}"
+}
+
+#### common functions ###################
 flash_image boot ${img_dir}/boot.img
 flash_image super ${img_dir}/super.img
 flash_image userdata ${img_dir}/userdata.img
