@@ -480,6 +480,14 @@ function download_tuxsuite_prebuilts(){
         ln -r -s "${dir_prebuilts}" "${link_prebuilts}"
     fi
 }
+function concatenate_cts_files(){
+    local target_dir="${1}"
+
+    cd "${target_dir}" && \
+        cat android-cts.zip.*.split > android-cts.zip && \
+        md5sum android-cts.zip >> MD5SUM.txt && \
+        cd -
+}
 
 ########## download hikey/hikey960 uefi firmware ########
 #download_hikey_uefi_firmware 123
@@ -493,6 +501,7 @@ download_linaro_ci_prebuilts android/lkft/lkft-aosp-main-db845c/2423
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-main-linaro-hikey960/2425
 download_hikey960_super_prm_ptable android/lkft/lkft-aosp-main-linaro-hikey960/2425
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-main-cts/2426
+concatenate_cts_files android/lkft/lkft-aosp-main-cts/2426
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-main-vts/2427
 #download_linaro_ci_prebuilts android/lkft/lkft-aosp-main-arm64/2428
 ########## upload aosp master files #####################
@@ -506,6 +515,7 @@ download_linaro_ci_prebuilts android/lkft/lkft-aosp-main-vts/2427
 ########## download android14 images ########
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-android14-db845c/2420
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-android14-cts/2421
+concatenate_cts_files android/lkft/lkft-aosp-android14-cts/2421
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-android14-vts/2422
 ########## upload android13 files #####################
 #copy_to_testdata android/lkft/lkft-aosp-android14-db845c/2420
@@ -518,6 +528,7 @@ download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-db845c/2416
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-hikey960/2417
 download_hikey960_super_prm_ptable android/lkft/lkft-aosp-android13-hikey960/2417
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-cts/2418
+concatenate_cts_files android/lkft/lkft-aosp-android13-cts/2418
 #download_google_release_cts android-cts-13_r4
 download_linaro_ci_prebuilts android/lkft/lkft-aosp-android13-vts/2419
 ########## upload android13 files #####################
