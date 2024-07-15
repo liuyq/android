@@ -443,11 +443,21 @@ function download_tuxsuite_prebuilts(){
     # tuxsuite url is something like this: https://storage.tuxsuite.com/public/linaro/lkft/oebuilds/2fUrAszJQ0dcGROzLdEw8IqGmxT/
     local tuxsuite_download_url="${1}"
     local tuxsuite_download_sha=$(basename "${tuxsuite_download_url}")
-    local dir_prebuilts="tuxsuite/${tuxsuite_download_sha}"
+
+    local url_download=$(dirname "${tuxsuite_download_url}")/$(basename "${tuxsuite_download_url}")
+    local url_build_definition="${url_download}/build-definition.json"
+    local f_build_definition="/tmp/build-definition-${tuxsuite_download_sha}.json"
+    rm -fr "${f_build_definition}"
+    download_till_finished "${url_build_definition}" "${f_build_definition}"
+    # 1323828919#lkft-aosp-main-vts#20240608-100537
+    local build_name=$(jq -r ".name" "${f_build_definition}")
+    local pipeline_id=${build_name%%\#*}
+    local build_config_name=$(echo "${build_name}"|cut -d# -f 2)
+    local dir_build_config_name="tuxsuite/${build_config_name}"
+    local dir_prebuilts="tuxsuite/${build_config_name}/${pipeline_id}"
 
     local f_finsihed="${dir_prebuilts}/download_finished"
     if [ ! -f "${f_finsihed}" ]; then
-        local url_download=$(dirname "${tuxsuite_download_url}")/$(basename "${tuxsuite_download_url}")
         mkdir -p "${dir_prebuilts}"
         cd "${dir_prebuilts}"
         local f_list="list.json"
@@ -471,15 +481,14 @@ function download_tuxsuite_prebuilts(){
                 xz -k -d "${f_name}"
             fi
         done
+
+        echo "${tuxsuite_download_url}" >url.txt
         cd -
         touch "${f_finsihed}"
     fi
-    local build_name=$(jq -r ".name" "${dir_prebuilts}/build-definition.json")
-    local link_prebuilts="tuxsuite/${tuxsuite_download_sha}-${build_name}"
-    if [ ! -L "${link_prebuilts}" ]; then
-        ln -r -s "${dir_prebuilts}" "${link_prebuilts}"
-    fi
+    rm -fr "${f_build_definition}"
 }
+
 function concatenate_cts_files(){
     local target_dir="${1}"
 
