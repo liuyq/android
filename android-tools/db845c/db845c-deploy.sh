@@ -1,5 +1,6 @@
 #!/bin/bash -ex
 
+# https://devboardsforandroid.linaro.org/en/latest/devices/rb3.html#booting-aosp-from-mmc-sdcard
 local_android_serial="897afb61"
 local_android_product="SuperEDK2k"
 
