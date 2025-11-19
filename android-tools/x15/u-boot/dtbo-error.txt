@@ -1,0 +1,73 @@
+
+U-Boot SPL 2020.04-rc3-12583-gc1f74e2290 (Apr 01 2020 - 00:18:50 -0500)
+DRA752-GP ES2.0
+Trying to boot from MMC1
+no pinctrl state for default mode
+Loading Environment from FAT... no pinctrl state for default mode
+OK
+
+
+U-Boot 2020.04-rc3-12583-gc1f74e2290 (Apr 01 2020 - 00:18:50 -0500)
+
+CPU  : DRA752-GP ES2.0
+Model: TI AM5728 BeagleBoard-X15
+Board: AM572x EVM REV A.30
+DRAM:  2 GiB
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+Loading Environment from FAT... OK
+Net:   
+Warning: ethernet@48484000 using MAC address from ROM
+eth0: ethernet@48484000
+Hit any key to stop autoboot:  2  1  0 
+switch to partitions #0, OK
+mmc0 is current device
+SD/MMC found on device 0
+switch to partitions #0, OK
+mmc0 is current device
+SD/MMC found on device 0
+Trying to boot Linux from eMMC ...
+switch to partitions #0, OK
+mmc1(part 0) is current device
+SD/MMC found on device 1
+** Unrecognized filesystem type **
+switch to partitions #0, OK
+mmc1(part 0) is current device
+misc partition number:0x4
+ANDROID: Booting slot: a
+CACHE: Misaligned operation at range [fffd34e8, fffd3ce8]
+Android: Normal boot...
+## Android Verified Boot 2.0 version 1.1.0
+read_is_device_unlocked not supported yet
+CACHE: Misaligned operation at range [fdf44298, fdf54298]
+CACHE: Misaligned operation at range [fdf44298, fdf54298]
+read_rollback_index not supported yet
+CACHE: Misaligned operation at range [fdf543f8, ff3543f8]
+CACHE: Misaligned operation at range [fdf543f8, ff3543f8]
+read_is_device_unlocked not supported yet
+Verification passed successfully
+AVB verification OK.
+A/B cmdline addition: androidboot.slot_suffix=_a
+
+MMC read: dev # 1, block # 5632, count 40960 ... 40960 blocks read: OK
+Preparing FDT...
+  Reading DTBO partition...
+
+MMC read: dev # 1, block # 87552, count 16384 ... 16384 blocks read: OK
+  Reading DTB for AM57x EVM RevA3...
+  Applying DTBOs for AM57x EVM RevA3...
+0x1462 (5218)
+failed on fdt_overlay_apply(): FDT_ERR_NOSPACE
+0x313 (787)
+failed on fdt_overlay_apply(): FDT_ERR_BADMAGIC
+base fdt does did not have a /__symbols__ node
+make sure you've compiled with -@
+## Booting Android Image at 0x82000000 ...
+Kernel load addr 0x82000800 size 5389 KiB
+Kernel command line: buildvariant=userdebug androidboot.verifiedbootstate=orange 
+RAM disk load addr 0x11000000 size 1191 KiB
+ERROR: Did not find a cmdline Flattened Device Tree
+   XIP Kernel Image
+   Loading Ramdisk to 8fed6000, end 8ffffb71 ... OK
+Using machid 0xfe6 from environment
+
+Starting kernel ...

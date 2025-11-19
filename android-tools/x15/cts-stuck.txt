@@ -1,0 +1,36 @@
+871402e05b24cb56bc69df47cff960d0e0d24267
+mm: forbid splitting special mappings
+arch/arm/kernel/vdso.c
+
+
+4f5b0c1789963477cc9a4d45b4b62d694665cceb
+arm, arm64: move free_unused_memmap() to generic mm
+arch/arm/mm/init.c
+
+4f5b0c1789963477cc9a4d45b4b62d694665cceb
+arm, arm64: move free_unused_memmap() to generic mm
+arch/arm/Kconfig
+
+5e545df3292fbd3d5963c68980f1527ead2a2b3f
+rm: remove CONFIG_ARCH_HAS_HOLES_MEMORYMODEL
+arch/arm/Kconfig
+
+
+871402e05b24cb56bc69df47cff960d0e0d24267
+mm: forbid splitting special mappings
+mm/mmap.c
+
+dd3b614f858d88f33e0cf8b7353e2ad937e71da3
+vm_ops: rename .split() callback to .may_split()
+include/linux/mm.h
+
+dd3b614f858d88f33e0cf8b7353e2ad937e71da3
+vm_ops: rename .split() callback to .may_split()
+include/linux/mm.h
+
+95bb7c42ac8a94ce3d0eb059ad64430390351ccb
+mm: Add 'mprotect' hook to struct vm_operations_struct
+include/linux/mm.h
+
+12-26 22:36:40 I/RemoteAndroidTest: Running am instrument -w -r --no-hidden-api-checks --no-isolated-storage --abi armeabi-v7a  -e debug false -e newRunListenerMode true -e log false -e notAnnotation android.platform.test.annotations.AppModeInstant,com.android.compatibility.common.util.CtsDownstreamingTest -e timeout_msec 24000000 android.camera.cts/androidx.test.runner.AndroidJUnitRunner on texas_instruments_inc-aosp_on_beagleboard_x15-0e005017394200e2
+

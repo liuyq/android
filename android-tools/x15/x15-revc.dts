@@ -1,0 +1,192 @@
+	aliases {
+		display1 = &lcd0;
+		display0 = &hdmi0;
+	};
+
+
+hdmi0: connector {
+    compatible = "hdmi-connector";
+    label = "hdmi";
+
+    type = "a";
+
+    port {
+        hdmi_connector_in: endpoint {
+            remote-endpoint = <&tpd12s015_out>;
+        };
+    };
+};
+
+tpd12s015: encoder {
+    compatible = "ti,tpd12s015";
+
+    ports {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        port@0 {
+            reg = <0>;
+
+            tpd12s015_in: endpoint {
+                remote-endpoint = <&hdmi_out>;
+            };
+        };
+
+        port@1 {
+            reg = <1>;
+
+            tpd12s015_out: endpoint {
+                remote-endpoint = <&hdmi_connector_in>;
+            };
+        };
+    };
+};
+
+
+&hdmi {
+    status = "okay";
+    vdda-supply = <&ldo4_reg>;
+
+    port {
+        hdmi_out: endpoint {
+            remote-endpoint = <&tpd12s015_in>;
+        };
+    };
+};
+
+
+
+target-module@58000000 {
+	compatible = "ti,sysc-omap2", "ti,sysc";
+	reg = <0x58000000 4>,
+	      <0x58000014 4>;
+	reg-names = "rev", "syss";
+	ti,syss-mask = <1>;
+	clocks = <&dss_clkctrl DRA7_DSS_CORE_CLKCTRL 0>,
+		 <&dss_clkctrl DRA7_DSS_CORE_CLKCTRL 9>,
+		 <&dss_clkctrl DRA7_DSS_CORE_CLKCTRL 10>,
+		 <&dss_clkctrl DRA7_DSS_CORE_CLKCTRL 11>;
+	clock-names = "fck", "hdmi_clk", "sys_clk", "tv_clk";
+	#address-cells = <1>;
+	#size-cells = <1>;
+	ranges = <0 0x58000000 0x800000>;
+
+	dss: dss@0 {
+		compatible = "ti,dra7-dss";
+		/* 'reg' defined in dra72x.dtsi and dra74x.dtsi */
+		/* 'clocks' defined in dra72x.dtsi and dra74x.dtsi */
+		status = "disabled";
+		/* CTRL_CORE_DSS_PLL_CONTROL */
+		syscon-pll-ctrl = <&scm_conf 0x538>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <0 0 0x800000>;
+
+		target-module@1000 {
+			compatible = "ti,sysc-omap2", "ti,sysc";
+			reg = <0x1000 0x4>,
+			      <0x1010 0x4>,
+			      <0x1014 0x4>;
+			reg-names = "rev", "sysc", "syss";
+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+					<SYSC_IDLE_NO>,
+					<SYSC_IDLE_SMART>;
+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
+					<SYSC_IDLE_NO>,
+					<SYSC_IDLE_SMART>;
+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
+					 SYSC_OMAP2_ENAWAKEUP |
+					 SYSC_OMAP2_SOFTRESET |
+					 SYSC_OMAP2_AUTOIDLE)>;
+			ti,syss-mask = <1>;
+			clocks = <&dss_clkctrl DRA7_DSS_CORE_CLKCTRL 8>;
+			clock-names = "fck";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			ranges = <0 0x1000 0x1000>;
+
+			dispc@0 {
+				compatible = "ti,dra7-dispc";
+				reg = <0 0x1000>;
+				interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&dss_clkctrl DRA7_DSS_DSS_CORE_CLKCTRL 8>;
+				clock-names = "fck";
+				/* CTRL_CORE_SMA_SW_1 */
+				syscon-pol = <&scm_conf 0x534>;
+			};
+		};
+
+		target-module@40000 {
+			compatible = "ti,sysc-omap4", "ti,sysc";
+			reg = <0x40000 0x4>,
+			      <0x40010 0x4>;
+			reg-names = "rev", "sysc";
+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+					<SYSC_IDLE_NO>,
+					<SYSC_IDLE_SMART>,
+					<SYSC_IDLE_SMART_WKUP>;
+			ti,sysc-mask = <(SYSC_OMAP4_SOFTRESET)>;
+			clocks = <&dss_clkctrl DRA7_DSS_CORE_CLKCTRL 9>,
+				 <&dss_clkctrl DRA7_DSS_CORE_CLKCTRL 8>;
+			clock-names = "fck", "dss_clk";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			ranges = <0 0x40000 0x40000>;
+
+			hdmi: encoder@0 {
+				compatible = "ti,dra7-hdmi";
+				reg = <0 0x200>,
+				      <0x200 0x80>,
+				      <0x300 0x80>,
+				      <0x20000 0x19000>;
+				reg-names = "wp", "pll", "phy", "core";
+				interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+				status = "disabled";
+				clocks = <&dss_clkctrl DRA7_DSS_DSS_CORE_CLKCTRL 9>,
+					 <&dss_clkctrl DRA7_DSS_DSS_CORE_CLKCTRL 10>;
+				clock-names = "fck", "sys_clk";
+				dmas = <&sdma_xbar 76>;
+				dma-names = "audio_tx";
+			};
+		};
+	};
+};
+
+
+
+lcd0: lcdpanel {
+	compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
+	backlight = <&lcd_bl>;
+	enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
+	label = "lcd";
+
+	port {
+		lcd_in: endpoint {
+			remote-endpoint = <&dpi_out>;
+		};
+	};
+};
+
+lcd_bl: backlight {
+	compatible = "pwm-backlight";
+	brightness-levels = <0 243 245 247 249 251 252 253 255>;
+	default-brightness-level = <8>;
+	pwms = <&ehrpwm1 0 50000 0>;
+};
+
+&dss {
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port {
+			reg = <0>;
+
+			dpi_out: endpoint {
+				data-lines = <24>;
+				remote-endpoint = <&lcd_in>;
+			};
+		};
+	};
+};
+

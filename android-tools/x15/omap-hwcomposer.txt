@@ -1,0 +1,382 @@
+https://source.android.com/devices/tech/display/multi_display/displays
+
+1. where is the SurfaceFlinger::onHotplugReceived called
+   as the first display will be set to the primary display by default
+
+2. is SurfaceFlinger::initScheduler is the problem function
+   with it run for the external display(hdmi), then it would display correctly
+
+how to get the default display device:
+    sp<const DisplayDevice> getDefaultDisplayDeviceLocked() const REQUIRES(mStateLock) {
+        return const_cast<SurfaceFlinger*>(this)->getDefaultDisplayDeviceLocked();
+    }
+
+    sp<DisplayDevice> getDefaultDisplayDeviceLocked() REQUIRES(mStateLock) {
+        if (const auto token = getInternalDisplayTokenLocked()) {
+            return getDisplayDeviceLocked(token);
+        }
+        return nullptr;
+    }
+
+    sp<const DisplayDevice> getDisplayDeviceLocked(const wp<IBinder>& displayToken) const
+            REQUIRES(mStateLock) {
+        return const_cast<SurfaceFlinger*>(this)->getDisplayDeviceLocked(displayToken);
+    }
+
+    sp<DisplayDevice> getDisplayDeviceLocked(const wp<IBinder>& displayToken) REQUIRES(mStateLock) {
+        const auto it = mDisplays.find(displayToken);
+        return it == mDisplays.end() ? nullptr : it->second;
+    }
+
+    // TODO(b/74619554): Remove special cases for primary display.
+    sp<IBinder> getInternalDisplayTokenLocked() const REQUIRES(mStateLock) {
+        const auto displayId = getInternalDisplayIdLocked();
+        return displayId ? getPhysicalDisplayTokenLocked(*displayId) : nullptr;
+    }
+
+    std::optional<DisplayId> getInternalDisplayIdLocked() const REQUIRES(mStateLock) {
+        const auto hwcDisplayId = getHwComposer().getInternalHwcDisplayId();
+        return hwcDisplayId ? getHwComposer().toPhysicalDisplayId(*hwcDisplayId) : std::nullopt;
+    }
+
+    sp<IBinder> getPhysicalDisplayTokenLocked(DisplayId displayId) const REQUIRES(mStateLock) {
+        const auto it = mPhysicalDisplayTokens.find(displayId);
+        return it != mPhysicalDisplayTokens.end() ? it->second : nullptr;
+    }
+
+frameworks/native/services/surfaceflinger/SurfaceFlinger.cpp
+    void SurfaceFlinger::processDisplayChanged(const wp<IBinder>& displayToken, const DisplayDeviceState& currentState, const DisplayDeviceState& drawingState) {
+
+    frameworks/native/services/surfaceflinger/DisplayHardware/HWComposer.cpp
+         std::optional<DisplayId> HWComposer::allocateVirtualDisplay(uint32_t width, uint32_t height, ui::PixelFormat* format) {
+         void HWComposer::allocatePhysicalDisplay(hal::HWDisplayId hwcDisplayId, DisplayId displayId) {
+         std::optional<DisplayIdentificationInfo> HWComposer::onHotplugDisconnect
+
+        frameworks/native/services/surfaceflinger/DisplayHardware/HWC2.cpp
+            Display::setConnected
+                Display::loadConfigs
+                    mComposer.getDisplayConfigs(mId, &configIds);
+                    loadConfig(configId);
+                        Display::getAttribute(HWConfigId configId, Attribute attribute)
+                            mComposer.getDisplayAttribute(mId, configId, attribute, &value);
+                                frameworks/native/services/surfaceflinger/DisplayHardware/ComposerHal.cpp getDisplayAttribute
+                                    hardware/interfaces/graphics/composer/2.1/utils/passthrough/include/composer-passthrough/2.1/HwcHal.h
+                                    hardware/interfaces/graphics/composer/2.1/utils/hwc2onfbadapter/HWC2OnFbAdapter.cpp
+                                    HWC2_FUNCTION_GET_DISPLAY_ATTRIBUTE / HWC2_PFN_GET_DISPLAY_ATTRIBUTE / getDisplayAttributeHook
+                                    external/drm_hwcomposer/DrmHwcTwo.cpp DrmHwcTwo::HwcDisplay::GetDisplayAttribute
+
+
+02-04 17:27:49.240   312   312 E HWComposer: loadLayerMetadataSupport: getLayerGenericMetadataKeys failed: UNSUPPORTED (8)
+02-04 17:27:49.241   304   357 E hwc-drm-two: LIUYQ external/drm_hwcomposer/DrmHwcTwo.cpp 1125 HandleInitialHotplugState: conn->display()=0, conn->state()=1
+02-04 17:27:49.241   312   312 I HWComposer: Switching to legacy multi-display mode
+02-04 17:27:49.241   312   312 E HWComposer: isConnected failed for display 0: Invalid display
+02-04 17:27:49.242   312   312 E HWC2    : getDisplayAttribute(0, 1, Unknown) failed: BadConfig (1)
+frameworks/native/services/surfaceflinger/DisplayHardware/HWC2.cpp
+    int32_t Display::getAttribute(HWConfigId configId, Attribute attribute) {
+        int32_t value = 0;
+        auto intError = mComposer.getDisplayAttribute(mId, configId, attribute, &value);
+        auto error = static_cast<Error>(intError);
+        if (error != Error::NONE) {
+            ALOGE("getDisplayAttribute(%" PRIu64 ", %u, %s) failed: %s (%d)", mId,
+                    configId, to_string(attribute).c_str(),
+                    to_string(error).c_str(), intError);
+            return -1;
+        }
+        return value;
+    }
+
+
+02-04 17:28:11.626   304   357 E hwc-drm-display-compositor: Commit test failed for display 1, FIXME
+02-04 17:28:11.626   304   357 E hwc-drm-two: Failed to apply the frame composition ret=-22
+02-04 17:28:11.626   312   312 E HWComposer: presentAndGetReleaseFences: present failed for display 1: BadParameter (4)
+external/drm_hwcomposer/compositor/DrmDisplayCompositor.cpp:651:
+    int DrmDisplayCompositor::ApplyComposition(
+        std::unique_ptr<DrmDisplayComposition> composition) {
+      int ret = 0;
+      switch (composition->type()) {
+        case DRM_COMPOSITION_TYPE_FRAME:
+          if (composition->geometry_changed()) {
+            // Send the composition to the kernel to ensure we can commit it. This
+            // is just a test, it won't actually commit the frame.
+            ret = CommitFrame(composition.get(), true);
+            if (ret) {
+              ALOGE("Commit test failed for display %d, FIXME", display_);
+              return ret;
+            }
+          }
+
+          ApplyFrame(std::move(composition), ret);
+          break;
+        case DRM_COMPOSITION_TYPE_DPMS:
+          active_ = (composition->dpms_mode() == DRM_MODE_DPMS_ON);
+          ret = ApplyDpms(composition.get());
+          if (ret)
+            ALOGE("Failed to apply dpms for display %d", display_);
+          return ret;
+        case DRM_COMPOSITION_TYPE_MODESET:
+          mode_.mode = composition->display_mode();
+          if (mode_.blob_id)
+            resource_manager_->GetDrmDevice(display_)->DestroyPropertyBlob(
+                mode_.blob_id);
+          std::tie(ret, mode_.blob_id) = CreateModeBlob(mode_.mode);
+          if (ret) {
+            ALOGE("Failed to create mode blob for display %d", display_);
+            return ret;
+          }
+          mode_.needs_modeset = true;
+          return 0;
+        default:
+          ALOGE("Unknown composition type %d", composition->type());
+          return -EINVAL;
+      }
+
+      return ret;
+    }
+
+external/drm_hwcomposer/DrmHwcTwo.cpp:
+    HWC2::Error DrmHwcTwo::HwcDisplay::CreateComposition(bool test) {
+  std::vector<DrmCompositionDisplayLayersMap> layers_map;
+  layers_map.emplace_back();
+  DrmCompositionDisplayLayersMap &map = layers_map.back();
+
+  map.display = static_cast<int>(handle_);
+  map.geometry_changed = true;  // TODO: Fix this
+
+  // order the layers by z-order
+  bool use_client_layer = false;
+  uint32_t client_z_order = UINT32_MAX;
+  std::map<uint32_t, DrmHwcTwo::HwcLayer *> z_map;
+  for (std::pair<const hwc2_layer_t, DrmHwcTwo::HwcLayer> &l : layers_) {
+    switch (l.second.validated_type()) {
+      case HWC2::Composition::Device:
+        z_map.emplace(std::make_pair(l.second.z_order(), &l.second));
+        break;
+      case HWC2::Composition::Client:
+        // Place it at the z_order of the lowest client layer
+        use_client_layer = true;
+        client_z_order = std::min(client_z_order, l.second.z_order());
+        break;
+      default:
+        continue;
+    }
+  }
+  if (use_client_layer)
+    z_map.emplace(std::make_pair(client_z_order, &client_layer_));
+
+  if (z_map.empty())
+    return HWC2::Error::BadLayer;
+
+  // now that they're ordered by z, add them to the composition
+  for (std::pair<const uint32_t, DrmHwcTwo::HwcLayer *> &l : z_map) {
+    DrmHwcLayer layer;
+    l.second->PopulateDrmLayer(&layer);
+    int ret = layer.ImportBuffer(importer_.get());
+    if (ret) {
+      ALOGE("Failed to import layer, ret=%d", ret);
+      return HWC2::Error::NoResources;
+    }
+    map.layers.emplace_back(std::move(layer));
+  }
+
+  std::unique_ptr<DrmDisplayComposition> composition = compositor_
+                                                           .CreateComposition();
+  composition->Init(drm_, crtc_, importer_.get(), planner_.get(), frame_no_);
+
+  // TODO: Don't always assume geometry changed
+  int ret = composition->SetLayers(map.layers.data(), map.layers.size(), true);
+  if (ret) {
+    ALOGE("Failed to set layers in the composition ret=%d", ret);
+    return HWC2::Error::BadLayer;
+  }
+
+  std::vector<DrmPlane *> primary_planes(primary_planes_);
+  std::vector<DrmPlane *> overlay_planes(overlay_planes_);
+  ret = composition->Plan(&primary_planes, &overlay_planes);
+  if (ret) {
+    ALOGE("Failed to plan the composition ret=%d", ret);
+    return HWC2::Error::BadConfig;
+  }
+
+  // Disable the planes we're not using
+  for (auto i = primary_planes.begin(); i != primary_planes.end();) {
+    composition->AddPlaneDisable(*i);
+    i = primary_planes.erase(i);
+  }
+  for (auto i = overlay_planes.begin(); i != overlay_planes.end();) {
+    composition->AddPlaneDisable(*i);
+    i = overlay_planes.erase(i);
+  }
+
+  if (test) {
+    ret = compositor_.TestComposition(composition.get());
+  } else {
+    ret = compositor_.ApplyComposition(std::move(composition));
+    AddFenceToPresentFence(compositor_.TakeOutFence());
+  }
+  if (ret) {
+    if (!test)
+      ALOGE("Failed to apply the frame composition ret=%d", ret);
+    return HWC2::Error::BadParameter;
+  }
+  return HWC2::Error::None;
+}
+
+
+
+
+frameworks/native/services/surfaceflinger/DisplayHardware/HWComposer.cpp presentAndGetReleaseFences
+    status_t HWComposer::presentAndGetReleaseFences(DisplayId displayId) {
+        ATRACE_CALL();
+
+        RETURN_IF_INVALID_DISPLAY(displayId, BAD_INDEX);
+
+        auto& displayData = mDisplayData[displayId];
+        auto& hwcDisplay = displayData.hwcDisplay;
+
+        if (displayData.validateWasSkipped) {
+            // explicitly flush all pending commands
+            auto error = static_cast<hal::Error>(mComposer->executeCommands());
+            RETURN_IF_HWC_ERROR_FOR("executeCommands", error, displayId, UNKNOWN_ERROR);
+            RETURN_IF_HWC_ERROR_FOR("present", displayData.presentError, displayId, UNKNOWN_ERROR);
+            return NO_ERROR;
+        }
+        ...
+   }
+
+
+=====================================
+
+frameworks/native/services/surfaceflinger/DisplayHardware/ComposerHal.cpp
+    Error Composer::getDisplayName(Display display, std::string* outName)
+    {
+        Error error = kDefaultError;
+        mClient->getDisplayName(display,
+                [&](const auto& tmpError, const auto& tmpName) {
+                    error = tmpError;
+                    if (error != Error::NONE) {
+                        return;
+                    }
+
+                    *outName = tmpName.c_str();
+                });
+
+        return error;
+    }
+
+hardware/interfaces/graphics/composer/2.1/utils/passthrough/include/composer-passthrough/2.1/HwcHal.h
+    HWC2_PFN_GET_DISPLAY_NAME getDisplayName;
+
+external/drm_hwcomposer/DrmHwcTwo.cpp
+    hwc2_function_pointer_t DrmHwcTwo::HookDevGetFunction(
+        ...
+        case HWC2::FunctionDescriptor::GetDisplayName:
+          return ToHook<HWC2_PFN_GET_DISPLAY_NAME>(
+              DisplayHook<decltype(&HwcDisplay::GetDisplayName),
+                          &HwcDisplay::GetDisplayName, uint32_t *, char *>);
+        ...
+    }
+
+    HWC2::Error DrmHwcTwo::HwcDisplay::GetDisplayName(uint32_t *size, char *name) {
+      supported(__func__);
+      std::ostringstream stream;
+      stream << "display-" << connector_->id();
+      std::string string = stream.str();
+      size_t length = string.length();
+      if (!name) {
+        *size = length;
+        return HWC2::Error::None;
+      }
+
+      *size = std::min<uint32_t>(static_cast<uint32_t>(length - 1), *size);
+      strncpy(name, string.c_str(), *size);
+      return HWC2::Error::None;
+    }
+
+frameworks/native/services/surfaceflinger/SurfaceFlinger.cpp
+    void SurfaceFlinger::init() {
+        ...
+        mCompositionEngine->setHwComposer(getFactory().createHWComposer(getBE().mHwcServiceName));
+    }
+
+    * mHwcServiceName is default
+
+frameworks/native/services/surfaceflinger/SurfaceFlingerDefaultFactory.cpp
+    std::unique_ptr<HWComposer> DefaultFactory::createHWComposer(const std::string& serviceName) {
+        return std::make_unique<android::impl::HWComposer>(serviceName);
+    }
+frameworks/native/services/surfaceflinger/DisplayHardware/HWComposer.cpp
+    HWComposer::HWComposer(const std::string& composerServiceName)
+        : mComposer(std::make_unique<Hwc2::impl::Composer>(composerServiceName)) {
+    }
+
+frameworks/native/services/surfaceflinger/DisplayHardware/ComposerHal.cpp
+    Composer::Composer(const std::string& serviceName)
+        : mWriter(kWriterInitialSize),
+            mIsUsingVrComposer(serviceName == std::string("vr"))
+    {
+        mComposer = V2_1::IComposer::getService(serviceName);
+        ....
+    }
+
+hardware/interfaces/graphics/composer/2.1/default/service.cpp
+    android::sp<IComposer> composer = HwcLoader::load();
+hardware/interfaces/graphics/composer/2.1/utils/passthrough/include/composer-passthrough/2.1/HwcLoader.h
+    static IComposer* load() {
+        const hw_module_t* module = loadModule();
+        if (!module) {
+            return nullptr;
+        }
+
+        auto hal = createHalWithAdapter(module);
+        if (!hal) {
+            return nullptr;
+        }
+
+        return createComposer(std::move(hal));
+    }
+    // load hwcomposer2 module
+    static const hw_module_t* loadModule() {
+        const hw_module_t* module;
+        int error = hw_get_module(HWC_HARDWARE_MODULE_ID, &module);
+        if (error) {
+            ALOGI("falling back to gralloc module");
+            error = hw_get_module(GRALLOC_HARDWARE_MODULE_ID, &module);
+        }
+
+        if (error) {
+            ALOGE("failed to get hwcomposer or gralloc module");
+            return nullptr;
+        }
+
+        return module;
+    }
+
+
+
+hardware/libhardware/hardware.c
+    hw_get_module
+        hw_get_module_by_class(id, NULL, module);
+            snprintf(prop_name, sizeof(prop_name), "ro.hardware.%s", name);
+
+device/ti/beagle_x15/device.mk
+    PRODUCT_PACKAGES += hwcomposer.drm_imagination
+    PRODUCT_PROPERTY_OVERRIDES += ro.hardware.hwcomposer=drm_imagination
+
+    PRODUCT_PACKAGES += \
+        android.hardware.graphics.composer@2.1-impl \
+        android.hardware.graphics.composer@2.1-service \
+
+    * android.hardware.graphics.composer@2.1-impl is not necessary
+    * or it should be android.hardware.graphics.composer@2.1
+
+device/ti/beagle_x15/manifest.xml
+    <hal format="hidl">
+        <name>android.hardware.graphics.composer</name>
+        <transport>hwbinder</transport>
+        <version>2.1</version>
+        <interface>
+            <name>IComposer</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+

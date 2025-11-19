@@ -1,0 +1,671 @@
+drivers/gpu/drm/omapdrm/dss/Makefile
+    obj-$(CONFIG_OMAP2_DSS) += omapdss.o
+    # Core DSS files
+    omapdss-y := dss.o dispc.o dispc_coefs.o \
+        pll.o video-pll.o
+    omapdss-$(CONFIG_OMAP2_DSS_DPI) += dpi.o
+
+drivers/gpu/drm/omapdrm/dss/dss.c:
+    static const enum omap_display_type dra7xx_ports[] = {
+        OMAP_DISPLAY_TYPE_DPI,
+        OMAP_DISPLAY_TYPE_DPI,
+        OMAP_DISPLAY_TYPE_DPI,
+    };
+
+    static const enum omap_dss_output_id omap5_dss_supported_outputs[] = {
+        /* OMAP_DSS_CHANNEL_LCD */
+        OMAP_DSS_OUTPUT_DPI | OMAP_DSS_OUTPUT_DBI |
+        OMAP_DSS_OUTPUT_DSI1 | OMAP_DSS_OUTPUT_DSI2,
+
+        /* OMAP_DSS_CHANNEL_DIGIT */
+        OMAP_DSS_OUTPUT_HDMI,
+
+        /* OMAP_DSS_CHANNEL_LCD2 */
+        OMAP_DSS_OUTPUT_DPI | OMAP_DSS_OUTPUT_DBI |
+        OMAP_DSS_OUTPUT_DSI1,
+
+        /* OMAP_DSS_CHANNEL_LCD3 */
+        OMAP_DSS_OUTPUT_DPI | OMAP_DSS_OUTPUT_DBI |
+        OMAP_DSS_OUTPUT_DSI2,
+    };
+
+    static int dss_dpi_select_source_omap5(struct dss_device *dss, int port,
+                           enum omap_channel channel)
+    {
+        int val;
+
+        switch (channel) {
+        case OMAP_DSS_CHANNEL_LCD:
+            val = 1;
+            break;
+        case OMAP_DSS_CHANNEL_LCD2:
+            val = 2;
+            break;
+        case OMAP_DSS_CHANNEL_LCD3:
+            val = 3;
+            break;
+        case OMAP_DSS_CHANNEL_DIGIT:
+            val = 0;
+            break;
+        default:
+            return -EINVAL;
+        }
+
+        REG_FLD_MOD(dss, DSS_CONTROL, val, 17, 16);
+
+        return 0;
+    }
+
+    static int dss_dpi_select_source_dra7xx(struct dss_device *dss, int port,
+                        enum omap_channel channel)
+    {
+        switch (port) {
+        case 0:
+            return dss_dpi_select_source_omap5(dss, port, channel);
+        case 1:
+            if (channel != OMAP_DSS_CHANNEL_LCD2)
+                return -EINVAL;
+            break;
+        case 2:
+            if (channel != OMAP_DSS_CHANNEL_LCD3)
+                return -EINVAL;
+            break;
+        default:
+            return -EINVAL;
+        }
+
+        return 0;
+    }
+
+    static int dss_lcd_clk_mux_dra7(struct dss_device *dss,
+                    enum omap_channel channel,
+                    enum dss_clk_source clk_src)
+    {
+        const u8 ctrl_bits[] = {
+            [OMAP_DSS_CHANNEL_LCD] = 0,
+            [OMAP_DSS_CHANNEL_LCD2] = 12,
+            [OMAP_DSS_CHANNEL_LCD3] = 19,
+        };
+
+        u8 ctrl_bit = ctrl_bits[channel];
+        int r;
+
+        if (clk_src == DSS_CLK_SRC_FCK) {
+            /* LCDx_CLK_SWITCH */
+            REG_FLD_MOD(dss, DSS_CONTROL, 0, ctrl_bit, ctrl_bit);
+            return -EINVAL;
+        }
+
+        r = dss_ctrl_pll_set_control_mux(dss, clk_src, channel);
+        if (r)
+            return r;
+
+        REG_FLD_MOD(dss, DSS_CONTROL, 1, ctrl_bit, ctrl_bit);
+
+        return 0;
+    }
+
+    static const struct dss_ops dss_ops_dra7 = {
+        .dpi_select_source = &dss_dpi_select_source_dra7xx,
+        .select_lcd_source = &dss_lcd_clk_mux_dra7,
+    };
+
+    static const struct dss_features dra7xx_dss_feats = {
+        .model			=	DSS_MODEL_DRA7,
+        .fck_div_max		=	64,
+        .fck_freq_max		=	209250000,
+        .dss_fck_multiplier	=	1,
+        .parent_clk_name	=	"dpll_per_x2_ck",
+        .ports			=	dra7xx_ports,
+        .num_ports		=	ARRAY_SIZE(dra7xx_ports),
+        .outputs		=	omap5_dss_supported_outputs,
+        .ops			=	&dss_ops_dra7,
+        .dispc_clk_switch	=	{ 9, 7 },
+        .has_lcd_clk_src	=	true,
+    };
+
+    /* DSS HW IP initialisation */
+    static const struct of_device_id dss_of_match[] = {
+        { .compatible = "ti,omap2-dss", .data = &omap24xx_dss_feats },
+        { .compatible = "ti,omap3-dss", .data = &omap3630_dss_feats },
+        { .compatible = "ti,omap4-dss", .data = &omap44xx_dss_feats },
+        { .compatible = "ti,omap5-dss", .data = &omap54xx_dss_feats },
+        { .compatible = "ti,dra7-dss",  .data = &dra7xx_dss_feats },
+        {},
+    };
+
+    struct platform_driver omap_dsshw_driver = {
+        .probe		= dss_probe,
+        .remove		= dss_remove,
+        .shutdown	= dss_shutdown,
+        .driver         = {
+            .name   = "omapdss_dss",
+            .pm	= &dss_pm_ops,
+            .of_match_table = dss_of_match,
+            .suppress_bind_attrs = true,
+        },
+    };
+
+    static int dss_init_ports(struct dss_device *dss)
+    {
+        struct platform_device *pdev = dss->pdev;
+        struct device_node *parent = pdev->dev.of_node;
+        struct device_node *port;
+        unsigned int i;
+        int r;
+
+        for (i = 0; i < dss->feat->num_ports; i++) {
+            port = of_graph_get_port_by_id(parent, i);
+            if (!port)
+                continue;
+
+            switch (dss->feat->ports[i]) {
+            case OMAP_DISPLAY_TYPE_DPI:
+                r = dpi_init_port(dss, pdev, port, dss->feat->model);
+                if (r)
+                    goto error;
+                break;
+
+            case OMAP_DISPLAY_TYPE_SDI:
+                r = sdi_init_port(dss, pdev, port);
+                if (r)
+                    goto error;
+                break;
+
+            default:
+                break;
+            }
+        }
+
+        return 0;
+
+    error:
+        __dss_uninit_ports(dss, i);
+        return r;
+    }
+
+
+    static int dss_probe(struct platform_device *pdev)
+    {
+        const struct soc_device_attribute *soc;
+        struct dss_component_match_data cmatch;
+        struct component_match *match = NULL;
+        struct resource *dss_mem;
+        struct dss_device *dss;
+        int r;
+
+        dss = kzalloc(sizeof(*dss), GFP_KERNEL);
+        if (!dss)
+            return -ENOMEM;
+
+        dss->pdev = pdev;
+        platform_set_drvdata(pdev, dss);
+
+        r = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
+        if (r) {
+            dev_err(&pdev->dev, "Failed to set the DMA mask\n");
+            goto err_free_dss;
+        }
+
+        /*
+         * The various OMAP3-based SoCs can't be told apart using the compatible
+         * string, use SoC device matching.
+         */
+        soc = soc_device_match(dss_soc_devices);
+        if (soc)
+            dss->feat = soc->data;
+        else
+            dss->feat = of_match_device(dss_of_match, &pdev->dev)->data;
+
+        /* Map I/O registers, get and setup clocks. */
+        dss_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+        dss->base = devm_ioremap_resource(&pdev->dev, dss_mem);
+        if (IS_ERR(dss->base)) {
+            r = PTR_ERR(dss->base);
+            goto err_free_dss;
+        }
+
+        r = dss_get_clocks(dss);
+        if (r)
+            goto err_free_dss;
+
+        r = dss_setup_default_clock(dss);
+        if (r)
+            goto err_put_clocks;
+
+        /* Setup the video PLLs and the DPI and SDI ports. */
+        r = dss_video_pll_probe(dss);
+        if (r)
+            goto err_put_clocks;
+
+
+/*
+    to init all the possibe displays
+*/
+        r = dss_init_ports(dss);
+        if (r)
+            goto err_uninit_plls;
+
+        /* Enable runtime PM and probe the hardware. */
+        pm_runtime_enable(&pdev->dev);
+
+        r = dss_probe_hardware(dss);
+        if (r)
+            goto err_pm_runtime_disable;
+
+        /* Initialize debugfs. */
+        r = dss_initialize_debugfs(dss);
+        if (r)
+            goto err_pm_runtime_disable;
+
+        dss->debugfs.clk = dss_debugfs_create_file(dss, "clk",
+                               dss_debug_dump_clocks, dss);
+        dss->debugfs.dss = dss_debugfs_create_file(dss, "dss", dss_dump_regs,
+                               dss);
+
+        /* Add all the child devices as components. */
+        r = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+        if (r)
+            goto err_uninit_debugfs;
+
+        omapdss_gather_components(&pdev->dev);
+
+        cmatch.dev = &pdev->dev;
+        cmatch.match = &match;
+        device_for_each_child(&pdev->dev, &cmatch, dss_add_child_component);
+
+        r = component_master_add_with_match(&pdev->dev, &dss_component_ops, match);
+        if (r)
+            goto err_of_depopulate;
+
+        return 0;
+    }
+
+    struct platform_driver omap_dsshw_driver = {
+        .probe		= dss_probe,
+        .remove		= dss_remove,
+        .shutdown	= dss_shutdown,
+        .driver         = {
+            .name   = "omapdss_dss",
+            .pm	= &dss_pm_ops,
+            .of_match_table = dss_of_match,
+            .suppress_bind_attrs = true,
+        },
+    };
+
+    /* INIT */
+    static struct platform_driver * const omap_dss_drivers[] = {
+        &omap_dsshw_driver,
+        &omap_dispchw_driver,
+        ...
+    #ifdef CONFIG_OMAP5_DSS_HDMI
+        &omapdss_hdmi5hw_driver,
+    #endif
+    };
+
+    static int __init omap_dss_init(void)
+    {
+        return platform_register_drivers(omap_dss_drivers,
+                         ARRAY_SIZE(omap_dss_drivers));
+    }
+
+    module_init(omap_dss_init);
+    module_exit(omap_dss_exit);
+
+drivers/gpu/drm/omapdrm/dss/dpi.c
+    int dpi_init_port(struct dss_device *dss, struct platform_device *pdev,
+              struct device_node *port, enum dss_model dss_model)
+    {
+        struct dpi_data *dpi;
+        struct device_node *ep;
+        u32 datalines;
+        int r;
+
+        dpi = devm_kzalloc(&pdev->dev, sizeof(*dpi), GFP_KERNEL);
+        if (!dpi)
+            return -ENOMEM;
+
+        ep = of_get_next_child(port, NULL);
+        if (!ep)
+            return 0;
+
+        r = of_property_read_u32(ep, "data-lines", &datalines);
+        of_node_put(ep);
+        if (r) {
+            DSSERR("failed to parse datalines\n");
+            return r;
+        }
+
+        dpi->data_lines = datalines;
+
+        dpi->pdev = pdev;
+        dpi->dss_model = dss_model;
+        dpi->dss = dss;
+        port->data = dpi;
+
+        r = dpi_init_regulator(dpi);
+        if (r)
+            return r;
+
+        return dpi_init_output_port(dpi, port);
+    }
+
+    static int dpi_init_output_port(struct dpi_data *dpi, struct device_node *port)
+    {
+        struct omap_dss_device *out = &dpi->output;
+        u32 port_num = 0;
+        int r;
+
+        dpi_bridge_init(dpi);
+
+        of_property_read_u32(port, "reg", &port_num);
+        dpi->id = port_num <= 2 ? port_num : 0;
+
+        switch (port_num) {
+        case 2:
+            out->name = "dpi.2";
+            break;
+        case 1:
+            out->name = "dpi.1";
+            break;
+        case 0:
+        default:
+            out->name = "dpi.0";
+            break;
+        }
+
+        out->dev = &dpi->pdev->dev;
+        out->id = OMAP_DSS_OUTPUT_DPI;
+        out->type = OMAP_DISPLAY_TYPE_DPI;
+        out->dispc_channel = dpi_get_channel(dpi);
+        out->of_port = port_num;
+        out->owner = THIS_MODULE;
+
+        r = omapdss_device_init_output(out, &dpi->bridge);
+        if (r < 0) {
+            dpi_bridge_cleanup(dpi);
+            return r;
+        }
+/*
+    registr into omapdss_devices_list
+*/
+        omapdss_device_register(out);
+
+        return 0;
+    }
+
+drivers/gpu/drm/omapdrm/dss/base.c
+    void omapdss_device_register(struct omap_dss_device *dssdev)
+    {
+        mutex_lock(&omapdss_devices_lock);
+        list_add_tail(&dssdev->list, &omapdss_devices_list);
+        mutex_unlock(&omapdss_devices_lock);
+    }
+    EXPORT_SYMBOL_GPL(omapdss_device_register);
+
+    int omapdss_device_connect(struct dss_device *dss,
+                   struct omap_dss_device *src,
+                   struct omap_dss_device *dst)
+    {
+        int ret;
+
+        dev_dbg(&dss->pdev->dev, "connect(%s, %s)\n",
+            src ? dev_name(src->dev) : "NULL",
+            dst ? dev_name(dst->dev) : "NULL");
+
+        if (!dst) {
+            /*
+             * The destination is NULL when the source is connected to a
+             * bridge instead of a DSS device. Stop here, we will attach
+             * the bridge later when we will have a DRM encoder.
+             */
+            return src && src->bridge ? 0 : -EINVAL;
+        }
+
+        if (omapdss_device_is_connected(dst))
+            return -EBUSY;
+
+        dst->dss = dss;
+
+        if (dst->ops && dst->ops->connect) {
+            ret = dst->ops->connect(src, dst);
+            if (ret < 0) {
+                dst->dss = NULL;
+                return ret;
+            }
+        }
+
+        return 0;
+    }
+drivers/gpu/drm/omapdrm/omap_drv.c
+    static int omap_connect_pipelines(struct drm_device *ddev)
+    {
+        struct omap_drm_private *priv = ddev->dev_private;
+        struct omap_dss_device *output = NULL;
+        int r;
+
+        for_each_dss_output(output) {
+            r = omapdss_device_connect(priv->dss, NULL, output);
+            if (r == -EPROBE_DEFER) {
+                omapdss_device_put(output);
+                return r;
+            } else if (r) {
+                dev_warn(output->dev, "could not connect output %s\n",
+                     output->name);
+            } else {
+                struct omap_drm_pipeline *pipe;
+
+                pipe = &priv->pipes[priv->num_pipes++];
+                pipe->output = omapdss_device_get(output);
+
+                if (priv->num_pipes == ARRAY_SIZE(priv->pipes)) {
+                    /* To balance the 'for_each_dss_output' loop */
+                    omapdss_device_put(output);
+                    break;
+                }
+            }
+        }
+
+        return 0;
+    }
+/*
+    init each pipes with overlay plane, crts, connecter, encoder
+*/
+    static int omap_modeset_init(struct drm_device *dev)
+    {
+        struct omap_drm_private *priv = dev->dev_private;
+        int num_ovls = priv->dispc_ops->get_num_ovls(priv->dispc);
+        int num_mgrs = priv->dispc_ops->get_num_mgrs(priv->dispc);
+        unsigned int i;
+        int ret;
+        u32 plane_crtc_mask;
+
+        if (!omapdss_stack_is_ready())
+            return -EPROBE_DEFER;
+
+        drm_mode_config_init(dev);
+
+        ret = omap_modeset_init_properties(dev);
+        if (ret < 0)
+            return ret;
+
+        /*
+         * This function creates exactly one connector, encoder, crtc,
+         * and primary plane per each connected dss-device. Each
+         * connector->encoder->crtc chain is expected to be separate
+         * and each crtc is connect to a single dss-channel. If the
+         * configuration does not match the expectations or exceeds
+         * the available resources, the configuration is rejected.
+         */
+        ret = omap_connect_pipelines(dev);
+        if (ret < 0)
+            return ret;
+
+        if (priv->num_pipes > num_mgrs || priv->num_pipes > num_ovls) {
+            dev_err(dev->dev, "%s(): Too many connected displays\n",
+                __func__);
+            return -EINVAL;
+        }else{
+            dev_info(dev->dev, "%s(): num_pipes=%d, num_ovls=%d, num_mgrs=%d\n",
+                __func__, priv->num_pipes, num_ovls, num_mgrs);
+        }
+
+
+        /* Create all planes first. They can all be put to any CRTC. */
+        plane_crtc_mask = (1 << priv->num_pipes) - 1;
+
+        for (i = 0; i < num_ovls; i++) {
+            enum drm_plane_type type = i < priv->num_pipes
+                         ? DRM_PLANE_TYPE_PRIMARY
+                         : DRM_PLANE_TYPE_OVERLAY;
+            struct drm_plane *plane;
+
+            if (WARN_ON(priv->num_planes >= ARRAY_SIZE(priv->planes)))
+                return -EINVAL;
+
+            plane = omap_plane_init(dev, i, type, plane_crtc_mask);
+            if (IS_ERR(plane))
+                return PTR_ERR(plane);
+
+            priv->planes[priv->num_planes++] = plane;
+        }
+
+        /*
+         * Create the encoders, attach the bridges and get the pipeline alias
+         * IDs.
+         */
+        for (i = 0; i < priv->num_pipes; i++) {
+            struct omap_drm_pipeline *pipe = &priv->pipes[i];
+            int id;
+
+            pipe->encoder = omap_encoder_init(dev, pipe->output);
+            if (!pipe->encoder)
+                return -ENOMEM;
+
+            if (pipe->output->bridge) {
+                ret = drm_bridge_attach(pipe->encoder,
+                            pipe->output->bridge, NULL,
+                            DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+                if (ret < 0) {
+                    dev_err(priv->dev,
+                        "unable to attach bridge %pOF\n",
+                        pipe->output->bridge->of_node);
+                    return ret;
+                }
+            }
+
+            id = omap_display_id(pipe->output);
+            pipe->alias_id = id >= 0 ? id : i;
+        }
+
+        /* Sort the pipelines by DT aliases. */
+        sort(priv->pipes, priv->num_pipes, sizeof(priv->pipes[0]),
+             omap_compare_pipelines, NULL);
+
+        /*
+         * Populate the pipeline lookup table by DISPC channel. Only one display
+         * is allowed per channel.
+         */
+        for (i = 0; i < priv->num_pipes; ++i) {
+            struct omap_drm_pipeline *pipe = &priv->pipes[i];
+            enum omap_channel channel = pipe->output->dispc_channel;
+
+            if (WARN_ON(priv->channels[channel] != NULL))
+                return -EINVAL;
+
+            priv->channels[channel] = pipe;
+        }
+
+        /* Create the connectors and CRTCs. */
+        for (i = 0; i < priv->num_pipes; i++) {
+            struct omap_drm_pipeline *pipe = &priv->pipes[i];
+            struct drm_encoder *encoder = pipe->encoder;
+            struct drm_crtc *crtc;
+
+            if (pipe->output->next) {
+                pipe->connector = omap_connector_init(dev, pipe->output,
+                                      encoder);
+                if (!pipe->connector)
+                    return -ENOMEM;
+            } else {
+                pipe->connector = drm_bridge_connector_init(dev, encoder);
+                if (IS_ERR(pipe->connector)) {
+                    dev_err(priv->dev,
+                        "unable to create bridge connector for %s\n",
+                        pipe->output->name);
+                    return PTR_ERR(pipe->connector);
+                }
+            }
+
+            drm_connector_attach_encoder(pipe->connector, encoder);
+
+            crtc = omap_crtc_init(dev, pipe, priv->planes[i]);
+            if (IS_ERR(crtc))
+                return PTR_ERR(crtc);
+
+            encoder->possible_crtcs = 1 << i;
+            pipe->crtc = crtc;
+        }
+
+        DBG("registered %u planes, %u crtcs/encoders/connectors\n",
+            priv->num_planes, priv->num_pipes);
+
+        dev->mode_config.min_width = 8;
+        dev->mode_config.min_height = 2;
+
+        /*
+         * Note: these values are used for multiple independent things:
+         * connector mode filtering, buffer sizes, crtc sizes...
+         * Use big enough values here to cover all use cases, and do more
+         * specific checking in the respective code paths.
+         */
+        dev->mode_config.max_width = 8192;
+        dev->mode_config.max_height = 8192;
+
+        /* We want the zpos to be normalized */
+        dev->mode_config.normalize_zpos = true;
+
+        dev->mode_config.funcs = &omap_mode_config_funcs;
+        dev->mode_config.helper_private = &omap_mode_config_helper_funcs;
+
+        drm_mode_config_reset(dev);
+
+        omap_drm_irq_install(dev);
+
+        return 0;
+    }
+
+
+    pdev_probe
+        omapdrm_init
+            omap_crtc_pre_init
+            omap_gem_init
+            omap_modeset_init
+            drm_vblank_init
+            omap_fbdev_init
+            drm_kms_helper_poll_init
+            omap_modeset_enable_external_hpd
+
+
+    static struct platform_driver pdev = {
+        .driver = {
+            .name = "omapdrm",
+            .pm = &omapdrm_pm_ops,
+        },
+        .probe = pdev_probe,
+        .remove = pdev_remove,
+    };
+
+    static struct platform_driver * const drivers[] = {
+        &omap_dmm_driver,
+        &pdev,
+    };
+
+    static int __init omap_drm_init(void)
+    {
+        return platform_register_drivers(drivers, ARRAY_SIZE(drivers));
+    }
+
+    /* need late_initcall() so we load after dss_driver's are loaded */
+    late_initcall(omap_drm_init);
+    module_exit(omap_drm_fini);

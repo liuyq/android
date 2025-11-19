@@ -1,0 +1,172 @@
+
+U-Boot SPL 2020.10-rc5-06130-g10a1f3ee86 (Nov 13 2020 - 04:52:46 +0000)
+DRA752-GP ES2.0
+Trying to boot from MMC2_2
+no pinctrl state for default mode
+Loading Environment from FAT... no pinctrl state for default mode
+MMC: no card present
+Loading Environment from MMC... *** Warning - bad CRC, using default environment
+
+
+
+U-Boot 2020.10-rc5-06130-g10a1f3ee86 (Nov 13 2020 - 04:52:46 +0000)
+
+CPU  : DRA752-GP ES2.0
+Model: TI AM5728 BeagleBoard-X15
+Board: AM572x EVM REV A.30
+DRAM:  2 GiB
+MMC:   no pinctrl state for default mode
+no pinctrl state for default mode
+OMAP SD/MMC: 0, OMAP SD/MMC: 1
+Loading Environment from FAT... MMC: no card present
+Loading Environment from MMC... *** Warning - bad CRC, using default environment
+
+## Error: flags type check failure for "bootargs" <= "androidboot.serialno=${serial#} console=ttyS2,115200 androidboot.console=ttyS2 androidboot.hardware=beagle_x15board" (type: i)
+himport_r: can't insert "bootargs=androidboot.serialno=${serial#} console=ttyS2,115200 androidboot.console=ttyS2 androidboot.hardware=beagle_x15board" into hash table
+## Error: flags type check failure for "bootargs" <= "androidboot.serialno=${serial#} console=ttyS2,115200 androidboot.console=ttyS2 androidboot.hardware=beagle_x15board" (type: i)
+himport_r: can't insert "bootargs=androidboot.serialno=${serial#} console=ttyS2,115200 androidboot.console=ttyS2 androidboot.hardware=beagle_x15board" into hash table
+Error compiling regex: No closing bracket
+## Error: flags type check failure for "bootcmd" <= "if test ${dofastboot} -eq 1; then echo Boot fastboot requested, resetting dofastboot ...;setenv dofastboot 0; saveenv;echo Booting into fastboot ...; fastboot 1; fi;if test ${boot_fit} -eq 1; then run update_to_fit;fi;run findfdt; run envboot; run mmcboot;run emmc_linux_boot; run emmc_android_boot; " (type: i)
+himport_r: can't insert "bootcmd=if test ${dofastboot} -eq 1; then echo Boot fastboot requested, resetting dofastboot ...;setenv dofastboot 0; saveenv;echo Booting into fastboot ...; fastboot 1; fi;if test ${boot_fit} -eq 1; then run update_to_fit;fi;run findfdt; run envboot; run mmcboot;run emmc_linux_boot; run emmc_android_boot; " into hash table
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+## Error: flags type check failure for "fdtcontroladdr" <= "\FF\FF" (type: i)
+## Error inserting "fdtcontroladdr" variable, errno=1
+## Error: flags type check failure for "stdin" <= "serial@48020000" (type: i)
+## Error inserting "stdin" variable, errno=1
+## Error: flags type check failure for "stdout" <= "serial@48020000" (type: i)
+## Error inserting "stdout" variable, errno=1
+## Error: flags type check failure for "stderr" <= "serial@48020000" (type: i)
+## Error inserting "stderr" variable, errno=1
+Error compiling regex: No closing bracket
+Error compiling regex: No closing bracket
+Net:   eth2: ethernet@48484000
+=> 

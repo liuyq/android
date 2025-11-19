@@ -1,0 +1,42 @@
+eth0 not enabled, need to enable prueth: TI PRUSS Ethernet driver
+
+log in 4.19
+    https://android.googlesource.com/kernel/omap/+/500773e37d9170bb86fb352e0cdd1d0c1d466d51
+    https://android.googlesource.com/kernel/omap/+log/refs/heads/android-beagle-x15-4.19/drivers/net/ethernet/ti/icssg_prueth.c
+    https://android.googlesource.com/kernel/omap/+log/refs/heads/android-beagle-x15-4.19/drivers/net/ethernet/ti/icss_mii_rt.h
+    https://android.googlesource.com/kernel/omap/+log/refs/heads/android-beagle-x15-4.19/drivers/net/ethernet/ti/icss_switch.h
+    https://android.googlesource.com/kernel/omap/+log/refs/heads/android-beagle-x15-4.19/drivers/net/ethernet/ti/prueth.c
+
+For mainline
+    https://patchwork.kernel.org/project/linux-omap/cover/1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org/
+    https://patches.linaro.org/project/lkml/patch/1542886753-17625-7-git-send-email-rogerq@ti.com/
+    https://lkml.org/lkml/2020/7/29/319
+    https://patches.linaro.org/project/lkml/list/?series=16582
+
+https://git.ti.com/cgit/android/device-ti-beagle-x15/commit/?h=dev/multimedia&id=f88b8ebd7b5705748c7ec64b50d3317127b5c625
+
+Audio:
+    sound/soc/codecs/tlv320aic3x
+
+    $ tinymix 19 15 |tinymix |grep "Line Playback Volume"
+    $ tinyplay /sdcard/Download/test.wav
+
+    console:/ # cat /proc/asound/cards
+     0 [BeagleBoardX15 ]: simple-card - BeagleBoard-X15
+                          BeagleBoard-X15
+     1 [H58040000encode]: HDMI_58040000_e - HDMI 58040000.encoder
+                          HDMI 58040000.encoder
+    console:/ #
+
+    130|console:/ # ls -l /dev/snd/
+    total 0
+    crw-rw---- 1 system audio 116,   0 2021-11-26 17:30 controlC0
+    crw-rw---- 1 system audio 116,  32 2021-11-26 17:30 controlC1
+    crw-rw---- 1 system audio 116,  24 2021-11-26 17:30 pcmC0D0c
+    crw-rw---- 1 system audio 116,  16 2021-11-26 17:30 pcmC0D0p
+    crw-rw---- 1 system audio 116,  48 2021-11-26 17:30 pcmC1D0p
+    crw-rw---- 1 system audio 116,  33 2021-11-26 17:30 timer
+    console:/ #
+
+    $ tinyplay  /sdcard/Download/test.wav -D 0
+    $ tinyplay  /sdcard/Download/test.wav -D 1
