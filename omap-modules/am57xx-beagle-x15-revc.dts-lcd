@@ -1,0 +1,195 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright (C) 2014-2017 Texas Instruments Incorporated - https://www.ti.com/
+ */
+
+#include "am57xx-beagle-x15-common.dtsi"
+#include <dt-bindings/input/input.h>
+
+/ {
+	model = "TI AM5728 BeagleBoard-X15 rev C";
+
+	aliases {
+	    // specify with the node name
+	    /*
+		    display0 = "/lcdpanel";
+		    display1 = "/connector";
+		*/
+
+	    // specify with label of the node name
+		display0 = &lcd0;
+		display1 = &hdmi0;
+	};
+
+	gpio_keys {
+		compatible = "gpio-keys";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		autorepeat;
+		USER1 {
+			gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
+			label = "Up";
+			linux,code = <KEY_UP>;
+		};
+		USER2 {
+			gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;
+			label = "Down";
+			linux,code = <KEY_DOWN>;
+		};
+		USER3 {
+			gpios = <&gpio2 28 GPIO_ACTIVE_LOW>;
+			label = "Left";
+			linux,code = <KEY_LEFT>;
+		};
+		USER4 {
+			gpios = <&gpio2 24 GPIO_ACTIVE_LOW>;
+			label = "Right";
+			linux,code = <KEY_RIGHT>;
+		};
+		USER5 {
+			gpios = <&gpio2 20 GPIO_ACTIVE_LOW>;
+			label = "Home";
+			linux,code = <KEY_HOME>;
+		};
+	};
+
+	lcd0: lcdpanel {
+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
+		backlight = <&lcd_bl>;
+		enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
+		label = "lcd";
+
+		port {
+			lcd_in: endpoint {
+				remote-endpoint = <&dpi_out>;
+			};
+		};
+	};
+
+	lcd_bl: backlight {
+		compatible = "pwm-backlight";
+		brightness-levels = <0 243 245 247 249 251 252 253 255>;
+		default-brightness-level = <8>;
+		pwms = <&ehrpwm1 0 50000 0>;
+	};
+
+	com_3v6: fixedregulator-com_3v6 {
+		compatible = "regulator-fixed";
+		regulator-name = "com_3v6";
+		regulator-min-microvolt = <3600000>;
+		regulator-max-microvolt = <3600000>;
+		vin-supply = <&evm_5v0>;
+		regulator-always-on;
+		regulator-boot-on;
+	};
+
+	vmmcwl_fixed: fixedregulator-mmcwl {
+		compatible = "regulator-fixed";
+		regulator-name = "vmmcwl_fixed";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		gpio = <&gpio5 8 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	ocp {
+		target-module@56000000 {
+		    sgx544_gpu: gpu@0 {
+		        compatible = "ti,dra7-sgx544", "img,sgx544";
+		        reg = <0x0 0x10000>;
+		        interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+		    };
+		};
+	};
+};
+
+&tpd12s015 {
+	gpios = <&gpio7 10 GPIO_ACTIVE_HIGH>,	/* gpio7_10, CT CP HPD */
+		<&gpio2 30 GPIO_ACTIVE_HIGH>,	/* gpio2_30, LS OE */
+		<&gpio7 12 GPIO_ACTIVE_HIGH>;	/* gpio7_12/sp1_cs2, HPD */
+};
+
+&mmc1 {
+	pinctrl-names = "default", "hs";
+	pinctrl-0 = <&mmc1_pins_default>;
+	pinctrl-1 = <&mmc1_pins_hs>;
+	vmmc-supply = <&vdd_3v3>;
+	vqmmc-supply = <&ldo1_reg>;
+};
+
+&mmc2 {
+	pinctrl-names = "default", "hs", "ddr_3_3v";
+	pinctrl-0 = <&mmc2_pins_default>;
+	pinctrl-1 = <&mmc2_pins_hs>;
+	pinctrl-2 = <&mmc2_pins_ddr_rev20>;
+};
+
+&ehrpwm1 {
+	status = "okay";
+};
+
+&epwmss1 {
+	status = "okay";
+};
+
+&i2c5 {
+	clock-frequency = <400000>;
+	status = "okay";
+
+	pixcir_ts@5c {
+		compatible = "pixcir,pixcir_tangoc";
+		attb-gpio = <&gpio2 4 GPIO_ACTIVE_HIGH>;
+		interrupt-parent = <&gpio2>;
+		interrupts = <4 0>;
+		reg = <0x5c>;
+		reset-gpio = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+		touchscreen-size-x = <1024>;
+		touchscreen-size-y = <600>;
+	};
+};
+
+&uart8 {
+	status = "okay";
+};
+
+&dss {
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+
+			dpi_out: endpoint {
+				data-lines = <24>;
+				remote-endpoint = <&lcd_in>;
+			};
+		};
+	};
+};
+
+&mmc3 {
+	status = "okay";
+	vmmc-supply = <&com_3v6>;
+	vqmmc-supply = <&vmmcwl_fixed>;
+	bus-width = <4>;
+	cap-power-off-card;
+	keep-power-in-suspend;
+	non-removable;
+	#address-cells = <1>;
+	#size-cells = <0>;
+	wlcore: wlcore@2 {
+		compatible = "ti,wl1835";
+		reg = <2>;
+		interrupt-parent = <&gpio5>;
+		interrupts = <7 IRQ_TYPE_EDGE_RISING>;
+	};
+};
+
+&sgx544_gpu {
+       status = "okay";
+};
+
+&bb2d {
+       status = "disabled";
+};

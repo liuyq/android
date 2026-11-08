@@ -1,0 +1,84 @@
+From bc6d1bcfb50b80169bc8b140025419db9446192c Mon Sep 17 00:00:00 2001
+From: Yongqin Liu <yongqin.liu@linaro.org>
+Date: Wed, 15 Dec 2021 14:45:44 +0800
+Subject: [PATCH 2/2] am57xx-beagle-x15-revc.dts: enable the onboard buttons
+ via gpio_keys
+
+based on the build here:
+    https://android-review.linaro.org/c/kernel/omap/+/21996
+
+Here are some links for the study on gpio-keys driver
+some links on gpio-keys for beginner:
+    https://www.kernel.org/doc/Documentation/devicetree/bindings/input/gpio-keys.txt
+    dt-bindings/gpio/gpio.h
+    dt-bindings/input/input.h
+    drivers/input/keyboard/gpio_keys.c
+    https://blog.csdn.net/lhl_blog/article/details/82892809
+
+device tree links:
+    https://devicetree-specification.readthedocs.io/en/v0.3/introduction.html
+    https://elinux.org/images/f/f9/Petazzoni-device-tree-dummies_0.pdf
+    https://www.kernel.org/doc/html/latest/devicetree/index.html
+    https://elinux.org/Device_Tree_Usage
+    https://github.com/devicetree-org/dt-schema
+
+Signed-off-by: Yongqin Liu <yongqin.liu@linaro.org>
+Change-Id: Ib8afa4a68c45c22a7af5b2619ee71f8852c62216
+---
+ dts/am57xx-beagle-x15-revc.dts | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/dts/am57xx-beagle-x15-revc.dts b/dts/am57xx-beagle-x15-revc.dts
+index bfa8c15d434b..296b321cbb6d 100644
+--- a/dts/am57xx-beagle-x15-revc.dts
++++ b/dts/am57xx-beagle-x15-revc.dts
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include "am57xx-beagle-x15-common.dtsi"
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	model = "TI AM5728 BeagleBoard-X15 rev C";
+@@ -20,6 +21,38 @@
+ 		display1 = &hdmi0;
+ 	};
+ 
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		autorepeat;
++		USER1 {
++			gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
++			label = "Up";
++			linux,code = <KEY_UP>;
++		};
++		USER2 {
++			gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;
++			label = "Down";
++			linux,code = <KEY_DOWN>;
++		};
++		USER3 {
++			gpios = <&gpio2 28 GPIO_ACTIVE_LOW>;
++			label = "Left";
++			linux,code = <KEY_LEFT>;
++		};
++		USER4 {
++			gpios = <&gpio2 24 GPIO_ACTIVE_LOW>;
++			label = "Right";
++			linux,code = <KEY_RIGHT>;
++		};
++		USER5 {
++			gpios = <&gpio2 20 GPIO_ACTIVE_LOW>;
++			label = "Home";
++			linux,code = <KEY_HOME>;
++		};
++	};
++
+ 	lcd0: lcdpanel {
+ 		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
+ 		backlight = <&lcd_bl>;
+-- 
+2.25.1
+

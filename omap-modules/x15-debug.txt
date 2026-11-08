@@ -1,0 +1,19 @@
+  CC [M]  ../omap-modules/android-mainline/pvr/services4/system/omap/sysutils.o
+/home/liuyq/data/android/lkft-test/common/../omap-modules/android-mainline/pvr/services4/srvkm/env/linux/osfunc.c:4614:2: error: use of undeclared identifier 'arm_dma_ops'
+        arm_dma_ops.sync_single_for_device(NULL, pStart, pEnd - pStart, DMA_TO_DEVICE);
+        ^
+/home/liuyq/data/android/lkft-test/common/../omap-modules/android-mainline/pvr/services4/srvkm/env/linux/osfunc.c:4615:2: error: use of undeclared identifier 'arm_dma_ops'
+        arm_dma_ops.sync_single_for_cpu(NULL, pStart, pEnd - pStart, DMA_FROM_DEVICE);
+        ^
+/home/liuyq/data/android/lkft-test/common/../omap-modules/android-mainline/pvr/services4/srvkm/env/linux/osfunc.c:4626:2: error: use of undeclared identifier 'arm_dma_ops'
+        arm_dma_ops.sync_single_for_device(NULL, pStart, pEnd - pStart, DMA_TO_DEVICE);
+        ^
+/home/liuyq/data/android/lkft-test/common/../omap-modules/android-mainline/pvr/services4/srvkm/env/linux/osfunc.c:4638:2: error: use of undeclared identifier 'arm_dma_ops'
+        arm_dma_ops.sync_single_for_cpu(NULL, pStart, pEnd - pStart, DMA_FROM_DEVICE);
+        ^
+4 errors generated.
+make[4]: *** [/home/liuyq/data/android/lkft-test/common/scripts/Makefile.build:249: ../omap-modules/android-mainline/pvr/services4/srvkm/env/linux/osfunc.o] Error 
+
+
+a45e52bf1eca9bf8a7d075ce12b1e306497ce393 dma-mapping: update comment after dmabounce removal
+ae626eb97376148bb63c3f3ca9517fde0f39bec3 ARM/dma-mapping: use dma-direct unconditionally
